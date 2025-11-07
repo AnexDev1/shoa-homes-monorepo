@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapPin, Bed, Bath, Square, Home, Check, Phone, Mail, Share2 } from 'lucide-react';
 import { propertiesAPI } from '../../services/api';
 import { useModalStore } from '../../store/modalStore';
 import LoadingSpinner from '../../components/LoadingSpinner';
@@ -45,8 +46,8 @@ const PropertyDetailPage = () => {
     );
   }
 
-  const images = property.images?.length > 0 
-    ? property.images 
+  const images = property?.data?.images?.length > 0 
+    ? property.data.images 
     : ['https://via.placeholder.com/800x600?text=No+Image'];
 
   return (
@@ -59,7 +60,7 @@ const PropertyDetailPage = () => {
             <span>/</span>
             <Link to="/properties" className="hover:text-primary-600">Properties</Link>
             <span>/</span>
-            <span className="text-gray-900">{property.title}</span>
+            <span className="text-gray-900">{property.data.title}</span>
           </div>
         </div>
       </div>
@@ -73,12 +74,12 @@ const PropertyDetailPage = () => {
               <div className="relative h-[500px]">
                 <img
                   src={images[selectedImage]}
-                  alt={property.title}
+                  alt={property.data.title}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute top-4 right-4">
                   <span className="bg-primary-600 text-white px-4 py-2 rounded-full font-semibold">
-                    {property.status}
+                    {property.data.status}
                   </span>
                 </div>
               </div>
@@ -109,42 +110,42 @@ const PropertyDetailPage = () => {
 
             {/* Property Details */}
             <div className="bg-white rounded-xl shadow-md p-6">
-              <h1 className="text-3xl font-bold mb-4">{property.title}</h1>
+              <h1 className="text-3xl font-bold mb-4">{property.data.title}</h1>
               
               <div className="flex items-center text-gray-600 mb-6">
-                <span className="mr-2">📍</span>
-                <span>{property.location}</span>
+                <MapPin className="mr-2 h-5 w-5 text-primary-600" />
+                <span>{property.data.location}</span>
               </div>
 
               <div className="flex items-center justify-between mb-6 pb-6 border-b">
                 <div className="text-3xl font-bold text-primary-600">
-                  {formatPrice(property.price)}
+                  {formatPrice(property.data.price)}
                 </div>
                 <div className="text-gray-600">
-                  {property.priceType}
+                  {property.data.priceType}
                 </div>
               </div>
 
               {/* Key Features */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 pb-6 border-b">
                 <div className="text-center p-4 bg-gray-50 rounded-lg">
-                  <div className="text-3xl mb-2">🛏️</div>
-                  <div className="font-semibold">{property.bedrooms}</div>
+                  <Bed className="h-8 w-8 mx-auto mb-2 text-primary-600" />
+                  <div className="font-semibold">{property.data.bedrooms}</div>
                   <div className="text-sm text-gray-600">Bedrooms</div>
                 </div>
                 <div className="text-center p-4 bg-gray-50 rounded-lg">
-                  <div className="text-3xl mb-2">🚿</div>
-                  <div className="font-semibold">{property.bathrooms}</div>
+                  <Bath className="h-8 w-8 mx-auto mb-2 text-primary-600" />
+                  <div className="font-semibold">{property.data.bathrooms}</div>
                   <div className="text-sm text-gray-600">Bathrooms</div>
                 </div>
                 <div className="text-center p-4 bg-gray-50 rounded-lg">
-                  <div className="text-3xl mb-2">📐</div>
-                  <div className="font-semibold">{property.area} m²</div>
+                  <Square className="h-8 w-8 mx-auto mb-2 text-primary-600" />
+                  <div className="font-semibold">{property.data.area} m²</div>
                   <div className="text-sm text-gray-600">Area</div>
                 </div>
                 <div className="text-center p-4 bg-gray-50 rounded-lg">
-                  <div className="text-3xl mb-2">🏠</div>
-                  <div className="font-semibold capitalize">{property.type}</div>
+                  <Home className="h-8 w-8 mx-auto mb-2 text-primary-600" />
+                  <div className="font-semibold capitalize">{property.data.type}</div>
                   <div className="text-sm text-gray-600">Type</div>
                 </div>
               </div>
@@ -153,18 +154,18 @@ const PropertyDetailPage = () => {
               <div className="mb-6">
                 <h2 className="text-2xl font-bold mb-4">Description</h2>
                 <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                  {property.description}
+                  {property.data.description}
                 </p>
               </div>
 
               {/* Amenities */}
-              {property.amenities && property.amenities.length > 0 && (
+              {property.data.amenities && property.data.amenities.length > 0 && (
                 <div className="mb-6">
                   <h2 className="text-2xl font-bold mb-4">Amenities</h2>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {property.amenities.map((amenity, idx) => (
+                    {property.data.amenities.map((amenity, idx) => (
                       <div key={idx} className="flex items-center space-x-2 text-gray-700">
-                        <span className="text-primary-600">✓</span>
+                        <Check className="h-4 w-4 text-primary-600" />
                         <span>{amenity}</span>
                       </div>
                     ))}
@@ -187,7 +188,7 @@ const PropertyDetailPage = () => {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                   />
                   <Marker position={[9.03, 38.74]}>
-                    <Popup>{property.title}</Popup>
+                    <Popup>{property.data.title}</Popup>
                   </Marker>
                 </MapContainer>
               </div>
@@ -200,7 +201,7 @@ const PropertyDetailPage = () => {
               <h3 className="text-xl font-bold mb-6">Interested in this property?</h3>
               
               <button
-                onClick={() => openInquiryModal(property)}
+                onClick={() => openInquiryModal(property.data)}
                 className="btn-primary w-full mb-4"
               >
                 Send Inquiry
@@ -208,7 +209,7 @@ const PropertyDetailPage = () => {
 
               <div className="space-y-4 pt-4 border-t">
                 <div className="flex items-center space-x-3 text-gray-700">
-                  <span className="text-xl">📞</span>
+                  <Phone className="h-5 w-5 text-primary-600" />
                   <div>
                     <div className="text-sm text-gray-600">Call Us</div>
                     <div className="font-semibold">+251 11 123 4567</div>
@@ -216,7 +217,7 @@ const PropertyDetailPage = () => {
                 </div>
 
                 <div className="flex items-center space-x-3 text-gray-700">
-                  <span className="text-xl">✉️</span>
+                  <Mail className="h-5 w-5 text-primary-600" />
                   <div>
                     <div className="text-sm text-gray-600">Email Us</div>
                     <div className="font-semibold">info@shoahomes.com</div>
@@ -224,7 +225,7 @@ const PropertyDetailPage = () => {
                 </div>
 
                 <div className="flex items-center space-x-3 text-gray-700">
-                  <span className="text-xl">📍</span>
+                  <MapPin className="h-5 w-5 text-primary-600" />
                   <div>
                     <div className="text-sm text-gray-600">Visit Office</div>
                     <div className="font-semibold">Addis Ababa, Ethiopia</div>
@@ -233,7 +234,10 @@ const PropertyDetailPage = () => {
               </div>
 
               <div className="pt-4 border-t mt-4">
-                <h4 className="font-semibold mb-2">Share this property</h4>
+                <h4 className="font-semibold mb-2 flex items-center">
+                  <Share2 className="h-4 w-4 mr-2" />
+                  Share this property
+                </h4>
                 <div className="flex space-x-2">
                   <button className="flex-1 btn-secondary text-sm py-2">Facebook</button>
                   <button className="flex-1 btn-secondary text-sm py-2">Twitter</button>
