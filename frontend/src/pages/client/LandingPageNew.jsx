@@ -4,16 +4,7 @@ import { mockProperties, whyChooseUs, mockTestimonials, companyStats } from '../
 import PropertyCard from '../../components/PropertyCard';
 
 const LandingPage = () => {
-  const [scrolled, setScrolled] = useState(false);
   const featuredProperties = mockProperties.filter(p => p.featured).slice(0, 6);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   return (
     <div className="overflow-hidden">
