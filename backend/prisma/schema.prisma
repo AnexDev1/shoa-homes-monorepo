@@ -1,0 +1,87 @@
+// This file contains the Prisma schema definition for the database
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  phone     String?
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  properties Property[]
+  inquiries  Inquiry[]
+
+  @@map("users")
+}
+
+model Property {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  price       Float
+  priceType   String   // "total", "per-month", "per-year"
+  type        String   // "apartment", "house", "villa", "commercial", "land"
+  status      String   // "for-sale", "for-rent"
+  location    String
+  bedrooms    Int
+  bathrooms   Int
+  area        Float
+  amenities   String[] // Array of amenities
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  images      Image[]
+  inquiries   Inquiry[]
+
+  @@map("properties")
+}
+
+model Image {
+  id         String   @id @default(uuid())
+  url        String
+  publicId   String   // Cloudinary public ID for deletion
+  createdAt  DateTime @default(now())
+  
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@map("images")
+}
+
+model Inquiry {
+  id         String   @id @default(uuid())
+  name       String
+  email      String
+  phone      String?
+  message    String
+  status     String   @default("unread") // "unread", "read"
+  createdAt  DateTime @default(now())
+  
+  propertyId String?
+  property   Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  
+  userId     String?
+  user       User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("inquiries")
+}
+
+enum Role {
+  USER
+  ADMIN
+}

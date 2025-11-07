@@ -1,0 +1,276 @@
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { propertiesAPI } from '../../services/api';
+import PropertyCard from '../../components/PropertyCard';
+import LoadingSpinner from '../../components/LoadingSpinner';
+
+const PropertyListingPage = () => {
+  const [filters, setFilters] = useState({
+    search: '',
+    type: '',
+    priceMin: '',
+    priceMax: '',
+    bedrooms: '',
+    location: '',
+    status: '',
+  });
+  const [page, setPage] = useState(1);
+  const limit = 12;
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['properties', filters, page],
+    queryFn: () => propertiesAPI.getAll({ ...filters, page, limit }),
+  });
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters({ ...filters, [name]: value });
+    setPage(1); // Reset to first page on filter change
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      search: '',
+      type: '',
+      priceMin: '',
+      priceMax: '',
+      bedrooms: '',
+      location: '',
+      status: '',
+    });
+    setPage(1);
+  };
+
+  const totalPages = data ? Math.ceil(data.total / limit) : 0;
+
+  return (
+    <div className="bg-gray-50 min-h-screen">
+      {/* Header */}
+      <div className="bg-white shadow-sm">
+        <div className="container-custom py-8">
+          <h1 className="text-4xl font-bold mb-2">Browse Properties</h1>
+          <p className="text-gray-600">
+            Find your perfect home from our collection of {data?.total || 0} properties
+          </p>
+        </div>
+      </div>
+
+      <div className="container-custom py-8">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Filters Sidebar */}
+          <aside className="lg:w-80 shrink-0">
+            <div className="bg-white rounded-xl shadow-md p-6 sticky top-24">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold">Filters</h2>
+                <button
+                  onClick={clearFilters}
+                  className="text-primary-600 text-sm hover:underline"
+                >
+                  Clear All
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                {/* Search */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Search
+                  </label>
+                  <input
+                    type="text"
+                    name="search"
+                    value={filters.search}
+                    onChange={handleFilterChange}
+                    placeholder="Search properties..."
+                    className="input-field"
+                  />
+                </div>
+
+                {/* Property Type */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Property Type
+                  </label>
+                  <select
+                    name="type"
+                    value={filters.type}
+                    onChange={handleFilterChange}
+                    className="input-field"
+                  >
+                    <option value="">All Types</option>
+                    <option value="apartment">Apartment</option>
+                    <option value="house">House</option>
+                    <option value="villa">Villa</option>
+                    <option value="commercial">Commercial</option>
+                    <option value="land">Land</option>
+                  </select>
+                </div>
+
+                {/* Status */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Status
+                  </label>
+                  <select
+                    name="status"
+                    value={filters.status}
+                    onChange={handleFilterChange}
+                    className="input-field"
+                  >
+                    <option value="">All</option>
+                    <option value="for-sale">For Sale</option>
+                    <option value="for-rent">For Rent</option>
+                  </select>
+                </div>
+
+                {/* Price Range */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Price Range (ETB)
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <input
+                      type="number"
+                      name="priceMin"
+                      value={filters.priceMin}
+                      onChange={handleFilterChange}
+                      placeholder="Min"
+                      className="input-field"
+                    />
+                    <input
+                      type="number"
+                      name="priceMax"
+                      value={filters.priceMax}
+                      onChange={handleFilterChange}
+                      placeholder="Max"
+                      className="input-field"
+                    />
+                  </div>
+                </div>
+
+                {/* Bedrooms */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Bedrooms
+                  </label>
+                  <select
+                    name="bedrooms"
+                    value={filters.bedrooms}
+                    onChange={handleFilterChange}
+                    className="input-field"
+                  >
+                    <option value="">Any</option>
+                    <option value="1">1+</option>
+                    <option value="2">2+</option>
+                    <option value="3">3+</option>
+                    <option value="4">4+</option>
+                    <option value="5">5+</option>
+                  </select>
+                </div>
+
+                {/* Location */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Location
+                  </label>
+                  <select
+                    name="location"
+                    value={filters.location}
+                    onChange={handleFilterChange}
+                    className="input-field"
+                  >
+                    <option value="">All Locations</option>
+                    <option value="Bole">Bole</option>
+                    <option value="Kirkos">Kirkos</option>
+                    <option value="Yeka">Yeka</option>
+                    <option value="Arada">Arada</option>
+                    <option value="Lideta">Lideta</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          {/* Properties Grid */}
+          <div className="flex-1">
+            {isLoading ? (
+              <div className="flex items-center justify-center py-20">
+                <LoadingSpinner size="lg" />
+              </div>
+            ) : data?.data?.length === 0 ? (
+              <div className="bg-white rounded-xl shadow-md p-12 text-center">
+                <div className="text-6xl mb-4">🏠</div>
+                <h3 className="text-2xl font-bold mb-2">No Properties Found</h3>
+                <p className="text-gray-600 mb-6">
+                  Try adjusting your filters to find more properties
+                </p>
+                <button onClick={clearFilters} className="btn-primary">
+                  Clear Filters
+                </button>
+              </div>
+            ) : (
+              <>
+                {/* Results Header */}
+                <div className="flex items-center justify-between mb-6">
+                  <p className="text-gray-600">
+                    Showing {data?.data?.length || 0} of {data?.total || 0} properties
+                  </p>
+                  <select className="input-field w-auto">
+                    <option>Sort: Featured</option>
+                    <option>Price: Low to High</option>
+                    <option>Price: High to Low</option>
+                    <option>Newest First</option>
+                  </select>
+                </div>
+
+                {/* Properties Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+                  {data?.data?.map((property) => (
+                    <PropertyCard key={property.id} property={property} />
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-center space-x-2">
+                    <button
+                      onClick={() => setPage(Math.max(1, page - 1))}
+                      disabled={page === 1}
+                      className="px-4 py-2 border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                    >
+                      Previous
+                    </button>
+                    
+                    {[...Array(totalPages)].map((_, i) => (
+                      <button
+                        key={i + 1}
+                        onClick={() => setPage(i + 1)}
+                        className={`px-4 py-2 rounded-lg ${
+                          page === i + 1
+                            ? 'bg-primary-600 text-white'
+                            : 'border hover:bg-gray-50'
+                        }`}
+                      >
+                        {i + 1}
+                      </button>
+                    ))}
+
+                    <button
+                      onClick={() => setPage(Math.min(totalPages, page + 1))}
+                      disabled={page === totalPages}
+                      className="px-4 py-2 border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                    >
+                      Next
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default PropertyListingPage;
