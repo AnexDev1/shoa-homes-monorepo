@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useSearchParams } from 'react-router-dom';
 import { propertiesAPI } from '../../services/api';
 import PropertyCard from '../../components/PropertyCard';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
 const PropertyListingPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [filters, setFilters] = useState({
     search: '',
     type: '',
@@ -14,22 +16,61 @@ const PropertyListingPage = () => {
     location: '',
     status: '',
   });
+  const [sortBy, setSortBy] = useState('newest');
   const [page, setPage] = useState(1);
   const limit = 12;
 
+  // Initialize filters and sort from URL params
+  useEffect(() => {
+    const urlFilters = {
+      search: searchParams.get('search') || '',
+      type: searchParams.get('type') || '',
+      priceMin: searchParams.get('priceMin') || '',
+      priceMax: searchParams.get('priceMax') || '',
+      bedrooms: searchParams.get('bedrooms') || '',
+      location: searchParams.get('location') || '',
+      status: searchParams.get('status') || '',
+    };
+    setFilters(urlFilters);
+    setSortBy(searchParams.get('sort') || 'newest');
+    setPage(1); // Reset to first page when filters change
+  }, [searchParams]);
+
   const { data, isLoading } = useQuery({
-    queryKey: ['properties', filters, page],
-    queryFn: () => propertiesAPI.getAll({ ...filters, page, limit }),
+    queryKey: ['properties', filters, sortBy, page],
+    queryFn: () => propertiesAPI.getAll({ ...filters, sort: sortBy, page, limit }),
   });
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilters({ ...filters, [name]: value });
+    const newFilters = { ...filters, [name]: value };
+    setFilters(newFilters);
     setPage(1); // Reset to first page on filter change
+    
+    // Update URL params
+    const params = new URLSearchParams();
+    Object.entries(newFilters).forEach(([key, val]) => {
+      if (val) params.set(key, val);
+    });
+    if (sortBy !== 'newest') params.set('sort', sortBy);
+    setSearchParams(params);
+  };
+
+  const handleSortChange = (value) => {
+    setSortBy(value);
+    setPage(1);
+    
+    // Update URL params
+    const params = new URLSearchParams();
+    Object.entries(filters).forEach(([key, val]) => {
+      if (val) params.set(key, val);
+    });
+    if (value !== 'newest') params.set('sort', value);
+    setSearchParams(params);
   };
 
   const clearFilters = () => {
-    setFilters({
+    const clearedFilters = {
       search: '',
       type: '',
       priceMin: '',
@@ -37,8 +78,11 @@ const PropertyListingPage = () => {
       bedrooms: '',
       location: '',
       status: '',
-    });
+    };
+    setFilters(clearedFilters);
+    setSortBy('newest');
     setPage(1);
+    setSearchParams(new URLSearchParams()); // Clear URL params
   };
 
   const totalPages = data ? Math.ceil(data.total / limit) : 0;
@@ -193,6 +237,28 @@ const PropertyListingPage = () => {
 
           {/* Properties Grid */}
           <div className="flex-1">
+            {/* Sort and Results Header */}
+            <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="text-gray-600">
+                  {data?.total || 0} properties found
+                </div>
+                <div className="flex items-center gap-2">
+                  <label className="text-sm font-medium text-gray-700">Sort by:</label>
+                  <select
+                    value={sortBy}
+                    onChange={(e) => handleSortChange(e.target.value)}
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:border-primary-500 focus:outline-none text-sm"
+                  >
+                    <option value="newest">Newest First</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="area">Area: Largest First</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
             {isLoading ? (
               <div className="flex items-center justify-center py-20">
                 <LoadingSpinner size="lg" />

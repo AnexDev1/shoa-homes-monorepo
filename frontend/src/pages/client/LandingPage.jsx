@@ -1,11 +1,17 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { Award, Gem, MapPin, Handshake, Star, Phone, Mail, ChevronRight } from 'lucide-react';
+import { Award, Gem, MapPin, Handshake, Star, Phone, Mail, ChevronRight, Search } from 'lucide-react';
 import { mockProperties, whyChooseUs, mockTestimonials, companyStats } from '../../data/mockData';
 import PropertyCard from '../../components/PropertyCard';
 
 const LandingPage = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [searchFilters, setSearchFilters] = useState({
+    location: '',
+    type: '',
+    priceRange: '',
+  });
+  const navigate = useNavigate();
   const featuredProperties = mockProperties.filter(p => p.featured).slice(0, 6);
 
   useEffect(() => {
@@ -15,6 +21,47 @@ const LandingPage = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleSearchFilterChange = (field, value) => {
+    setSearchFilters(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+    
+    if (searchFilters.location) {
+      params.set('location', searchFilters.location);
+    }
+    
+    if (searchFilters.type) {
+      params.set('type', searchFilters.type.toLowerCase());
+    }
+    
+    // Convert price range to min/max
+    if (searchFilters.priceRange) {
+      switch (searchFilters.priceRange) {
+        case 'Under 5M ETB':
+          params.set('priceMax', '5000000');
+          break;
+        case '5M - 15M ETB':
+          params.set('priceMin', '5000000');
+          params.set('priceMax', '15000000');
+          break;
+        case '15M - 30M ETB':
+          params.set('priceMin', '15000000');
+          params.set('priceMax', '30000000');
+          break;
+        case '30M+ ETB':
+          params.set('priceMin', '30000000');
+          break;
+      }
+    }
+    
+    navigate(`/properties?${params.toString()}`);
+  };
 
   return (
     <div className="overflow-hidden">
@@ -88,29 +135,40 @@ const LandingPage = () => {
             <input
               type="text"
               placeholder="Location (e.g., Bole, CMC)..."
+              value={searchFilters.location}
+              onChange={(e) => handleSearchFilterChange('location', e.target.value)}
               className="px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-gold-500 focus:outline-none transition-colors"
             />
-            <select className="px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-gold-500 focus:outline-none transition-colors">
-              <option>Property Type</option>
-              <option>Apartment</option>
-              <option>House</option>
-              <option>Villa</option>
-              <option>Condo</option>
-              <option>Commercial</option>
-            </select>
-            <select className="px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-gold-500 focus:outline-none transition-colors">
-              <option>Price Range</option>
-              <option>Under 5M ETB</option>
-              <option>5M - 15M ETB</option>
-              <option>15M - 30M ETB</option>
-              <option>30M+ ETB</option>
-            </select>
-            <Link 
-              to="/properties" 
-              className="px-6 py-3 bg-gradient-to-r from-navy-700 to-navy-900 text-white font-semibold rounded-lg hover:from-navy-600 hover:to-navy-800 transition-all duration-300 text-center"
+            <select 
+              value={searchFilters.type}
+              onChange={(e) => handleSearchFilterChange('type', e.target.value)}
+              className="px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-gold-500 focus:outline-none transition-colors"
             >
+              <option value="">Property Type</option>
+              <option value="Apartment">Apartment</option>
+              <option value="House">House</option>
+              <option value="Villa">Villa</option>
+              <option value="Condo">Condo</option>
+              <option value="Commercial">Commercial</option>
+            </select>
+            <select 
+              value={searchFilters.priceRange}
+              onChange={(e) => handleSearchFilterChange('priceRange', e.target.value)}
+              className="px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-gold-500 focus:outline-none transition-colors"
+            >
+              <option value="">Price Range</option>
+              <option value="Under 5M ETB">Under 5M ETB</option>
+              <option value="5M - 15M ETB">5M - 15M ETB</option>
+              <option value="15M - 30M ETB">15M - 30M ETB</option>
+              <option value="30M+ ETB">30M+ ETB</option>
+            </select>
+            <button 
+              onClick={handleSearch}
+              className="px-6 py-3 bg-gradient-to-r from-navy-700 to-navy-900 text-white font-semibold rounded-lg hover:from-navy-600 hover:to-navy-800 transition-all duration-300 flex items-center justify-center gap-2"
+            >
+              <Search className="h-4 w-4" />
               Search Properties
-            </Link>
+            </button>
           </div>
         </div>
       </section>

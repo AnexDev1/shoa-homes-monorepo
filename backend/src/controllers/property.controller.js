@@ -59,20 +59,237 @@ let properties = [
     featured: true,
     createdAt: new Date().toISOString(),
   },
+  {
+    id: '3',
+    title: 'Cozy Studio Apartment',
+    description: 'Perfect starter home in a prime location. This modern studio apartment features an open layout, modern appliances, and is close to shopping and entertainment.',
+    price: 8500000,
+    priceType: 'total',
+    type: 'Apartment',
+    status: 'For Sale',
+    location: 'CMC, Addis Ababa',
+    bedrooms: 1,
+    bathrooms: 1,
+    area: 65,
+    images: [
+      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&q=80',
+    ],
+    amenities: [
+      'Modern Kitchen',
+      'Parking',
+      'Security',
+      'Elevator',
+    ],
+    featured: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: '4',
+    title: 'Spacious Family House',
+    description: 'Ideal family home with 4 bedrooms, large garden, and plenty of space for children to play. Located in a quiet residential area.',
+    price: 22000000,
+    priceType: 'total',
+    type: 'House',
+    status: 'For Sale',
+    location: 'Yeka, Addis Ababa',
+    bedrooms: 4,
+    bathrooms: 3,
+    area: 320,
+    images: [
+      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80',
+    ],
+    amenities: [
+      'Garden',
+      'Garage',
+      'Security',
+      'Water Tank',
+    ],
+    featured: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: '5',
+    title: 'Commercial Office Space',
+    description: 'Prime commercial space in the heart of the business district. Perfect for offices, clinics, or retail businesses.',
+    price: 150000,
+    priceType: 'per-month',
+    type: 'Commercial',
+    status: 'For Rent',
+    location: 'Arada, Addis Ababa',
+    bedrooms: 0,
+    bathrooms: 2,
+    area: 200,
+    images: [
+      'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80',
+    ],
+    amenities: [
+      'Parking',
+      'Security',
+      'Elevator',
+      'Meeting Rooms',
+    ],
+    featured: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: '6',
+    title: 'Luxury Condo with Amenities',
+    description: 'High-end condominium with access to pool, gym, and concierge services. Modern design with premium finishes throughout.',
+    price: 35000000,
+    priceType: 'total',
+    type: 'Condo',
+    status: 'For Sale',
+    location: 'Bole, Addis Ababa',
+    bedrooms: 3,
+    bathrooms: 2,
+    area: 160,
+    images: [
+      'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80',
+    ],
+    amenities: [
+      'Pool',
+      'Gym',
+      'Concierge',
+      'Parking',
+      'Security',
+    ],
+    featured: true,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: '7',
+    title: 'Affordable Townhouse',
+    description: 'Budget-friendly townhouse perfect for first-time buyers. Well-maintained with modern amenities in a developing area.',
+    price: 12000000,
+    priceType: 'total',
+    type: 'House',
+    status: 'For Sale',
+    location: 'Lideta, Addis Ababa',
+    bedrooms: 3,
+    bathrooms: 2,
+    area: 180,
+    images: [
+      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80',
+    ],
+    amenities: [
+      'Parking',
+      'Security',
+      'Water Tank',
+    ],
+    featured: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: '8',
+    title: 'Executive Penthouse',
+    description: 'Ultra-luxury penthouse with private elevator, rooftop terrace, and breathtaking city views. The epitome of sophisticated living.',
+    price: 75000000,
+    priceType: 'total',
+    type: 'Apartment',
+    status: 'For Sale',
+    location: 'Bole, Addis Ababa',
+    bedrooms: 4,
+    bathrooms: 4,
+    area: 400,
+    images: [
+      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80',
+    ],
+    amenities: [
+      'Private Elevator',
+      'Rooftop Terrace',
+      'City View',
+      'Smart Home',
+      'Wine Cellar',
+      'Home Theater',
+    ],
+    featured: true,
+    createdAt: new Date().toISOString(),
+  },
 ];
 
 export const getAllProperties = async (req, res) => {
   try {
-    const { featured, limit = 50, page = 1 } = req.query;
-    
+    const {
+      featured,
+      limit = 50,
+      page = 1,
+      search,
+      type,
+      priceMin,
+      priceMax,
+      bedrooms,
+      location,
+      status,
+      sort = 'newest'
+    } = req.query;
+
     let filtered = [...properties];
-    
+
+    // Featured filter
     if (featured === 'true') {
       filtered = filtered.filter(p => p.featured);
     }
 
+    // Search filter (title, description, location)
+    if (search) {
+      const searchLower = search.toLowerCase();
+      filtered = filtered.filter(p =>
+        p.title.toLowerCase().includes(searchLower) ||
+        p.description.toLowerCase().includes(searchLower) ||
+        p.location.toLowerCase().includes(searchLower)
+      );
+    }
+
+    // Type filter
+    if (type) {
+      filtered = filtered.filter(p => p.type.toLowerCase() === type.toLowerCase());
+    }
+
+    // Price range filters
+    if (priceMin) {
+      const minPrice = parseFloat(priceMin);
+      filtered = filtered.filter(p => p.price >= minPrice);
+    }
+    if (priceMax) {
+      const maxPrice = parseFloat(priceMax);
+      filtered = filtered.filter(p => p.price <= maxPrice);
+    }
+
+    // Bedrooms filter
+    if (bedrooms) {
+      const minBedrooms = parseInt(bedrooms);
+      filtered = filtered.filter(p => p.bedrooms >= minBedrooms);
+    }
+
+    // Location filter
+    if (location) {
+      filtered = filtered.filter(p => p.location.toLowerCase().includes(location.toLowerCase()));
+    }
+
+    // Status filter
+    if (status) {
+      filtered = filtered.filter(p => p.status.toLowerCase().replace(' ', '-') === status.toLowerCase());
+    }
+
+    // Sorting
+    switch (sort) {
+      case 'price-low':
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-high':
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case 'area':
+        filtered.sort((a, b) => b.area - a.area);
+        break;
+      case 'newest':
+      default:
+        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        break;
+    }
+
     const total = filtered.length;
-    const startIndex = (page - 1) * limit;
+    const startIndex = (page - 1) * parseInt(limit);
     const endIndex = startIndex + parseInt(limit);
     const paginatedData = filtered.slice(startIndex, endIndex);
 
