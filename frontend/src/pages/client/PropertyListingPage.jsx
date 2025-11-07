@@ -276,19 +276,6 @@ const PropertyListingPage = () => {
               </div>
             ) : (
               <>
-                {/* Results Header */}
-                <div className="flex items-center justify-between mb-6">
-                  <p className="text-gray-600">
-                    Showing {data?.data?.length || 0} of {data?.total || 0} properties
-                  </p>
-                  <select className="input-field w-auto">
-                    <option>Sort: Featured</option>
-                    <option>Price: Low to High</option>
-                    <option>Price: High to Low</option>
-                    <option>Newest First</option>
-                  </select>
-                </div>
-
                 {/* Properties Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
                   {data?.data?.map((property) => (
