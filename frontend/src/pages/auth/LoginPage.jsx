@@ -17,7 +17,7 @@ const LoginPage = () => {
     mutationFn: authAPI.login,
     onSuccess: (data) => {
       setAuth(data.user, data.token);
-      navigate(data.user.role === 'admin' ? '/admin' : '/');
+      navigate(data.user.role === 'ADMIN' ? '/admin' : '/');
     },
     onError: (err) => {
       setError(err.response?.data?.message || 'Login failed. Please try again.');

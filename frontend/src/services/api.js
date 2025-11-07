@@ -4,12 +4,12 @@ import apiClient from '../lib/api';
 export const authAPI = {
   login: async (credentials) => {
     const { data } = await apiClient.post('/auth/login', credentials);
-    return data;
+    return data.data;
   },
   
   register: async (userData) => {
     const { data } = await apiClient.post('/auth/register', userData);
-    return data;
+    return data.data;
   },
   
   getCurrentUser: async () => {
