@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { authAPI } from '../../services/api';
 import { useAuthStore } from '../../store/authStore';
+import { Mail, Lock, Home, AlertCircle } from 'lucide-react';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -39,24 +40,26 @@ const LoginPage = () => {
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 bg-primary-600 rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-2xl">SH</span>
+            <div className="w-16 h-16 bg-gradient-to-br from-gold-500 to-gold-600 rounded-xl flex items-center justify-center shadow-lg">
+              <Home className="w-8 h-8 text-white" />
             </div>
           </div>
-          <h2 className="text-3xl font-bold">Welcome Back</h2>
+          <h2 className="text-3xl font-bold text-navy-900">Welcome Back</h2>
           <p className="text-gray-600 mt-2">Sign in to your account</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-md p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
-                {error}
+              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm flex items-start gap-2">
+                <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                <span>{error}</span>
               </div>
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                <Mail className="w-4 h-4" />
                 Email Address
               </label>
               <input
@@ -71,7 +74,8 @@ const LoginPage = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                <Lock className="w-4 h-4" />
                 Password
               </label>
               <input

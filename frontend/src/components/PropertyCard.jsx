@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { MapPin, Bed, Bath, Maximize2, Star } from 'lucide-react';
 
 const PropertyCard = ({ property }) => {
   const formatPrice = (price) => {
@@ -40,9 +41,7 @@ const PropertyCard = ({ property }) => {
           {property.featured && (
             <div className="absolute top-4 left-4">
               <span className="px-3 py-1 bg-red-500 text-white rounded-full text-xs font-bold flex items-center gap-1">
-                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
+                <Star className="w-3 h-3 fill-current" />
                 FEATURED
               </span>
             </div>
@@ -74,30 +73,22 @@ const PropertyCard = ({ property }) => {
           
           {/* Location */}
           <div className="flex items-center text-gray-600 text-sm mb-4">
-            <svg className="w-4 h-4 mr-2 text-gold-500" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-            </svg>
+            <MapPin className="w-4 h-4 mr-2 text-gold-500" />
             <span className="line-clamp-1 font-medium">{property.location}</span>
           </div>
 
           {/* Property Details */}
           <div className="flex items-center justify-between pt-4 border-t border-gray-100">
             <div className="flex items-center text-gray-700 text-sm font-medium">
-              <svg className="w-5 h-5 mr-1 text-navy-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-              </svg>
+              <Bed className="w-5 h-5 mr-1 text-navy-600" />
               <span>{property.bedrooms} Beds</span>
             </div>
             <div className="flex items-center text-gray-700 text-sm font-medium">
-              <svg className="w-5 h-5 mr-1 text-navy-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
+              <Bath className="w-5 h-5 mr-1 text-navy-600" />
               <span>{property.bathrooms} Baths</span>
             </div>
             <div className="flex items-center text-gray-700 text-sm font-medium">
-              <svg className="w-5 h-5 mr-1 text-navy-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-              </svg>
+              <Maximize2 className="w-5 h-5 mr-1 text-navy-600" />
               <span>{property.area} m²</span>
             </div>
           </div>

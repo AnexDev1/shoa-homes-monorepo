@@ -563,22 +563,22 @@ export const companyStats = [
 // Why Choose Us Data
 export const whyChooseUs = [
   {
-    icon: '🏆',
+    icon: 'Award',
     title: 'Trusted Developers',
     description: 'Over 15 years of excellence in Ethiopian real estate market with proven track record.',
   },
   {
-    icon: '💎',
+    icon: 'Gem',
     title: 'Affordable Luxury',
     description: 'Premium properties at competitive prices. We make luxury living accessible to everyone.',
   },
   {
-    icon: '📍',
+    icon: 'MapPin',
     title: 'Prime Locations',
     description: 'Strategic locations in Addis Ababa\'s most sought-after neighborhoods.',
   },
   {
-    icon: '🤝',
+    icon: 'Handshake',
     title: 'Personalized Service',
     description: 'Dedicated agents who understand your needs and work tirelessly to exceed expectations.',
   },

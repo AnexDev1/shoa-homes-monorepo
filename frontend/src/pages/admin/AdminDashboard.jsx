@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { dashboardAPI } from '../../services/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { Home, CheckCircle, Mail, Users, TrendingUp, TrendingDown } from 'lucide-react';
 import {
   LineChart,
   Line,
@@ -32,30 +33,34 @@ const AdminDashboard = () => {
     {
       title: 'Total Properties',
       value: stats?.totalProperties || 0,
-      icon: '🏠',
+      icon: Home,
       color: 'bg-blue-500',
       change: '+12%',
+      trend: 'up',
     },
     {
       title: 'Active Listings',
       value: stats?.activeListings || 0,
-      icon: '✅',
+      icon: CheckCircle,
       color: 'bg-green-500',
       change: '+8%',
+      trend: 'up',
     },
     {
       title: 'Inquiries',
       value: stats?.totalInquiries || 0,
-      icon: '✉️',
+      icon: Mail,
       color: 'bg-purple-500',
       change: '+24%',
+      trend: 'up',
     },
     {
       title: 'Total Users',
       value: stats?.totalUsers || 0,
-      icon: '👥',
+      icon: Users,
       color: 'bg-orange-500',
       change: '+5%',
+      trend: 'up',
     },
   ];
 
@@ -85,20 +90,25 @@ const AdminDashboard = () => {
 
       {/* Stat Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {statCards.map((stat, index) => (
-          <div key={index} className="bg-white rounded-xl shadow-md p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className={`${stat.color} w-12 h-12 rounded-lg flex items-center justify-center text-2xl`}>
-                {stat.icon}
+        {statCards.map((stat, index) => {
+          const IconComponent = stat.icon;
+          const TrendIcon = stat.trend === 'up' ? TrendingUp : TrendingDown;
+          return (
+            <div key={index} className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+              <div className="flex items-center justify-between mb-4">
+                <div className={`${stat.color} w-12 h-12 rounded-lg flex items-center justify-center text-white`}>
+                  <IconComponent className="w-6 h-6" />
+                </div>
+                <span className={`${stat.trend === 'up' ? 'text-green-600' : 'text-red-600'} text-sm font-semibold flex items-center gap-1`}>
+                  <TrendIcon className="w-4 h-4" />
+                  {stat.change}
+                </span>
               </div>
-              <span className="text-green-600 text-sm font-semibold">
-                {stat.change}
-              </span>
+              <h3 className="text-gray-600 text-sm mb-1">{stat.title}</h3>
+              <p className="text-3xl font-bold">{stat.value}</p>
             </div>
-            <h3 className="text-gray-600 text-sm mb-1">{stat.title}</h3>
-            <p className="text-3xl font-bold">{stat.value}</p>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Charts */}
