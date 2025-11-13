@@ -6,14 +6,24 @@ export const authAPI = {
     const { data } = await apiClient.post('/auth/login', credentials);
     return data.data;
   },
-  
+
   register: async (userData) => {
     const { data } = await apiClient.post('/auth/register', userData);
     return data.data;
   },
-  
+
   getCurrentUser: async () => {
     const { data } = await apiClient.get('/auth/me');
+    return data;
+  },
+
+  updateProfile: async (userData) => {
+    const { data } = await apiClient.put('/auth/me', userData);
+    return data;
+  },
+
+  changePassword: async (passwordData) => {
+    const { data } = await apiClient.put('/auth/change-password', passwordData);
     return data;
   },
 };
@@ -24,27 +34,27 @@ export const propertiesAPI = {
     const { data } = await apiClient.get('/properties', { params });
     return data;
   },
-  
+
   getById: async (id) => {
     const { data } = await apiClient.get(`/properties/${id}`);
     return data;
   },
-  
+
   create: async (propertyData) => {
     const { data } = await apiClient.post('/properties', propertyData);
     return data;
   },
-  
+
   update: async (id, propertyData) => {
     const { data } = await apiClient.put(`/properties/${id}`, propertyData);
     return data;
   },
-  
+
   delete: async (id) => {
     const { data } = await apiClient.delete(`/properties/${id}`);
     return data;
   },
-  
+
   uploadImages: async (propertyId, files) => {
     const formData = new FormData();
     files.forEach((file) => formData.append('images', file));
@@ -65,12 +75,12 @@ export const inquiriesAPI = {
     const { data } = await apiClient.post('/inquiries', inquiryData);
     return data;
   },
-  
+
   getAll: async (params) => {
     const { data } = await apiClient.get('/inquiries', { params });
     return data;
   },
-  
+
   markAsRead: async (id) => {
     const { data } = await apiClient.patch(`/inquiries/${id}/read`);
     return data;

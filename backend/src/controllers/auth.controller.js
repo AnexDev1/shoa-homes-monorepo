@@ -1,137 +1,197 @@
 import bcrypt from 'bcryptjs';
 import { generateToken } from '../config/jwt.js';
+import { PrismaClient } from '@prisma/client';
 
-// Mock user data for development
-const mockUsers = [
-  {
-    id: '1',
-    email: 'admin@shoahomes.com',
-    password: '$2a$10$YourHashedPasswordHere', // 'admin123' hashed
-    name: 'Admin User',
-    phone: '+251 911 000000',
-    role: 'ADMIN',
-  },
-  {
-    id: '2',
-    email: 'user@shoahomes.com',
-    password: '$2a$10$YourHashedPasswordHere', // 'user123' hashed
-    name: 'Regular User',
-    phone: '+251 922 000000',
-    role: 'USER',
-  },
-];
+const prisma = new PrismaClient();
 
 export const register = async (req, res) => {
   try {
     const { email, password, name, phone } = req.body;
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
 
-    // Mock implementation
+    if (existingUser) {
+      return res.status(400).json({ error: 'Email already in use' });
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = {
-      id: Date.now().toString(),
-      email,
-      password: hashedPassword,
-      name,
-      phone,
-      role: 'USER',
-    };
+    const newUser = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        name,
+        phone,
+        role: 'USER',
+      },
+    });
 
-    const token = generateToken(newUser.id);
+    const token = generateToken({
+      id: newUser.id,
+      role: newUser.role,
+    });
+    const { password: _, ...userWithoutPassword } = newUser;
 
     res.status(201).json({
       success: true,
       message: 'User registered successfully',
       data: {
-        user: {
-          id: newUser.id,
-          email: newUser.email,
-          name: newUser.name,
-          role: newUser.role,
-        },
+        user: userWithoutPassword,
         token,
       },
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Registration failed',
-      error: error.message,
-    });
+    console.error('Registration failed:', error);
+    res
+      .status(500)
+      .json({ error: 'Error registering user', details: error.message });
   }
 };
 
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    // Mock implementation for demo
-    const user = mockUsers.find((u) => u.email === email);
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
 
     if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid credentials',
-      });
+      return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    // For demo, accept predefined passwords
-    const validPasswords = {
-      'admin@shoahomes.com': 'admin123',
-      'user@shoahomes.com': 'user123',
-    };
-
-    if (password !== validPasswords[email]) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid credentials',
-      });
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    const token = generateToken(user.id);
+    const token = generateToken({
+      id: user.id,
+      role: user.role,
+    });
+
+    const { password: _, ...userWithoutPassword } = user;
 
     res.json({
       success: true,
       message: 'Login successful',
       data: {
-        user: {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-          phone: user.phone,
-        },
+        user: userWithoutPassword,
         token,
       },
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Login failed',
-      error: error.message,
+    console.error('Login error:', error);
+    res.status(500).json({ error: 'Error logging in', details: error.message });
+  }
+};
+
+export const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const userId = req.user.id;
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
     });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: 'Current password is incorrect' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword },
+    });
+
+    res.json({
+      success: true,
+      message: 'Password updated successfully',
+    });
+  } catch (error) {
+    console.error('Password change error:', error);
+    res.status(500).json({
+      error: 'Error changing password',
+      details: error.message,
+    });
+  }
+};
+
+export const updateProfile = async (req, res) => {
+  try {
+    const { name, email, phone } = req.body;
+    const userId = req.user.id;
+
+    if (email) {
+      const existingUser = await prisma.user.findFirst({
+        where: {
+          email,
+          id: { not: userId },
+        },
+      });
+
+      if (existingUser) {
+        return res.status(400).json({ error: 'Email already in use' });
+      }
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        name,
+        email,
+        phone,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        role: true,
+      },
+    });
+
+    res.json(updatedUser);
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    res.status(500).json({ error: 'Failed to update profile' });
   }
 };
 
 export const getCurrentUser = async (req, res) => {
   try {
-    // Mock implementation
-    const user = mockUsers[0];
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        phone: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
 
     res.json({
       success: true,
-      data: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-        phone: user.phone,
-      },
+      data: user,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Failed to get user',
-      error: error.message,
-    });
+    console.error('Get current user error:', error);
+    res
+      .status(500)
+      .json({ error: 'Error fetching user', details: error.message });
   }
 };

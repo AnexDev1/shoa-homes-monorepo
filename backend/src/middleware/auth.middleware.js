@@ -1,42 +1,75 @@
 import { verifyToken } from '../config/jwt.js';
+import { PrismaClient } from '@prisma/client';
 
-export const authenticate = (req, res, next) => {
+const prisma = new PrismaClient();
+
+export const authenticate = async (req, res, next) => {
   try {
     const token = req.headers.authorization?.split(' ')[1];
 
     if (!token) {
       return res.status(401).json({
         success: false,
-        message: 'No token provided',
+        error: 'No token provided',
       });
     }
 
     const decoded = verifyToken(token);
+    console.log('Decoded token:', decoded);
 
-    if (!decoded) {
+    if (!decoded || !decoded.id) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid or expired token',
+        error: 'Invalid or expired token',
       });
     }
 
-    req.userId = decoded.userId;
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.id },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+      },
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        error: 'User not found',
+      });
+    }
+
+    req.user = user;
     next();
   } catch (error) {
-    res.status(401).json({
+    console.error('Authentication error:', error);
+    return res.status(401).json({
       success: false,
-      message: 'Authentication failed',
+      error: 'Authentication failed',
+      details:
+        process.env.NODE_ENV === 'development' ? error.message : undefined,
     });
   }
 };
 
-export const requireAdmin = (req, res, next) => {
-  // Mock implementation - in production, check user role from database
-  if (req.user?.role !== 'ADMIN') {
-    return res.status(403).json({
-      success: false,
-      message: 'Admin access required',
-    });
-  }
-  next();
+export const authorize = (roles = []) => {
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        error: 'Not authenticated',
+      });
+    }
+
+    if (roles.length && !roles.includes(req.user.role)) {
+      return res.status(403).json({
+        success: false,
+        error: 'Not authorized to access this resource',
+      });
+    }
+
+    next();
+  };
 };
