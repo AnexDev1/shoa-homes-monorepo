@@ -13,8 +13,7 @@
     "dev:backend": "npm run dev --workspace=backend",
     "build": "npm run build --workspace=frontend",
     "lint": "npm run lint --workspaces",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
-    "prepare": "husky install"
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\""
   },
   "devDependencies": {
     "@commitlint/cli": "^18.4.3",
