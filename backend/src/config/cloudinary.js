@@ -1,7 +1,25 @@
 import { v2 as cloudinary } from 'cloudinary';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load environment variables from .env file in the backend directory
+const envPath = path.resolve(__dirname, '../../../.env');
+dotenv.config({ path: envPath });
+
+// Verify Cloudinary configuration
+if (
+  !process.env.CLOUDINARY_CLOUD_NAME ||
+  !process.env.CLOUDINARY_API_KEY ||
+  !process.env.CLOUDINARY_API_SECRET
+) {
+  throw new Error('Missing required Cloudinary environment variables');
+}
+
+// Cloudinary configuration is valid, proceed with initialization
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -11,7 +29,11 @@ cloudinary.config({
 
 export const uploadToCloudinary = async (file, folder = 'shoa-homes') => {
   try {
-    const result = await cloudinary.uploader.upload(file.tempFilePath, {
+    // Normalize the file path for Windows
+    const normalizedPath = file.tempFilePath.replace(/\\/g, '/');
+
+    // Use the normalized temp file path for upload
+    const result = await cloudinary.uploader.upload(normalizedPath, {
       folder,
       resource_type: 'auto',
     });
@@ -21,8 +43,7 @@ export const uploadToCloudinary = async (file, folder = 'shoa-homes') => {
       publicId: result.public_id,
     };
   } catch (error) {
-    console.error('Cloudinary upload error:', error);
-    throw new Error('Failed to upload image');
+    throw new Error(`Failed to upload image: ${error.message}`);
   }
 };
 
@@ -30,7 +51,7 @@ export const deleteFromCloudinary = async (publicId) => {
   try {
     await cloudinary.uploader.destroy(publicId);
   } catch (error) {
-    console.error('Cloudinary delete error:', error);
+    // Silently handle delete errors
   }
 };
 

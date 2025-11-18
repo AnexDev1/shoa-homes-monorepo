@@ -1,8 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { generateToken } from '../config/jwt.js';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '../config/prisma.js';
 
 export const register = async (req, res) => {
   try {
@@ -40,10 +38,10 @@ export const register = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Registration failed:', error);
-    res
-      .status(500)
-      .json({ error: 'Error registering user', details: error.message });
+    res.status(500).json({
+      error: 'Error registering user',
+      details: error.message,
+    });
   }
 };
 
@@ -79,8 +77,10 @@ export const login = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ error: 'Error logging in', details: error.message });
+    res.status(500).json({
+      error: 'Error logging in',
+      details: error.message,
+    });
   }
 };
 
@@ -116,7 +116,6 @@ export const changePassword = async (req, res) => {
       message: 'Password updated successfully',
     });
   } catch (error) {
-    console.error('Password change error:', error);
     res.status(500).json({
       error: 'Error changing password',
       details: error.message,
@@ -160,8 +159,10 @@ export const updateProfile = async (req, res) => {
 
     res.json(updatedUser);
   } catch (error) {
-    console.error('Error updating profile:', error);
-    res.status(500).json({ error: 'Failed to update profile' });
+    res.status(500).json({
+      error: 'Failed to update profile',
+      details: error.message,
+    });
   }
 };
 
@@ -189,9 +190,9 @@ export const getCurrentUser = async (req, res) => {
       data: user,
     });
   } catch (error) {
-    console.error('Get current user error:', error);
-    res
-      .status(500)
-      .json({ error: 'Error fetching user', details: error.message });
+    res.status(500).json({
+      error: 'Error fetching user',
+      details: error.message,
+    });
   }
 };

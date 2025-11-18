@@ -1,4 +1,5 @@
 import apiClient from '../lib/api';
+import { useAuthStore } from '../store/authStore';
 
 // Auth API
 export const authAPI = {
@@ -41,12 +42,20 @@ export const propertiesAPI = {
   },
 
   create: async (propertyData) => {
-    const { data } = await apiClient.post('/properties', propertyData);
+    const { user } = useAuthStore.getState();
+    const { data } = await apiClient.post('/properties', {
+      ...propertyData,
+      userId: user?.id,
+    });
     return data;
   },
 
   update: async (id, propertyData) => {
-    const { data } = await apiClient.put(`/properties/${id}`, propertyData);
+    const { user } = useAuthStore.getState();
+    const { data } = await apiClient.put(`/properties/${id}`, {
+      ...propertyData,
+      userId: user?.id,
+    });
     return data;
   },
 

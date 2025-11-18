@@ -1,6 +1,28 @@
 import { Link } from 'react-router-dom';
 import { MapPin, Bed, Bath, Maximize2, Star } from 'lucide-react';
 
+// Helper function to get image URL from different formats
+const getImageUrl = (img) => {
+  if (!img) return 'https://via.placeholder.com/400x300?text=No+Image';
+  // If it's a full URL, return as is
+  if (
+    typeof img === 'string' &&
+    (img.startsWith('http') || img.startsWith('blob:'))
+  ) {
+    return img;
+  }
+  // If it's a file object with a preview (from file upload)
+  if (img instanceof File) {
+    return URL.createObjectURL(img);
+  }
+  // If it's an object with a path or url
+  if (typeof img === 'object' && (img.path || img.url)) {
+    return img.path || img.url;
+  }
+  // Fallback to placeholder
+  return 'https://via.placeholder.com/400x300?text=No+Image';
+};
+
 const PropertyCard = ({ property }) => {
   const formatPrice = (price) => {
     if (property.status === 'For Rent') {
@@ -18,21 +40,28 @@ const PropertyCard = ({ property }) => {
         {/* Image */}
         <div className="relative h-64 overflow-hidden">
           <img
-            src={property.images?.[0] || 'https://via.placeholder.com/400x300?text=No+Image'}
+            src={getImageUrl(property.images?.[0])}
             alt={property.title}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             loading="lazy"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src =
+                'https://via.placeholder.com/400x300?text=Image+Not+Available';
+            }}
           />
           {/* Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          
+
           {/* Status Badge */}
           <div className="absolute top-4 right-4">
-            <span className={`px-4 py-2 rounded-full text-xs font-bold backdrop-blur-sm border ${
-              property.status === 'For Sale' 
-                ? 'bg-gold-500/90 text-navy-900 border-gold-300' 
-                : 'bg-navy-700/90 text-white border-navy-500'
-            }`}>
+            <span
+              className={`px-4 py-2 rounded-full text-xs font-bold backdrop-blur-sm border ${
+                property.status === 'For Sale'
+                  ? 'bg-gold-500/90 text-navy-900 border-gold-300'
+                  : 'bg-navy-700/90 text-white border-navy-500'
+              }`}
+            >
               {property.status}
             </span>
           </div>
@@ -70,11 +99,13 @@ const PropertyCard = ({ property }) => {
           <h3 className="text-xl font-bold text-navy-900 mb-2 line-clamp-2 group-hover:text-gold-600 transition-colors">
             {property.title}
           </h3>
-          
+
           {/* Location */}
           <div className="flex items-center text-gray-600 text-sm mb-4">
             <MapPin className="w-4 h-4 mr-2 text-gold-500" />
-            <span className="line-clamp-1 font-medium">{property.location}</span>
+            <span className="line-clamp-1 font-medium">
+              {property.location}
+            </span>
           </div>
 
           {/* Property Details */}
@@ -97,7 +128,7 @@ const PropertyCard = ({ property }) => {
           {property.amenities && property.amenities.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-2">
               {property.amenities.slice(0, 3).map((amenity, index) => (
-                <span 
+                <span
                   key={index}
                   className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded"
                 >

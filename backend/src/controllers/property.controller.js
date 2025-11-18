@@ -1,211 +1,5 @@
-// Mock property data
-let properties = [
-  {
-    id: '1',
-    title: 'Luxury Villa with Pool & Garden',
-    description: 'Experience unparalleled luxury in this stunning 5-bedroom villa featuring a private pool, landscaped garden, and modern amenities. Located in the prestigious Bole area, this property offers the perfect blend of elegance and comfort.',
-    price: 45000000,
-    priceType: 'total',
-    type: 'Villa',
-    status: 'For Sale',
-    location: 'Bole, Addis Ababa',
-    bedrooms: 5,
-    bathrooms: 4,
-    area: 450,
-    images: [
-      'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200&q=80',
-      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80',
-      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80',
-      'https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=1200&q=80',
-    ],
-    amenities: [
-      'Private Pool',
-      'Garden',
-      'Garage',
-      'Security',
-      'Gym',
-      'Smart Home',
-      'Central AC',
-      'Generator',
-    ],
-    featured: true,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '2',
-    title: 'Modern Penthouse with City View',
-    description: 'Stunning penthouse apartment with panoramic views of Addis Ababa. Features floor-to-ceiling windows, Italian marble flooring, and a spacious balcony perfect for entertaining.',
-    price: 28000000,
-    priceType: 'total',
-    type: 'Apartment',
-    status: 'For Sale',
-    location: 'Kazanchis, Addis Ababa',
-    bedrooms: 3,
-    bathrooms: 2,
-    area: 180,
-    images: [
-      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&q=80',
-      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&q=80',
-      'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1200&q=80',
-    ],
-    amenities: [
-      'City View',
-      'Balcony',
-      'Modern Kitchen',
-      'Parking',
-      'Security',
-      'Elevator',
-    ],
-    featured: true,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '3',
-    title: 'Cozy Studio Apartment',
-    description: 'Perfect starter home in a prime location. This modern studio apartment features an open layout, modern appliances, and is close to shopping and entertainment.',
-    price: 8500000,
-    priceType: 'total',
-    type: 'Apartment',
-    status: 'For Sale',
-    location: 'CMC, Addis Ababa',
-    bedrooms: 1,
-    bathrooms: 1,
-    area: 65,
-    images: [
-      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&q=80',
-    ],
-    amenities: [
-      'Modern Kitchen',
-      'Parking',
-      'Security',
-      'Elevator',
-    ],
-    featured: false,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '4',
-    title: 'Spacious Family House',
-    description: 'Ideal family home with 4 bedrooms, large garden, and plenty of space for children to play. Located in a quiet residential area.',
-    price: 22000000,
-    priceType: 'total',
-    type: 'House',
-    status: 'For Sale',
-    location: 'Yeka, Addis Ababa',
-    bedrooms: 4,
-    bathrooms: 3,
-    area: 320,
-    images: [
-      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80',
-    ],
-    amenities: [
-      'Garden',
-      'Garage',
-      'Security',
-      'Water Tank',
-    ],
-    featured: false,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '5',
-    title: 'Commercial Office Space',
-    description: 'Prime commercial space in the heart of the business district. Perfect for offices, clinics, or retail businesses.',
-    price: 150000,
-    priceType: 'per-month',
-    type: 'Commercial',
-    status: 'For Rent',
-    location: 'Arada, Addis Ababa',
-    bedrooms: 0,
-    bathrooms: 2,
-    area: 200,
-    images: [
-      'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80',
-    ],
-    amenities: [
-      'Parking',
-      'Security',
-      'Elevator',
-      'Meeting Rooms',
-    ],
-    featured: false,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '6',
-    title: 'Luxury Condo with Amenities',
-    description: 'High-end condominium with access to pool, gym, and concierge services. Modern design with premium finishes throughout.',
-    price: 35000000,
-    priceType: 'total',
-    type: 'Condo',
-    status: 'For Sale',
-    location: 'Bole, Addis Ababa',
-    bedrooms: 3,
-    bathrooms: 2,
-    area: 160,
-    images: [
-      'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80',
-    ],
-    amenities: [
-      'Pool',
-      'Gym',
-      'Concierge',
-      'Parking',
-      'Security',
-    ],
-    featured: true,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '7',
-    title: 'Affordable Townhouse',
-    description: 'Budget-friendly townhouse perfect for first-time buyers. Well-maintained with modern amenities in a developing area.',
-    price: 12000000,
-    priceType: 'total',
-    type: 'House',
-    status: 'For Sale',
-    location: 'Lideta, Addis Ababa',
-    bedrooms: 3,
-    bathrooms: 2,
-    area: 180,
-    images: [
-      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80',
-    ],
-    amenities: [
-      'Parking',
-      'Security',
-      'Water Tank',
-    ],
-    featured: false,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '8',
-    title: 'Executive Penthouse',
-    description: 'Ultra-luxury penthouse with private elevator, rooftop terrace, and breathtaking city views. The epitome of sophisticated living.',
-    price: 75000000,
-    priceType: 'total',
-    type: 'Apartment',
-    status: 'For Sale',
-    location: 'Bole, Addis Ababa',
-    bedrooms: 4,
-    bathrooms: 4,
-    area: 400,
-    images: [
-      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80',
-    ],
-    amenities: [
-      'Private Elevator',
-      'Rooftop Terrace',
-      'City View',
-      'Smart Home',
-      'Wine Cellar',
-      'Home Theater',
-    ],
-    featured: true,
-    createdAt: new Date().toISOString(),
-  },
-];
+import prisma from '../config/prisma.js';
+import { uploadToCloudinary } from '../config/cloudinary.js';
 
 export const getAllProperties = async (req, res) => {
   try {
@@ -220,87 +14,85 @@ export const getAllProperties = async (req, res) => {
       bedrooms,
       location,
       status,
-      sort = 'newest'
+      sort = 'newest',
     } = req.query;
 
-    let filtered = [...properties];
+    // Build the where clause for Prisma
+    const where = {};
 
-    // Featured filter
-    if (featured === 'true') {
-      filtered = filtered.filter(p => p.featured);
+    if (featured === 'true') where.featured = true;
+    if (type) where.type = { equals: type, mode: 'insensitive' };
+    if (status) where.status = { equals: status, mode: 'insensitive' };
+    if (bedrooms) where.bedrooms = { gte: parseInt(bedrooms) };
+    if (location) where.location = { contains: location, mode: 'insensitive' };
+
+    // Handle price range
+    if (priceMin || priceMax) {
+      where.price = {};
+      if (priceMin) where.price.gte = parseFloat(priceMin);
+      if (priceMax) where.price.lte = parseFloat(priceMax);
     }
 
-    // Search filter (title, description, location)
+    // Handle search across multiple fields
     if (search) {
-      const searchLower = search.toLowerCase();
-      filtered = filtered.filter(p =>
-        p.title.toLowerCase().includes(searchLower) ||
-        p.description.toLowerCase().includes(searchLower) ||
-        p.location.toLowerCase().includes(searchLower)
-      );
+      where.OR = [
+        { title: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+        { location: { contains: search, mode: 'insensitive' } },
+      ];
     }
 
-    // Type filter
-    if (type) {
-      filtered = filtered.filter(p => p.type.toLowerCase() === type.toLowerCase());
-    }
-
-    // Price range filters
-    if (priceMin) {
-      const minPrice = parseFloat(priceMin);
-      filtered = filtered.filter(p => p.price >= minPrice);
-    }
-    if (priceMax) {
-      const maxPrice = parseFloat(priceMax);
-      filtered = filtered.filter(p => p.price <= maxPrice);
-    }
-
-    // Bedrooms filter
-    if (bedrooms) {
-      const minBedrooms = parseInt(bedrooms);
-      filtered = filtered.filter(p => p.bedrooms >= minBedrooms);
-    }
-
-    // Location filter
-    if (location) {
-      filtered = filtered.filter(p => p.location.toLowerCase().includes(location.toLowerCase()));
-    }
-
-    // Status filter
-    if (status) {
-      filtered = filtered.filter(p => p.status.toLowerCase().replace(' ', '-') === status.toLowerCase());
-    }
-
-    // Sorting
+    // Handle sorting
+    const orderBy = {};
     switch (sort) {
       case 'price-low':
-        filtered.sort((a, b) => a.price - b.price);
+        orderBy.price = 'asc';
         break;
       case 'price-high':
-        filtered.sort((a, b) => b.price - a.price);
+        orderBy.price = 'desc';
         break;
       case 'area':
-        filtered.sort((a, b) => b.area - a.area);
+        orderBy.area = 'desc';
         break;
       case 'newest':
       default:
-        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        orderBy.createdAt = 'desc';
         break;
     }
 
-    const total = filtered.length;
-    const startIndex = (page - 1) * parseInt(limit);
-    const endIndex = startIndex + parseInt(limit);
-    const paginatedData = filtered.slice(startIndex, endIndex);
+    const skip = (page - 1) * parseInt(limit);
+    const take = parseInt(limit);
 
-    res.json({
+    // Get paginated results and total count
+    const [properties, total] = await Promise.all([
+      prisma.property.findMany({
+        where,
+        include: {
+          images: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              phone: true,
+            },
+          },
+        },
+        orderBy,
+        skip,
+        take,
+      }),
+      prisma.property.count({ where }),
+    ]);
+
+    res.status(200).json({
       success: true,
-      data: paginatedData,
+      data: properties,
       pagination: {
         page: parseInt(page),
-        limit: parseInt(limit),
+        limit: take,
         total,
-        pages: Math.ceil(total / limit),
+        pages: Math.ceil(total / take),
       },
       total,
     });
@@ -316,7 +108,21 @@ export const getAllProperties = async (req, res) => {
 export const getPropertyById = async (req, res) => {
   try {
     const { id } = req.params;
-    const property = properties.find(p => p.id === id);
+
+    const property = await prisma.property.findUnique({
+      where: { id },
+      include: {
+        images: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+          },
+        },
+      },
+    });
 
     if (!property) {
       return res.status(404).json({
@@ -325,7 +131,7 @@ export const getPropertyById = async (req, res) => {
       });
     }
 
-    res.json({
+    res.status(200).json({
       success: true,
       data: property,
     });
@@ -340,14 +146,27 @@ export const getPropertyById = async (req, res) => {
 
 export const createProperty = async (req, res) => {
   try {
-    const newProperty = {
-      id: Date.now().toString(),
-      ...req.body,
-      images: [],
-      createdAt: new Date().toISOString(),
-    };
+    const { userId, ...propertyData } = req.body;
 
-    properties.push(newProperty);
+    const newProperty = await prisma.property.create({
+      data: {
+        ...propertyData,
+        user: {
+          connect: { id: userId },
+        },
+      },
+      include: {
+        images: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+          },
+        },
+      },
+    });
 
     res.status(201).json({
       success: true,
@@ -366,25 +185,33 @@ export const createProperty = async (req, res) => {
 export const updateProperty = async (req, res) => {
   try {
     const { id } = req.params;
-    const index = properties.findIndex(p => p.id === id);
+    const { userId, ...propertyData } = req.body;
 
-    if (index === -1) {
-      return res.status(404).json({
-        success: false,
-        message: 'Property not found',
-      });
-    }
+    const updatedProperty = await prisma.property.update({
+      where: { id },
+      data: {
+        ...propertyData,
+        user: {
+          connect: { id: userId },
+        },
+      },
+      include: {
+        images: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+          },
+        },
+      },
+    });
 
-    properties[index] = {
-      ...properties[index],
-      ...req.body,
-      updatedAt: new Date().toISOString(),
-    };
-
-    res.json({
+    res.status(200).json({
       success: true,
       message: 'Property updated successfully',
-      data: properties[index],
+      data: updatedProperty,
     });
   } catch (error) {
     res.status(500).json({
@@ -398,18 +225,31 @@ export const updateProperty = async (req, res) => {
 export const deleteProperty = async (req, res) => {
   try {
     const { id } = req.params;
-    const index = properties.findIndex(p => p.id === id);
+    const { userId } = req.body;
 
-    if (index === -1) {
+    const existingProperty = await prisma.property.findUnique({
+      where: { id },
+    });
+
+    if (!existingProperty) {
       return res.status(404).json({
         success: false,
         message: 'Property not found',
       });
     }
 
-    properties.splice(index, 1);
+    if (existingProperty.userId !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to delete this property',
+      });
+    }
 
-    res.json({
+    await prisma.property.delete({
+      where: { id },
+    });
+
+    res.status(200).json({
       success: true,
       message: 'Property deleted successfully',
     });
@@ -425,19 +265,66 @@ export const deleteProperty = async (req, res) => {
 export const uploadPropertyImages = async (req, res) => {
   try {
     const { id } = req.params;
+    const { userId } = req.body;
 
-    // Mock implementation
-    res.json({
+    if (!req.files || !req.files.images) {
+      return res.status(400).json({
+        success: false,
+        message: 'No files uploaded or invalid file field name',
+        receivedFiles: req.files ? Object.keys(req.files) : 'No files',
+      });
+    }
+
+    const files = Array.isArray(req.files.images)
+      ? req.files.images
+      : [req.files.images];
+
+    // Check property ownership
+    const existingProperty = await prisma.property.findUnique({
+      where: { id },
+      include: { user: true },
+    });
+
+    if (!existingProperty) {
+      return res.status(404).json({
+        success: false,
+        message: 'Property not found',
+      });
+    }
+
+    // Check if either the user owns the property or is an admin
+    const isOwner = existingProperty.userId === userId;
+    const isAdmin = req.user?.role === 'ADMIN';
+
+    if (!isOwner && !isAdmin) {
+      return res
+        .status(403)
+        .json({ success: false, message: 'Not authorized' });
+    }
+
+    // Upload to Cloudinary
+    const uploadedImages = [];
+    for (let file of files) {
+      const { url, publicId } = await uploadToCloudinary(file, 'properties');
+      const image = await prisma.image.create({
+        data: {
+          url,
+          publicId,
+          propertyId: id,
+        },
+      });
+      uploadedImages.push(image);
+    }
+
+    res.status(200).json({
       success: true,
-      message: 'Images uploaded successfully (mock)',
-      data: {
-        images: ['https://images.unsplash.com/photo-example'],
-      },
+      message: 'Images uploaded successfully',
+      data: uploadedImages,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Failed to upload images',
+      message: 'Error uploading images',
       error: error.message,
     });
   }
