@@ -35,9 +35,20 @@ const LandingPage = () => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['featured-properties'],
-    queryFn: () => propertiesAPI.getAll({ featured: true, limit: 6 }),
-    select: (data) => data.data || [],
+    queryKey: ['properties', 'featured'],
+    queryFn: async () => {
+      const res = await propertiesAPI.getAll({
+        featured: true,
+        limit: 6,
+        _t: Date.now(),
+      });
+      return res?.data ?? [];
+    },
+    staleTime: 0,
+    cacheTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    refetchOnReconnect: true,
   });
 
   useEffect(() => {
