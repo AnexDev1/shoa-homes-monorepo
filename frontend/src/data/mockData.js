@@ -3,7 +3,8 @@ export const mockProperties = [
   {
     id: '1',
     title: 'Luxury Villa with Pool & Garden',
-    description: 'Experience unparalleled luxury in this stunning 5-bedroom villa featuring a private pool, landscaped garden, and modern amenities. Located in the prestigious Bole area, this property offers the perfect blend of elegance and comfort.',
+    description:
+      'Experience unparalleled luxury in this stunning 5-bedroom villa featuring a private pool, landscaped garden, and modern amenities. Located in the prestigious Bole area, this property offers the perfect blend of elegance and comfort.',
     price: 45000000,
     location: 'Bole, Addis Ababa',
     address: 'Bole Subcity, Woreda 03, House No. 245',
@@ -42,7 +43,8 @@ export const mockProperties = [
   {
     id: '2',
     title: 'Modern Penthouse with City View',
-    description: 'Stunning penthouse apartment with panoramic views of Addis Ababa. Features floor-to-ceiling windows, Italian marble flooring, and a spacious balcony perfect for entertaining.',
+    description:
+      'Stunning penthouse apartment with panoramic views of Addis Ababa. Features floor-to-ceiling windows, Italian marble flooring, and a spacious balcony perfect for entertaining.',
     price: 28000000,
     location: 'Kazanchis, Addis Ababa',
     address: 'Kirkos Subcity, Kazanchis Area',
@@ -79,7 +81,8 @@ export const mockProperties = [
   {
     id: '3',
     title: 'Spacious Family Home with Garden',
-    description: 'Perfect family home in a quiet neighborhood with a large garden and plenty of space for children to play. Recently renovated with modern finishes throughout.',
+    description:
+      'Perfect family home in a quiet neighborhood with a large garden and plenty of space for children to play. Recently renovated with modern finishes throughout.',
     price: 18500000,
     location: 'CMC, Addis Ababa',
     address: 'Yeka Subcity, CMC Area',
@@ -115,7 +118,8 @@ export const mockProperties = [
   {
     id: '4',
     title: 'Contemporary Condo Near Shopping Mall',
-    description: 'Modern 2-bedroom condo in prime location near major shopping centers and entertainment venues. Perfect for young professionals and couples.',
+    description:
+      'Modern 2-bedroom condo in prime location near major shopping centers and entertainment venues. Perfect for young professionals and couples.',
     price: 12000000,
     location: 'Megenagna, Addis Ababa',
     address: 'Bole Subcity, Megenagna',
@@ -130,13 +134,7 @@ export const mockProperties = [
       'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80',
       'https://images.unsplash.com/photo-1560185007-5f0bb1866cab?w=1200&q=80',
     ],
-    amenities: [
-      'Parking',
-      'Elevator',
-      'Security',
-      'Gym',
-      'Swimming Pool',
-    ],
+    amenities: ['Parking', 'Elevator', 'Security', 'Gym', 'Swimming Pool'],
     agent: {
       id: 'agent1',
       name: 'Abebe Kebede',
@@ -149,7 +147,8 @@ export const mockProperties = [
   {
     id: '5',
     title: 'Elegant Townhouse in Gated Community',
-    description: 'Beautiful townhouse in secure gated community with 24/7 security, playground, and community center. Modern design with high-quality finishes.',
+    description:
+      'Beautiful townhouse in secure gated community with 24/7 security, playground, and community center. Modern design with high-quality finishes.',
     price: 22000000,
     location: '22 Mazoria, Addis Ababa',
     address: 'Bole Subcity, 22 Mazoria',
@@ -183,7 +182,8 @@ export const mockProperties = [
   {
     id: '6',
     title: 'Commercial Building in Business District',
-    description: 'Prime commercial property in the heart of business district. Ideal for offices, retail, or mixed-use development. Excellent investment opportunity.',
+    description:
+      'Prime commercial property in the heart of business district. Ideal for offices, retail, or mixed-use development. Excellent investment opportunity.',
     price: 85000000,
     location: 'Arat Kilo, Addis Ababa',
     address: 'Arada Subcity, Arat Kilo',
@@ -218,7 +218,8 @@ export const mockProperties = [
   {
     id: '7',
     title: 'Cozy Studio Apartment for Rent',
-    description: 'Fully furnished studio apartment perfect for singles or students. Located near universities and public transportation.',
+    description:
+      'Fully furnished studio apartment perfect for singles or students. Located near universities and public transportation.',
     price: 15000,
     location: 'Saris, Addis Ababa',
     address: 'Addis Ketema Subcity, Saris',
@@ -233,12 +234,7 @@ export const mockProperties = [
       'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&q=80',
       'https://images.unsplash.com/photo-1536376072261-38c75010e6c9?w=1200&q=80',
     ],
-    amenities: [
-      'Furnished',
-      'WiFi',
-      'Kitchen',
-      'Security',
-    ],
+    amenities: ['Furnished', 'WiFi', 'Kitchen', 'Security'],
     agent: {
       id: 'agent5',
       name: 'Yonas Bekele',
@@ -251,7 +247,8 @@ export const mockProperties = [
   {
     id: '8',
     title: 'Luxury Apartment with Smart Features',
-    description: 'State-of-the-art smart apartment with voice control, automated lighting, and climate control. Premium finishes and stunning views.',
+    description:
+      'State-of-the-art smart apartment with voice control, automated lighting, and climate control. Premium finishes and stunning views.',
     price: 32000000,
     location: 'Bole Medhanialem, Addis Ababa',
     address: 'Bole Subcity, Medhanialem Area',
@@ -287,7 +284,8 @@ export const mockProperties = [
   {
     id: '9',
     title: 'Executive Villa with Home Office',
-    description: 'Perfect for professionals working from home. Features dedicated home office, high-speed internet infrastructure, and quiet location.',
+    description:
+      'Perfect for professionals working from home. Features dedicated home office, high-speed internet infrastructure, and quiet location.',
     price: 38000000,
     location: 'Old Airport, Addis Ababa',
     address: 'Bole Subcity, Old Airport Area',
@@ -322,7 +320,8 @@ export const mockProperties = [
   {
     id: '10',
     title: 'Affordable Apartment Near Stadium',
-    description: 'Great value apartment in developing area with good transport links. Perfect for first-time buyers or investment.',
+    description:
+      'Great value apartment in developing area with good transport links. Perfect for first-time buyers or investment.',
     price: 8500000,
     location: 'Stadium Area, Addis Ababa',
     address: 'Kirkos Subcity, Stadium',
@@ -337,11 +336,7 @@ export const mockProperties = [
       'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&q=80',
       'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1200&q=80',
     ],
-    amenities: [
-      'Parking',
-      'Security',
-      'Balcony',
-    ],
+    amenities: ['Parking', 'Security', 'Balcony'],
     agent: {
       id: 'agent5',
       name: 'Yonas Bekele',
@@ -354,7 +349,8 @@ export const mockProperties = [
   {
     id: '11',
     title: 'Boutique Condo with Rooftop Access',
-    description: 'Exclusive boutique building with only 8 units. Features rooftop terrace with BBQ area and stunning city views.',
+    description:
+      'Exclusive boutique building with only 8 units. Features rooftop terrace with BBQ area and stunning city views.',
     price: 19500000,
     location: 'Sarbet, Addis Ababa',
     address: 'Arada Subcity, Sarbet',
@@ -388,7 +384,8 @@ export const mockProperties = [
   {
     id: '12',
     title: 'Renovated Heritage Home',
-    description: 'Beautifully restored traditional Ethiopian home with modern amenities. Unique character and charm with historical significance.',
+    description:
+      'Beautifully restored traditional Ethiopian home with modern amenities. Unique character and charm with historical significance.',
     price: 16000000,
     location: 'Piazza, Addis Ababa',
     address: 'Arada Subcity, Piazza',
@@ -403,12 +400,7 @@ export const mockProperties = [
       'https://images.unsplash.com/photo-1598228723793-52759bba239c?w=1200&q=80',
       'https://images.unsplash.com/photo-1558036117-15d82a90b9b1?w=1200&q=80',
     ],
-    amenities: [
-      'Garden',
-      'Parking',
-      'Original Features',
-      'Renovated Kitchen',
-    ],
+    amenities: ['Garden', 'Parking', 'Original Features', 'Renovated Kitchen'],
     agent: {
       id: 'agent4',
       name: 'Meron Assefa',
@@ -427,7 +419,8 @@ export const mockAgents = [
     name: 'Abebe Kebede',
     phone: '+251 911 234567',
     email: 'abebe@shoahomes.com',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
+    avatar:
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
     listingsCount: 23,
     bio: 'Senior property consultant with 8+ years of experience in luxury real estate.',
     languages: ['Amharic', 'English', 'Oromo'],
@@ -437,7 +430,8 @@ export const mockAgents = [
     name: 'Tigist Hailu',
     phone: '+251 911 345678',
     email: 'tigist@shoahomes.com',
-    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
+    avatar:
+      'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
     listingsCount: 18,
     bio: 'Specialized in modern apartments and condos. Passionate about helping clients find their perfect home.',
     languages: ['Amharic', 'English'],
@@ -447,7 +441,8 @@ export const mockAgents = [
     name: 'Daniel Tesfaye',
     phone: '+251 911 456789',
     email: 'daniel@shoahomes.com',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
+    avatar:
+      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
     listingsCount: 15,
     bio: 'Family home specialist focused on CMC and surrounding areas. Known for excellent customer service.',
     languages: ['Amharic', 'English', 'Tigrigna'],
@@ -480,7 +475,8 @@ export const mockTestimonials = [
     id: '1',
     name: 'Alemayehu Bekele',
     role: 'Homeowner',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
+    avatar:
+      'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
     rating: 5,
     text: 'Working with Shoa Homes was an absolute pleasure. They helped us find our dream home in Bole within just two weeks. Professional, responsive, and truly caring about our needs.',
     date: '2024-10-15',
@@ -489,7 +485,8 @@ export const mockTestimonials = [
     id: '2',
     name: 'Tigist Haile',
     role: 'Property Investor',
-    avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150',
+    avatar:
+      'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150',
     rating: 5,
     text: 'As an Ethiopian investor, I needed a trustworthy partner in Addis Ababa. Shoa Homes exceeded my expectations with their deep market knowledge and transparent communication.',
     date: '2024-09-22',
@@ -514,7 +511,8 @@ export const mockInquiries = [
     name: 'John Doe',
     email: 'john.doe@email.com',
     phone: '+251 911 111111',
-    message: 'I am interested in scheduling a viewing for this property. Are weekends available?',
+    message:
+      'I am interested in scheduling a viewing for this property. Are weekends available?',
     status: 'pending',
     createdAt: '2024-11-05T10:30:00Z',
   },
@@ -536,7 +534,8 @@ export const mockInquiries = [
     name: 'Ahmed Ali',
     email: 'ahmed.ali@email.com',
     phone: '+251 911 333333',
-    message: 'Can you provide more information about the neighborhood and schools nearby?',
+    message:
+      'Can you provide more information about the neighborhood and schools nearby?',
     status: 'pending',
     createdAt: '2024-11-03T09:15:00Z',
   },
@@ -554,32 +553,36 @@ export const mockDashboardStats = {
 
 // Company Stats
 export const companyStats = [
-  { label: 'Years of Experience', value: '15+' },
-  { label: 'Properties Sold', value: '2,500+' },
-  { label: 'Happy Clients', value: '3,200+' },
-  { label: 'Expert Agents', value: '25+' },
+  { label: 'Years of Legacy', value: '60+' },
+  { label: 'Projects Delivered', value: '10+' },
+  { label: 'Sq.M Developed', value: '44,000+' },
+  { label: 'Happy Families', value: '3,200+' },
 ];
 
 // Why Choose Us Data
 export const whyChooseUs = [
   {
     icon: 'Award',
-    title: 'Trusted Developers',
-    description: 'Over 15 years of excellence in Ethiopian real estate market with proven track record.',
+    title: 'Integrity & Quality',
+    description:
+      'Honest operations with excellence in every detail, rooted in 60+ years of Shoa brand legacy.',
   },
   {
     icon: 'Gem',
-    title: 'Affordable Luxury',
-    description: 'Premium properties at competitive prices. We make luxury living accessible to everyone.',
+    title: 'Innovation & Sustainability',
+    description:
+      'Modern solutions for tomorrow, building for future generations with customer-focused designs.',
   },
   {
     icon: 'MapPin',
     title: 'Prime Locations',
-    description: 'Strategic locations in Addis Ababa\'s most sought-after neighborhoods.',
+    description:
+      'Strategic locations across Addis Ababa, including flagship projects in Bole Bulbula and beyond.',
   },
   {
     icon: 'Handshake',
-    title: 'Personalized Service',
-    description: 'Dedicated agents who understand your needs and work tirelessly to exceed expectations.',
+    title: 'Community Focus',
+    description:
+      'Creating lasting value for clients, partners, and communities through affordable, modern living spaces.',
   },
 ];

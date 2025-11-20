@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 import {
   mockProperties,
   whyChooseUs,
@@ -47,9 +46,9 @@ const LandingPage = () => {
             </h1>
 
             <p className="text-xl md:text-2xl mb-10 text-gray-200 max-w-3xl mx-auto animate-fade-in">
-              Discover luxury properties, modern apartments, and premium
-              commercial spaces with Ethiopia&apos;s most trusted real estate
-              partner
+              Discover modern, affordable homes with Ethiopia&apos;s most
+              trusted real estate developer. With 60+ years of Shoa legacy, we
+              build communities where families belong.
             </p>
 
             <div className="flex flex-wrap justify-center gap-4 animate-fade-in">
@@ -206,11 +205,12 @@ const LandingPage = () => {
             WHY SHOA HOMES
           </span>
           <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 text-navy-900">
-            Your Trusted Real Estate Partner
+            Why Choose Shoa Homes
           </h2>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            We combine local expertise with world-class service to deliver
-            exceptional results
+            Experience the difference of working with Ethiopia&apos;s premier
+            real estate developer, backed by 60+ years of excellence and
+            innovation.
           </p>
         </div>
 
@@ -231,6 +231,379 @@ const LandingPage = () => {
               </p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* About Us */}
+      <section id="about" className="container-custom py-20 bg-gray-50">
+        <div className="text-center mb-16">
+          <span className="inline-block px-4 py-2 mb-4 text-sm font-semibold tracking-wider text-navy-600 bg-navy-50 rounded-full">
+            ABOUT SHOA HOMES
+          </span>
+          <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 text-navy-900">
+            Ethiopia&apos;s Premier Real Estate Developer
+          </h2>
+          <p className="text-gray-600 text-lg max-w-3xl mx-auto">
+            With over 60 years of Shoa brand legacy, we deliver high-quality,
+            sustainable, modern, and affordable housing solutions across Addis
+            Ababa.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+          {/* Company Overview */}
+          <div className="bg-white p-8 rounded-2xl shadow-premium">
+            <h3 className="text-2xl font-bold mb-4 text-navy-900">Our Story</h3>
+            <p className="text-gray-600 mb-4">
+              Shoa Homes is a proudly Ethiopian real estate company delivering
+              high-quality, sustainable, modern, and affordable housing
+              solutions. The company extends over 60+ years of the Shoa brand
+              legacy, rooted in integrity, quality, and community trust.
+            </p>
+            <p className="text-gray-600">
+              From our humble beginnings with Shoa Supermarket in 1957, through
+              landmark developments like the Piassa Somali Tera Haji Buser
+              Building, to our first residential project in Bole Bulbula (Mariam
+              Mazoriya), we now develop multiple sites across Addis Ababa,
+              including our 44,000 sq.m flagship project.
+            </p>
+          </div>
+
+          {/* CEO Message */}
+          <div className="bg-white p-8 rounded-2xl shadow-premium">
+            <h3 className="text-2xl font-bold mb-4 text-navy-900">
+              CEO Message
+            </h3>
+            <p className="text-gray-600 italic mb-4">
+              &ldquo;At Shoa Homes, the goal is to build modern, affordable
+              communities where families truly belong. Every project is rooted
+              in excellence, integrity, long-term value, and community-focused
+              development.&rdquo;
+            </p>
+            <p className="text-gray-600">
+              We are committed to delivering timely, sustainable, and
+              client-centered real estate solutions while creating lasting value
+              for clients, partners, and communities.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* Vision & Mission */}
+          <div className="bg-white p-8 rounded-2xl shadow-premium">
+            <h3 className="text-2xl font-bold mb-4 text-navy-900">
+              Vision & Mission
+            </h3>
+            <div className="mb-6">
+              <h4 className="text-lg font-semibold text-gold-600 mb-2">
+                Our Mission
+              </h4>
+              <p className="text-gray-600">
+                Deliver timely, sustainable, and client-centered real estate
+                solutions while creating lasting value for clients, partners,
+                and communities.
+              </p>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold text-gold-600 mb-2">
+                Our Vision
+              </h4>
+              <p className="text-gray-600">
+                Become a national real estate leader known for modern,
+                affordable, and high-quality living spaces.
+              </p>
+            </div>
+          </div>
+
+          {/* Core Values */}
+          <div className="bg-white p-8 rounded-2xl shadow-premium">
+            <h3 className="text-2xl font-bold mb-4 text-navy-900">
+              Core Values
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-gold-500 rounded-full mt-2 flex-shrink-0"></div>
+                <div>
+                  <h4 className="font-semibold text-navy-900">Integrity</h4>
+                  <p className="text-gray-600 text-sm">
+                    Honest, transparent operations
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-gold-500 rounded-full mt-2 flex-shrink-0"></div>
+                <div>
+                  <h4 className="font-semibold text-navy-900">Quality</h4>
+                  <p className="text-gray-600 text-sm">
+                    Excellence in every detail
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-gold-500 rounded-full mt-2 flex-shrink-0"></div>
+                <div>
+                  <h4 className="font-semibold text-navy-900">Innovation</h4>
+                  <p className="text-gray-600 text-sm">
+                    Modern solutions for tomorrow
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-gold-500 rounded-full mt-2 flex-shrink-0"></div>
+                <div>
+                  <h4 className="font-semibold text-navy-900">
+                    Sustainability
+                  </h4>
+                  <p className="text-gray-600 text-sm">
+                    Building for future generations
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-gold-500 rounded-full mt-2 flex-shrink-0"></div>
+                <div>
+                  <h4 className="font-semibold text-navy-900">
+                    Customer Focus
+                  </h4>
+                  <p className="text-gray-600 text-sm">
+                    Your needs drive our approach
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Projects */}
+      <section className="container-custom py-20">
+        <div className="text-center mb-16">
+          <span className="inline-block px-4 py-2 mb-4 text-sm font-semibold tracking-wider text-gold-600 bg-gold-50 rounded-full">
+            OUR PROJECTS
+          </span>
+          <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 text-navy-900">
+            Premier Developments Across Addis Ababa
+          </h2>
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            Discover our portfolio of modern, sustainable residential projects
+            designed for contemporary Ethiopian living.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Jackros Flagship Project */}
+          <div className="bg-white rounded-2xl shadow-premium overflow-hidden hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-1">
+            <div className="h-48 bg-gradient-to-r from-navy-600 to-navy-800 flex items-center justify-center">
+              <span className="text-white text-6xl">🏢</span>
+            </div>
+            <div className="p-6">
+              <h3 className="text-xl font-bold mb-2 text-navy-900">
+                Jackros Flagship Project
+              </h3>
+              <p className="text-gray-600 mb-4">
+                44,000 m² mixed-use development with premium amenities
+              </p>
+              <div className="space-y-2 text-sm text-gray-500">
+                <p>• G+2 Villas</p>
+                <p>• Main Gate Apartments</p>
+                <p>• Central Apartments</p>
+                <p>• High-rise buildings (up to 2B+G+17)</p>
+                <p>• Commercial center, gym, cafeteria, library</p>
+              </div>
+              <div className="mt-4 inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">
+                Delivered
+              </div>
+            </div>
+          </div>
+
+          {/* Bole Matemiya */}
+          <div className="bg-white rounded-2xl shadow-premium overflow-hidden hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-1">
+            <div className="h-48 bg-gradient-to-r from-gold-500 to-gold-600 flex items-center justify-center">
+              <span className="text-white text-6xl">🏗️</span>
+            </div>
+            <div className="p-6">
+              <h3 className="text-xl font-bold mb-2 text-navy-900">
+                Bole Matemiya
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Modern residential complex with comprehensive amenities
+              </p>
+              <div className="space-y-2 text-sm text-gray-500">
+                <p>• 2 Basement + 16 floors</p>
+                <p>• Gym, cafeteria, generator</p>
+                <p>• Underground parking</p>
+              </div>
+              <div className="mt-4 inline-block px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">
+                Under Design
+              </div>
+            </div>
+          </div>
+
+          {/* Wello Sefer */}
+          <div className="bg-white rounded-2xl shadow-premium overflow-hidden hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-1">
+            <div className="h-48 bg-gradient-to-r from-navy-500 to-navy-600 flex items-center justify-center">
+              <span className="text-white text-6xl">🏢</span>
+            </div>
+            <div className="p-6">
+              <h3 className="text-xl font-bold mb-2 text-navy-900">
+                Wello Sefer (Near Peacock)
+              </h3>
+              <p className="text-gray-600 mb-4">
+                High-rise residential tower with premium facilities
+              </p>
+              <div className="space-y-2 text-sm text-gray-500">
+                <p>• 3 Basement + 19 floors</p>
+                <p>• Gym, cafeteria, generator</p>
+                <p>• Underground parking</p>
+              </div>
+              <div className="mt-4 inline-block px-3 py-1 bg-orange-100 text-orange-800 text-xs font-semibold rounded-full">
+                Ongoing
+              </div>
+            </div>
+          </div>
+
+          {/* Bisrate Gabriel */}
+          <div className="bg-white rounded-2xl shadow-premium overflow-hidden hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-1">
+            <div className="h-48 bg-gradient-to-r from-green-500 to-green-600 flex items-center justify-center">
+              <span className="text-white text-6xl">🏠</span>
+            </div>
+            <div className="p-6">
+              <h3 className="text-xl font-bold mb-2 text-navy-900">
+                Bisrate Gabriel
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Contemporary residential building with modern amenities
+              </p>
+              <div className="space-y-2 text-sm text-gray-500">
+                <p>• 1 Basement + 14 floors</p>
+                <p>• Gym, cafeteria, generator</p>
+                <p>• Parking facilities</p>
+              </div>
+              <div className="mt-4 inline-block px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full">
+                Under Construction
+              </div>
+            </div>
+          </div>
+
+          {/* Bulbula Site */}
+          <div className="bg-white rounded-2xl shadow-premium overflow-hidden hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-1">
+            <div className="h-48 bg-gradient-to-r from-purple-500 to-purple-600 flex items-center justify-center">
+              <span className="text-white text-6xl">🏢</span>
+            </div>
+            <div className="p-6">
+              <h3 className="text-xl font-bold mb-2 text-navy-900">
+                Bulbula Site
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Our pioneering apartment project in Bole Bulbula
+              </p>
+              <div className="space-y-2 text-sm text-gray-500">
+                <p>• 1 Basement + 11 floors</p>
+                <p>• First Shoa Homes apartment project</p>
+                <p>• Modern residential units</p>
+              </div>
+              <div className="mt-4 inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">
+                Delivered
+              </div>
+            </div>
+          </div>
+
+          {/* Future Projects */}
+          <div className="bg-white rounded-2xl shadow-premium overflow-hidden hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-1 border-2 border-dashed border-gray-300">
+            <div className="h-48 bg-gradient-to-r from-gray-400 to-gray-500 flex items-center justify-center">
+              <span className="text-white text-6xl">🚀</span>
+            </div>
+            <div className="p-6">
+              <h3 className="text-xl font-bold mb-2 text-navy-900">
+                Future Developments
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Expanding to new city-center sites for 10,000+ households
+              </p>
+              <div className="space-y-2 text-sm text-gray-500">
+                <p>• Smart housing integration</p>
+                <p>• Sustainability focus</p>
+                <p>• National partnerships</p>
+                <p>• Strategic expansion</p>
+              </div>
+              <div className="mt-4 inline-block px-3 py-1 bg-gray-100 text-gray-800 text-xs font-semibold rounded-full">
+                Coming Soon
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Products & Services */}
+      <section className="bg-gradient-to-br from-gray-50 to-white py-20">
+        <div className="container-custom">
+          <div className="text-center mb-16">
+            <span className="inline-block px-4 py-2 mb-4 text-sm font-semibold tracking-wider text-navy-600 bg-navy-50 rounded-full">
+              OUR OFFERINGS
+            </span>
+            <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 text-navy-900">
+              Diverse Portfolio for Every Lifestyle
+            </h2>
+            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+              From functional studios to luxurious penthouses, we offer modern,
+              affordable homes designed for contemporary Ethiopian living.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Apartments */}
+            <div className="bg-white p-6 rounded-2xl shadow-premium hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div className="text-6xl mb-4">🏢</div>
+              <h3 className="text-xl font-bold mb-3 text-navy-900">
+                Apartments
+              </h3>
+              <div className="space-y-2 text-sm text-gray-600">
+                <p>• 1 Bedroom - Functional, fully equipped</p>
+                <p>• 2 Bedroom - Modern design, full amenities</p>
+                <p>• 3 Bedroom - Spacious, family-friendly</p>
+              </div>
+            </div>
+
+            {/* Villas */}
+            <div className="bg-white p-6 rounded-2xl shadow-premium hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div className="text-6xl mb-4">🏠</div>
+              <h3 className="text-xl font-bold mb-3 text-navy-900">Villas</h3>
+              <div className="space-y-2 text-sm text-gray-600">
+                <p>• 175 m² villas (3 stories)</p>
+                <p>• 175 m² villas with basement</p>
+                <p>• 200 m² villas with basement</p>
+                <p>• Built with precision and quality</p>
+              </div>
+            </div>
+
+            {/* Penthouses */}
+            <div className="bg-white p-6 rounded-2xl shadow-premium hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div className="text-6xl mb-4">🏙️</div>
+              <h3 className="text-xl font-bold mb-3 text-navy-900">
+                Penthouses
+              </h3>
+              <div className="space-y-2 text-sm text-gray-600">
+                <p>• Elegant penthouse units</p>
+                <p>• Premium finishing</p>
+                <p>• Exclusive living spaces</p>
+                <p>• Premium amenities</p>
+              </div>
+            </div>
+
+            {/* Services */}
+            <div className="bg-white p-6 rounded-2xl shadow-premium hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div className="text-6xl mb-4">🤝</div>
+              <h3 className="text-xl font-bold mb-3 text-navy-900">
+                Our Services
+              </h3>
+              <div className="space-y-2 text-sm text-gray-600">
+                <p>• Site selection & planning</p>
+                <p>• Quality construction</p>
+                <p>• Client handover support</p>
+                <p>• Long-term maintenance</p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

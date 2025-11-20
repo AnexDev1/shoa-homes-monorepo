@@ -32,18 +32,18 @@ const Navbar = () => {
             >
               Properties
             </Link>
-            <a
-              href="#about"
+            <Link
+              to="/about"
               className="text-gray-700 hover:text-primary-600 transition-colors"
             >
               About
-            </a>
-            <a
-              href="#contact"
+            </Link>
+            <Link
+              to="/contact"
               className="text-gray-700 hover:text-primary-600 transition-colors"
             >
               Contact
-            </a>
+            </Link>
           </div>
 
           {/* Auth Buttons */}
