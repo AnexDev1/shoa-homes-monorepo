@@ -3,46 +3,14 @@ import { generateToken } from '../config/jwt.js';
 import prisma from '../config/prisma.js';
 
 export const register = async (req, res) => {
-  try {
-    const { email, password, name, phone } = req.body;
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
+  // Registration disabled — admin accounts are pre-provisioned
+  res
+    .status(410)
+    .json({
+      success: false,
+      message:
+        'Registration disabled. Contact site administrator for admin access.',
     });
-
-    if (existingUser) {
-      return res.status(400).json({ error: 'Email already in use' });
-    }
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-        name,
-        phone,
-        role: 'USER',
-      },
-    });
-
-    const token = generateToken({
-      id: newUser.id,
-      role: newUser.role,
-    });
-    const { password: _, ...userWithoutPassword } = newUser;
-
-    res.status(201).json({
-      success: true,
-      message: 'User registered successfully',
-      data: {
-        user: userWithoutPassword,
-        token,
-      },
-    });
-  } catch (error) {
-    res.status(500).json({
-      error: 'Error registering user',
-      details: error.message,
-    });
-  }
 };
 
 export const login = async (req, res) => {
@@ -59,6 +27,15 @@ export const login = async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    // Only allow admins to login to the system
+    if (user.role !== 'ADMIN') {
+      return res
+        .status(403)
+        .json({
+          error: 'Public user login is disabled. Contact administrator.',
+        });
     }
 
     const token = generateToken({

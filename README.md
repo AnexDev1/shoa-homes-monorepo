@@ -26,23 +26,27 @@ shoa-homes-monorepo/
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone <repository-url>
 cd shoa-homes-monorepo
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Set up environment variables:
+
 ```bash
 cp .env.example .env
 # Edit .env with your actual credentials
 ```
 
 4. Set up the database (backend):
+
 ```bash
 cd backend
 npx prisma generate
@@ -53,6 +57,7 @@ cd ..
 ### Development
 
 Run both frontend and backend concurrently:
+
 ```bash
 npm run dev
 ```
@@ -60,12 +65,14 @@ npm run dev
 Or run them separately:
 
 **Frontend only:**
+
 ```bash
 npm run dev:frontend
 # Access at http://localhost:5173
 ```
 
 **Backend only:**
+
 ```bash
 npm run dev:backend
 # API runs at http://localhost:5000
@@ -74,6 +81,7 @@ npm run dev:backend
 ## 📦 Frontend
 
 Built with:
+
 - **React 18** - UI framework
 - **Vite** - Build tool
 - **TailwindCSS** - Styling
@@ -86,16 +94,16 @@ Built with:
 ### Frontend Pages
 
 **Client Side:**
+
 - Landing page with hero and featured listings
 - Property listing page with search/filters
 - Property detail page with gallery and map
-- Inquiry form modal
 - Authentication (Login/Register)
 
 **Admin Side:**
+
 - Dashboard with analytics
 - Property management (CRUD)
-- Inquiry management
 - Settings
 
 ### Frontend Commands
@@ -111,6 +119,7 @@ npm run lint         # Run ESLint
 ## 🔧 Backend
 
 Built with:
+
 - **Node.js + Express** - Server framework
 - **Prisma ORM** - Database management
 - **PostgreSQL** - Database
@@ -141,8 +150,6 @@ backend/
 - `POST /api/properties` - Create property (admin)
 - `PUT /api/properties/:id` - Update property (admin)
 - `DELETE /api/properties/:id` - Delete property (admin)
-- `POST /api/inquiries` - Submit inquiry
-- `GET /api/inquiries` - Get all inquiries (admin)
 - `GET /api/dashboard/stats` - Dashboard statistics (admin)
 
 ### Backend Commands
@@ -168,6 +175,7 @@ npm run format           # Format code with Prettier
 ### Pre-commit Hooks
 
 This project uses Husky and lint-staged for pre-commit hooks:
+
 - Lints staged files
 - Formats code with Prettier
 - Validates commit messages

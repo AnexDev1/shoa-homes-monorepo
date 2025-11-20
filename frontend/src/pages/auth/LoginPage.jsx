@@ -21,7 +21,9 @@ const LoginPage = () => {
       navigate(data.user.role === 'ADMIN' ? '/admin' : '/');
     },
     onError: (err) => {
-      setError(err.response?.data?.message || 'Login failed. Please try again.');
+      setError(
+        err.response?.data?.message || 'Login failed. Please try again.'
+      );
     },
   });
 
@@ -91,7 +93,10 @@ const LoginPage = () => {
 
             <div className="flex items-center justify-between">
               <label className="flex items-center">
-                <input type="checkbox" className="rounded border-gray-300 text-primary-600" />
+                <input
+                  type="checkbox"
+                  className="rounded border-gray-300 text-primary-600"
+                />
                 <span className="ml-2 text-sm text-gray-600">Remember me</span>
               </label>
               <a href="#" className="text-sm text-primary-600 hover:underline">
@@ -109,18 +114,20 @@ const LoginPage = () => {
           </form>
 
           <div className="mt-6 text-center text-sm">
-            <span className="text-gray-600">Don't have an account? </span>
-            <Link to="/register" className="text-primary-600 font-semibold hover:underline">
-              Sign up
-            </Link>
+            <span className="text-gray-600">
+              Need an account? Contact the site administrator.
+            </span>
           </div>
 
           {/* Demo Credentials */}
           <div className="mt-6 pt-6 border-t">
-            <p className="text-xs text-gray-500 text-center mb-2">Demo Credentials:</p>
+            <p className="text-xs text-gray-500 text-center mb-2">
+              Demo Credentials:
+            </p>
             <div className="text-xs text-gray-600 space-y-1 bg-gray-50 p-3 rounded">
-              <div><strong>Admin:</strong> admin@shoahomes.com / admin123</div>
-              <div><strong>User:</strong> user@shoahomes.com / user123</div>
+              <div>
+                <strong>Admin:</strong> admin@shoahomes.com / admin123
+              </div>
             </div>
           </div>
         </div>

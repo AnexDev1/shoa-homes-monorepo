@@ -10,12 +10,10 @@ import LandingPage from './pages/client/LandingPage';
 import PropertyListingPage from './pages/client/PropertyListingPage';
 import PropertyDetailPage from './pages/client/PropertyDetailPage';
 import LoginPage from './pages/auth/LoginPage';
-import RegisterPage from './pages/auth/RegisterPage';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
 import PropertyManagement from './pages/admin/PropertyManagement';
-import InquiryManagement from './pages/admin/InquiryManagement';
 import SettingsPage from './pages/admin/SettingsPage';
 
 // Protected Route Component
@@ -31,7 +29,7 @@ function App() {
           <Route path="properties" element={<PropertyListingPage />} />
           <Route path="properties/:id" element={<PropertyDetailPage />} />
           <Route path="login" element={<LoginPage />} />
-          <Route path="register" element={<RegisterPage />} />
+          {/* Registration removed — admins are pre-created */}
         </Route>
 
         {/* Admin Routes */}
@@ -45,7 +43,7 @@ function App() {
         >
           <Route index element={<AdminDashboard />} />
           <Route path="properties" element={<PropertyManagement />} />
-          <Route path="inquiries" element={<InquiryManagement />} />
+          {/* Inquiries management removed — contact is phone/email */}
           <Route path="settings" element={<SettingsPage />} />
         </Route>
 

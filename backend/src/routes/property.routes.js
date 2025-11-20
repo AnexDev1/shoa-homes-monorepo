@@ -7,7 +7,7 @@ import {
   deleteProperty,
   uploadPropertyImages,
 } from '../controllers/property.controller.js';
-import { authenticate } from '../middleware/auth.middleware.js';
+import { authenticate, authorize } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
@@ -16,9 +16,15 @@ router.get('/', getAllProperties);
 router.get('/:id', getPropertyById);
 
 // Protected routes (require authentication)
-router.post('/', authenticate, createProperty);
-router.put('/:id', authenticate, updateProperty);
-router.delete('/:id', authenticate, deleteProperty);
-router.post('/:id/images', authenticate, uploadPropertyImages);
+// All property management endpoints require ADMIN role
+router.post('/', authenticate, authorize(['ADMIN']), createProperty);
+router.put('/:id', authenticate, authorize(['ADMIN']), updateProperty);
+router.delete('/:id', authenticate, authorize(['ADMIN']), deleteProperty);
+router.post(
+  '/:id/images',
+  authenticate,
+  authorize(['ADMIN']),
+  uploadPropertyImages
+);
 
 export default router;

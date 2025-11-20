@@ -1,4 +1,6 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo, useEffect } from 'react';
+const DEFAULT_SMALL_PLACEHOLDER = `data:image/svg+xml;utf8,${encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'><rect width='50' height='50' fill='%23E5E7EB'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23737475' font-family='Arial' font-size='8'>No Image</text></svg>")}`;
+import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { propertiesAPI } from '../../services/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
@@ -20,6 +22,8 @@ const PropertyManagement = () => {
     bathrooms: '',
     area: '',
     amenities: '',
+    latitude: null,
+    longitude: null,
   });
   const [images, setImages] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -34,6 +38,8 @@ const PropertyManagement = () => {
     mutationFn: propertiesAPI.create,
     onSuccess: () => {
       queryClient.invalidateQueries(['admin-properties']);
+      queryClient.invalidateQueries({ queryKey: ['properties'], exact: false });
+      queryClient.invalidateQueries(['dashboard-stats']);
       setIsModalOpen(false);
       resetForm();
       toast.success('Property created successfully!');
@@ -44,6 +50,8 @@ const PropertyManagement = () => {
     mutationFn: ({ id, data }) => propertiesAPI.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries(['admin-properties']);
+      queryClient.invalidateQueries({ queryKey: ['properties'], exact: false });
+      queryClient.invalidateQueries(['dashboard-stats']);
       setIsModalOpen(false);
       setEditingProperty(null);
       resetForm();
@@ -53,7 +61,10 @@ const PropertyManagement = () => {
 
   const deleteMutation = useMutation({
     mutationFn: propertiesAPI.delete,
-    onSuccess: () => queryClient.invalidateQueries(['admin-properties']),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['admin-properties']);
+      queryClient.invalidateQueries(['dashboard-stats']);
+    },
   });
 
   const resetForm = () => {
@@ -94,6 +105,8 @@ const PropertyManagement = () => {
         type: formData.type,
         status: formData.status,
         location: formData.location,
+        latitude: formData.latitude ? parseFloat(formData.latitude) : null,
+        longitude: formData.longitude ? parseFloat(formData.longitude) : null,
         bedrooms: parseInt(formData.bedrooms) || 0,
         bathrooms: parseInt(formData.bathrooms) || 0,
         area: parseFloat(formData.area) || 0,
@@ -106,48 +119,82 @@ const PropertyManagement = () => {
       // First, create or update the property
       let propertyId;
       if (editingProperty) {
-        const { data } = await propertiesAPI.update(
-          editingProperty.id,
-          propertyData
-        );
+        const { data } = await updateMutation.mutateAsync({
+          id: editingProperty.id,
+          data: propertyData,
+        });
         propertyId = data.id;
       } else {
-        const { data } = await propertiesAPI.create(propertyData);
+        const { data } = await createMutation.mutateAsync(propertyData);
         propertyId = data.id;
       }
 
-      // Upload new images if any
+      // Upload new images if any (send using FormData 'images[]')
       const newImages = images.filter((img) => img.isNew);
+      let uploadSuccessful = newImages.length === 0; // If no images, consider successful
       if (newImages.length > 0) {
         const uploadFormData = new FormData();
-        newImages.forEach((img) => {
-          uploadFormData.append('images', img.file);
-        });
-
+        newImages.forEach((img) => uploadFormData.append('images[]', img.file));
         try {
-          await propertiesAPI.uploadImages(propertyId, uploadFormData);
-        } catch (uploadError) {
-          // Log to error tracking service in production
-          if (process.env.NODE_ENV !== 'production') {
-            console.error('Image upload failed:', uploadError);
+          const result = await propertiesAPI.uploadImages(
+            propertyId,
+            uploadFormData
+          );
+          if (result?.errors?.length) {
+            // eslint-disable-next-line no-console
+            console.warn('Some images failed to upload:', result.errors);
+            toast(
+              `Partial upload: ${result.errors.length} image(s) failed to upload.`,
+              { icon: '⚠️' }
+            );
           }
-          throw new Error('Failed to upload images. Please try again.');
+          // Append successfully uploaded images to the current images state
+          if (result?.data?.length) {
+            setImages((prev) => [
+              ...prev,
+              ...result.data.map((img) => ({
+                url: img.url,
+                publicId: img.publicId,
+              })),
+            ]);
+          }
+          // refresh public properties grid and property detail
+          await queryClient.invalidateQueries({
+            queryKey: ['properties'],
+            exact: false,
+          });
+          await queryClient.invalidateQueries(['property', propertyId]);
+          uploadSuccessful = true;
+        } catch (uploadError) {
+          // eslint-disable-next-line no-console
+          console.error('Image upload failed: ', uploadError);
+          const message =
+            uploadError.response?.data?.message ||
+            uploadError.message ||
+            'Failed to upload images';
+          toast.error(message);
+          uploadSuccessful = false;
+          // Property was created/updated successfully, but images failed
         }
       }
 
-      // Refresh the properties list
+      // Refresh the properties list and dashboard stats
       await queryClient.invalidateQueries(['admin-properties']);
+      await queryClient.invalidateQueries(['dashboard-stats']);
 
-      // Reset form and close modal
-      resetForm();
-      setIsModalOpen(false);
-      setEditingProperty(null);
-      toast.success(
-        `Property ${editingProperty ? 'updated' : 'created'} successfully!`
-      );
+      // Reset form and close modal only if upload was successful or no images
+      if (uploadSuccessful) {
+        resetForm();
+        setIsModalOpen(false);
+        setEditingProperty(null);
+        toast.success(
+          `Property ${editingProperty ? 'updated' : 'created'} successfully!`
+        );
+      }
     } catch (error) {
       // Log to error tracking service in production
       if (process.env.NODE_ENV !== 'production') {
+        // eslint-disable-next-line no-console
         console.error('Error saving property:', error);
       }
       toast.error(
@@ -178,7 +225,10 @@ const PropertyManagement = () => {
 
       setImages((prev) => [...prev, ...newImages]);
     } catch (error) {
-      console.error('Error creating image previews:', error);
+      if (process.env.NODE_ENV !== 'production') {
+        // eslint-disable-next-line no-console
+        console.error('Error creating image previews:', error);
+      }
       toast.error('Error processing images');
     } finally {
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -200,6 +250,18 @@ const PropertyManagement = () => {
 
   const handleEdit = (property) => {
     setEditingProperty(property);
+    const amenityString = Array.isArray(property.amenities)
+      ? property.amenities.join(', ')
+      : typeof property.amenities === 'string'
+        ? (() => {
+            try {
+              return JSON.parse(property.amenities).join(', ');
+            } catch (e) {
+              return property.amenities;
+            }
+          })()
+        : '';
+
     setFormData({
       title: property.title,
       description: property.description,
@@ -211,7 +273,9 @@ const PropertyManagement = () => {
       bedrooms: property.bedrooms,
       bathrooms: property.bathrooms,
       area: property.area,
-      amenities: property.amenities?.join(', ') || '',
+      amenities: amenityString || '',
+      latitude: property.latitude || null,
+      longitude: property.longitude || null,
     });
     if (property.images?.length) {
       setImages(
@@ -219,6 +283,55 @@ const PropertyManagement = () => {
       );
     }
     setIsModalOpen(true);
+  };
+
+  // Location picker for the admin modal
+  const LocationPicker = ({ lat, lng, onChange }) => {
+    const initialPosition = useMemo(
+      () => [lat ?? 9.03, lng ?? 38.74],
+      [lat, lng]
+    );
+    const [currentPosition, setCurrentPosition] = useState(initialPosition);
+
+    useEffect(() => {
+      setCurrentPosition([lat ?? 9.03, lng ?? 38.74]);
+    }, [lat, lng]);
+
+    const MapEvents = () => {
+      useMapEvents({
+        click(e) {
+          const newPos = [e.latlng.lat, e.latlng.lng];
+          setCurrentPosition(newPos);
+          onChange({ latitude: e.latlng.lat, longitude: e.latlng.lng });
+        },
+      });
+      return null;
+    };
+
+    return (
+      <div className="h-[250px] rounded overflow-hidden">
+        <MapContainer
+          center={currentPosition}
+          zoom={12}
+          className="h-full w-full"
+        >
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          <Marker
+            position={currentPosition}
+            draggable={true}
+            eventHandlers={{
+              dragend: (e) => {
+                const newPos = e.target.getLatLng();
+                const newPosition = [newPos.lat, newPos.lng];
+                setCurrentPosition(newPosition);
+                onChange({ latitude: newPos.lat, longitude: newPos.lng });
+              },
+            }}
+          />
+          <MapEvents />
+        </MapContainer>
+      </div>
+    );
   };
 
   const handleDelete = (id) => {
@@ -292,7 +405,7 @@ const PropertyManagement = () => {
                         <img
                           src={
                             property.images?.[0]?.url ||
-                            'https://via.placeholder.com/50'
+                            DEFAULT_SMALL_PLACEHOLDER
                           }
                           alt={property.title}
                           className="w-12 h-12 rounded object-cover mr-3"
@@ -336,8 +449,8 @@ const PropertyManagement = () => {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-xl max-w-2xl w-full p-6 my-8">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-white rounded-xl max-w-2xl w-full p-6 mt-12 max-h-[calc(100vh-6rem)] overflow-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold">
                 {editingProperty ? 'Edit Property' : 'Add New Property'}
@@ -453,7 +566,7 @@ const PropertyManagement = () => {
                 {/* Location */}
                 <div className="col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Location *
+                    Location / Map Picker
                   </label>
                   <input
                     type="text"
@@ -461,8 +574,54 @@ const PropertyManagement = () => {
                     value={formData.location}
                     onChange={handleChange}
                     required
-                    className="input-field"
+                    className="input-field mb-2"
                   />
+                  <div className="text-sm text-gray-500 mb-1">
+                    Click on the map to set the precise latitude & longitude for
+                    the property.
+                  </div>
+                  <LocationPicker
+                    lat={formData.latitude}
+                    lng={formData.longitude}
+                    onChange={(coords) =>
+                      setFormData({ ...formData, ...coords })
+                    }
+                  />
+                  <div className="mt-2 flex gap-2">
+                    <div className="flex-1">
+                      <label className="block text-xs text-gray-600">
+                        Latitude
+                      </label>
+                      <input
+                        type="number"
+                        step="any"
+                        name="latitude"
+                        value={formData.latitude ?? ''}
+                        onChange={(e) =>
+                          setFormData({ ...formData, latitude: e.target.value })
+                        }
+                        className="input-field"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <label className="block text-xs text-gray-600">
+                        Longitude
+                      </label>
+                      <input
+                        type="number"
+                        step="any"
+                        name="longitude"
+                        value={formData.longitude ?? ''}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            longitude: e.target.value,
+                          })
+                        }
+                        className="input-field"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 {/* Bedrooms, Bathrooms, Area */}

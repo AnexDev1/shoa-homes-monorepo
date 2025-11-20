@@ -2,8 +2,9 @@ import { Link } from 'react-router-dom';
 import { MapPin, Bed, Bath, Maximize2, Star } from 'lucide-react';
 
 // Helper function to get image URL from different formats
+const DEFAULT_PLACEHOLDER = `data:image/svg+xml;utf8,${encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'><rect width='400' height='300' fill='%23E5E7EB'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23737475' font-family='Arial' font-size='18'>No Image Available</text></svg>")}`;
 const getImageUrl = (img) => {
-  if (!img) return 'https://via.placeholder.com/400x300?text=No+Image';
+  if (!img) return DEFAULT_PLACEHOLDER;
   // If it's a full URL, return as is
   if (
     typeof img === 'string' &&
@@ -20,7 +21,7 @@ const getImageUrl = (img) => {
     return img.path || img.url;
   }
   // Fallback to placeholder
-  return 'https://via.placeholder.com/400x300?text=No+Image';
+  return DEFAULT_PLACEHOLDER;
 };
 
 const PropertyCard = ({ property }) => {
@@ -34,6 +35,22 @@ const PropertyCard = ({ property }) => {
     return `${(price / 1000).toFixed(0)}K ETB`;
   };
 
+  // Defensive amenities parsing: ensure we have an array
+  const amenities = Array.isArray(property.amenities)
+    ? property.amenities
+    : typeof property.amenities === 'string'
+      ? (() => {
+          try {
+            return JSON.parse(property.amenities);
+          } catch (e) {
+            return property.amenities
+              .split(',')
+              .map((a) => a.trim())
+              .filter(Boolean);
+          }
+        })()
+      : [];
+
   return (
     <Link to={`/properties/${property.id}`} className="group block">
       <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
@@ -46,8 +63,7 @@ const PropertyCard = ({ property }) => {
             loading="lazy"
             onError={(e) => {
               e.target.onerror = null;
-              e.target.src =
-                'https://via.placeholder.com/400x300?text=Image+Not+Available';
+              e.target.src = DEFAULT_PLACEHOLDER;
             }}
           />
           {/* Gradient Overlay */}
@@ -125,9 +141,9 @@ const PropertyCard = ({ property }) => {
           </div>
 
           {/* Amenities Preview */}
-          {property.amenities && property.amenities.length > 0 && (
+          {amenities && amenities.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-2">
-              {property.amenities.slice(0, 3).map((amenity, index) => (
+              {amenities.slice(0, 3).map((amenity, index) => (
                 <span
                   key={index}
                   className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded"
@@ -135,9 +151,9 @@ const PropertyCard = ({ property }) => {
                   {amenity}
                 </span>
               ))}
-              {property.amenities.length > 3 && (
+              {amenities.length > 3 && (
                 <span className="text-xs bg-gold-100 text-gold-700 px-2 py-1 rounded font-medium">
-                  +{property.amenities.length - 3} more
+                  +{amenities.length - 3} more
                 </span>
               )}
             </div>

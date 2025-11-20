@@ -38,7 +38,21 @@ const PropertyListingPage = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ['properties', filters, sortBy, page],
-    queryFn: () => propertiesAPI.getAll({ ...filters, sort: sortBy, page, limit }),
+    queryFn: () => {
+      // Filter out empty values before sending to API
+      const cleanFilters = Object.fromEntries(
+        Object.entries(filters).filter(
+          ([key, value]) =>
+            value !== '' && value !== null && value !== undefined
+        )
+      );
+      return propertiesAPI.getAll({
+        ...cleanFilters,
+        sort: sortBy,
+        page,
+        limit,
+      });
+    },
   });
 
   const handleFilterChange = (e) => {
@@ -46,11 +60,11 @@ const PropertyListingPage = () => {
     const newFilters = { ...filters, [name]: value };
     setFilters(newFilters);
     setPage(1); // Reset to first page on filter change
-    
-    // Update URL params
+
+    // Update URL params - only include non-empty values
     const params = new URLSearchParams();
     Object.entries(newFilters).forEach(([key, val]) => {
-      if (val) params.set(key, val);
+      if (val && val !== '') params.set(key, val);
     });
     if (sortBy !== 'newest') params.set('sort', sortBy);
     setSearchParams(params);
@@ -59,11 +73,11 @@ const PropertyListingPage = () => {
   const handleSortChange = (value) => {
     setSortBy(value);
     setPage(1);
-    
-    // Update URL params
+
+    // Update URL params - only include non-empty values
     const params = new URLSearchParams();
     Object.entries(filters).forEach(([key, val]) => {
-      if (val) params.set(key, val);
+      if (val && val !== '') params.set(key, val);
     });
     if (value !== 'newest') params.set('sort', value);
     setSearchParams(params);
@@ -94,7 +108,8 @@ const PropertyListingPage = () => {
         <div className="container-custom py-8">
           <h1 className="text-4xl font-bold mb-2">Browse Properties</h1>
           <p className="text-gray-600">
-            Find your perfect home from our collection of {data?.total || 0} properties
+            Find your perfect home from our collection of {data?.total || 0}{' '}
+            properties
           </p>
         </div>
       </div>
@@ -217,19 +232,14 @@ const PropertyListingPage = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Location
                   </label>
-                  <select
+                  <input
+                    type="text"
                     name="location"
                     value={filters.location}
                     onChange={handleFilterChange}
+                    placeholder="Enter location..."
                     className="input-field"
-                  >
-                    <option value="">All Locations</option>
-                    <option value="Bole">Bole</option>
-                    <option value="Kirkos">Kirkos</option>
-                    <option value="Yeka">Yeka</option>
-                    <option value="Arada">Arada</option>
-                    <option value="Lideta">Lideta</option>
-                  </select>
+                  />
                 </div>
               </div>
             </div>
@@ -244,7 +254,9 @@ const PropertyListingPage = () => {
                   {data?.total || 0} properties found
                 </div>
                 <div className="flex items-center gap-2">
-                  <label className="text-sm font-medium text-gray-700">Sort by:</label>
+                  <label className="text-sm font-medium text-gray-700">
+                    Sort by:
+                  </label>
                   <select
                     value={sortBy}
                     onChange={(e) => handleSortChange(e.target.value)}
@@ -293,20 +305,93 @@ const PropertyListingPage = () => {
                     >
                       Previous
                     </button>
-                    
-                    {[...Array(totalPages)].map((_, i) => (
-                      <button
-                        key={i + 1}
-                        onClick={() => setPage(i + 1)}
-                        className={`px-4 py-2 rounded-lg ${
-                          page === i + 1
-                            ? 'bg-primary-600 text-white'
-                            : 'border hover:bg-gray-50'
-                        }`}
-                      >
-                        {i + 1}
-                      </button>
-                    ))}
+
+                    {/* Page Numbers with Ellipsis */}
+                    {(() => {
+                      const pages = [];
+                      const maxVisible = 5;
+                      const halfVisible = Math.floor(maxVisible / 2);
+
+                      let startPage = Math.max(1, page - halfVisible);
+                      let endPage = Math.min(totalPages, page + halfVisible);
+
+                      // Adjust if we're near the beginning or end
+                      if (endPage - startPage + 1 < maxVisible) {
+                        if (startPage === 1) {
+                          endPage = Math.min(
+                            totalPages,
+                            startPage + maxVisible - 1
+                          );
+                        } else if (endPage === totalPages) {
+                          startPage = Math.max(1, endPage - maxVisible + 1);
+                        }
+                      }
+
+                      // Add first page and ellipsis if needed
+                      if (startPage > 1) {
+                        pages.push(
+                          <button
+                            key={1}
+                            onClick={() => setPage(1)}
+                            className="px-4 py-2 border rounded-lg hover:bg-gray-50"
+                          >
+                            1
+                          </button>
+                        );
+                        if (startPage > 2) {
+                          pages.push(
+                            <span
+                              key="start-ellipsis"
+                              className="px-2 py-2 text-gray-500"
+                            >
+                              ...
+                            </span>
+                          );
+                        }
+                      }
+
+                      // Add visible pages
+                      for (let i = startPage; i <= endPage; i++) {
+                        pages.push(
+                          <button
+                            key={i}
+                            onClick={() => setPage(i)}
+                            className={`px-4 py-2 rounded-lg ${
+                              page === i
+                                ? 'bg-primary-600 text-white'
+                                : 'border hover:bg-gray-50'
+                            }`}
+                          >
+                            {i}
+                          </button>
+                        );
+                      }
+
+                      // Add ellipsis and last page if needed
+                      if (endPage < totalPages) {
+                        if (endPage < totalPages - 1) {
+                          pages.push(
+                            <span
+                              key="end-ellipsis"
+                              className="px-2 py-2 text-gray-500"
+                            >
+                              ...
+                            </span>
+                          );
+                        }
+                        pages.push(
+                          <button
+                            key={totalPages}
+                            onClick={() => setPage(totalPages)}
+                            className="px-4 py-2 border rounded-lg hover:bg-gray-50"
+                          >
+                            {totalPages}
+                          </button>
+                        );
+                      }
+
+                      return pages;
+                    })()}
 
                     <button
                       onClick={() => setPage(Math.min(totalPages, page + 1))}

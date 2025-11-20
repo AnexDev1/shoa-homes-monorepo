@@ -6,9 +6,11 @@ const Footer = () => {
           {/* Company Info */}
           <div>
             <div className="flex items-center space-x-2 mb-4">
-              <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">SH</span>
-              </div>
+              <img
+                src="/images/logo.png"
+                alt="Shoa Homes Logo"
+                className="w-10 h-10 object-contain"
+              />
               <span className="text-xl font-bold">Shoa Homes</span>
             </div>
             <p className="text-gray-400 text-sm">
@@ -26,7 +28,10 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="/properties" className="hover:text-white transition-colors">
+                <a
+                  href="/properties"
+                  className="hover:text-white transition-colors"
+                >
                   Properties
                 </a>
               </li>
@@ -36,7 +41,10 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="#contact" className="hover:text-white transition-colors">
+                <a
+                  href="#contact"
+                  className="hover:text-white transition-colors"
+                >
                   Contact
                 </a>
               </li>
@@ -48,22 +56,34 @@ const Footer = () => {
             <h3 className="font-semibold text-lg mb-4">Property Types</h3>
             <ul className="space-y-2 text-gray-400">
               <li>
-                <a href="/properties?type=apartment" className="hover:text-white transition-colors">
+                <a
+                  href="/properties?type=apartment"
+                  className="hover:text-white transition-colors"
+                >
                   Apartments
                 </a>
               </li>
               <li>
-                <a href="/properties?type=house" className="hover:text-white transition-colors">
+                <a
+                  href="/properties?type=house"
+                  className="hover:text-white transition-colors"
+                >
                   Houses
                 </a>
               </li>
               <li>
-                <a href="/properties?type=villa" className="hover:text-white transition-colors">
+                <a
+                  href="/properties?type=villa"
+                  className="hover:text-white transition-colors"
+                >
                   Villas
                 </a>
               </li>
               <li>
-                <a href="/properties?type=commercial" className="hover:text-white transition-colors">
+                <a
+                  href="/properties?type=commercial"
+                  className="hover:text-white transition-colors"
+                >
                   Commercial
                 </a>
               </li>
@@ -93,7 +113,10 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
-          <p>&copy; {new Date().getFullYear()} Shoa Homes Real Estate PLC. All rights reserved.</p>
+          <p>
+            &copy; {new Date().getFullYear()} Shoa Homes Real Estate PLC. All
+            rights reserved.
+          </p>
         </div>
       </div>
     </footer>

@@ -8,11 +8,6 @@ export const authAPI = {
     return data.data;
   },
 
-  register: async (userData) => {
-    const { data } = await apiClient.post('/auth/register', userData);
-    return data.data;
-  },
-
   getCurrentUser: async () => {
     const { data } = await apiClient.get('/auth/me');
     return data;
@@ -65,41 +60,38 @@ export const propertiesAPI = {
   },
 
   uploadImages: async (propertyId, files) => {
-    const formData = new FormData();
-    files.forEach((file) => formData.append('images', file));
-    const { data } = await apiClient.post(
-      `/properties/${propertyId}/images`,
-      formData,
-      {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      }
-    );
+    // files may be either an array of File or a FormData (in case caller pre-made it)
+    let formData = files instanceof FormData ? files : new FormData();
+    if (!(files instanceof FormData)) {
+      (files || []).forEach((file) => formData.append('images[]', file));
+    }
+    // Do NOT set Content-Type header manually — axios/browser will set boundary for multipart/form-data
+    // Also ensure we don't send the `Content-Type` header without boundary as a misconfigured header can cause parsing failures
+    // Use fetch for file uploads to avoid axios headers overriding/boundary issues
+    const token = localStorage.getItem('token');
+    const baseUrl = apiClient.defaults.baseURL || '';
+    const url = baseUrl.replace(/\/$/, '') + `/properties/${propertyId}/images`;
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    const res = await fetch(url, {
+      method: 'POST',
+      headers,
+      body: formData,
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.message || 'Failed to upload images');
     return data;
   },
 };
 
 // Inquiries API
-export const inquiriesAPI = {
-  create: async (inquiryData) => {
-    const { data } = await apiClient.post('/inquiries', inquiryData);
-    return data;
-  },
-
-  getAll: async (params) => {
-    const { data } = await apiClient.get('/inquiries', { params });
-    return data;
-  },
-
-  markAsRead: async (id) => {
-    const { data } = await apiClient.patch(`/inquiries/${id}/read`);
-    return data;
-  },
-};
+// Inquiries API removed — use direct contact channels
 
 // Dashboard API
 export const dashboardAPI = {
   getStats: async () => {
     const { data } = await apiClient.get('/dashboard/stats');
-    return data;
+    // Dashboard endpoint returns { success: true, data: stats }
+    // Return the inner stats object to make it easier for callers
+    return data.data;
   },
 };

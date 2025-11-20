@@ -10,9 +10,11 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">SH</span>
-            </div>
+            <img
+              src="/images/logo.png"
+              alt="Shoa Homes Logo"
+              className="w-10 h-10 object-contain"
+            />
             <span className="text-xl font-bold text-gray-900">Shoa Homes</span>
           </Link>
 
@@ -56,21 +58,19 @@ const Navbar = () => {
                     Dashboard
                   </Link>
                 )}
-                <button
-                  onClick={logout}
-                  className="btn-secondary text-sm"
-                >
+                <button onClick={logout} className="btn-secondary text-sm">
                   Logout
                 </button>
               </>
             ) : (
               <>
-                <Link to="/login" className="text-gray-700 hover:text-primary-600">
+                <Link
+                  to="/login"
+                  className="text-gray-700 hover:text-primary-600"
+                >
                   Login
                 </Link>
-                <Link to="/register" className="btn-primary text-sm">
-                  Sign Up
-                </Link>
+                {/* Registration disabled */}
               </>
             )}
           </div>

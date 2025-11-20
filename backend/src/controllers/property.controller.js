@@ -21,24 +21,25 @@ export const getAllProperties = async (req, res) => {
     const where = {};
 
     if (featured === 'true') where.featured = true;
-    if (type) where.type = { equals: type, mode: 'insensitive' };
-    if (status) where.status = { equals: status, mode: 'insensitive' };
-    if (bedrooms) where.bedrooms = { gte: parseInt(bedrooms) };
-    if (location) where.location = { contains: location, mode: 'insensitive' };
+    if (type && type !== '') where.type = { equals: type };
+    if (status && status !== '') where.status = { equals: status };
+    if (bedrooms && bedrooms !== '')
+      where.bedrooms = { gte: parseInt(bedrooms) };
+    if (location && location !== '') where.location = { contains: location };
 
     // Handle price range
-    if (priceMin || priceMax) {
+    if ((priceMin && priceMin !== '') || (priceMax && priceMax !== '')) {
       where.price = {};
-      if (priceMin) where.price.gte = parseFloat(priceMin);
-      if (priceMax) where.price.lte = parseFloat(priceMax);
+      if (priceMin && priceMin !== '') where.price.gte = parseFloat(priceMin);
+      if (priceMax && priceMax !== '') where.price.lte = parseFloat(priceMax);
     }
 
     // Handle search across multiple fields
-    if (search) {
+    if (search && search !== '') {
       where.OR = [
-        { title: { contains: search, mode: 'insensitive' } },
-        { description: { contains: search, mode: 'insensitive' } },
-        { location: { contains: search, mode: 'insensitive' } },
+        { title: { contains: search } },
+        { description: { contains: search } },
+        { location: { contains: search } },
       ];
     }
 
@@ -82,12 +83,33 @@ export const getAllProperties = async (req, res) => {
         skip,
         take,
       }),
-      prisma.property.count({ where }),
+      prisma.property.count({
+        where: {
+          featured: where.featured,
+          type: where.type ? where.type.equals : undefined,
+          status: where.status ? where.status.equals : undefined,
+          bedrooms: where.bedrooms,
+          location: where.location
+            ? { contains: where.location.contains }
+            : undefined,
+          price: where.price,
+          OR: where.OR,
+        },
+      }),
     ]);
+
+    // Parse amenities before returning to clients so they get arrays
+    const parsedProperties = properties.map((p) => ({
+      ...p,
+      amenities:
+        typeof p.amenities === 'string'
+          ? JSON.parse(p.amenities)
+          : p.amenities || [],
+    }));
 
     res.status(200).json({
       success: true,
-      data: properties,
+      data: parsedProperties,
       pagination: {
         page: parseInt(page),
         limit: take,
@@ -97,6 +119,7 @@ export const getAllProperties = async (req, res) => {
       total,
     });
   } catch (error) {
+    console.error('Error in getAllProperties:', error?.stack || error);
     res.status(500).json({
       success: false,
       message: 'Failed to fetch properties',
@@ -131,11 +154,19 @@ export const getPropertyById = async (req, res) => {
       });
     }
 
+    const parsedProperty = {
+      ...property,
+      amenities:
+        typeof property.amenities === 'string'
+          ? JSON.parse(property.amenities)
+          : property.amenities || [],
+    };
     res.status(200).json({
       success: true,
-      data: property,
+      data: parsedProperty,
     });
   } catch (error) {
+    console.error('Error in getPropertyById:', error?.stack || error);
     res.status(500).json({
       success: false,
       message: 'Failed to fetch property',
@@ -146,8 +177,60 @@ export const getPropertyById = async (req, res) => {
 
 export const createProperty = async (req, res) => {
   try {
-    const { userId, ...propertyData } = req.body;
+    // Prefer authenticated user ID; fall back to body if provided
+    const userId = req.user?.id || req.body?.userId;
+    const propertyData = { ...req.body };
 
+    // Normalize amenities: store as JSON string in DB
+    if (Array.isArray(propertyData.amenities)) {
+      propertyData.amenities = JSON.stringify(propertyData.amenities);
+    } else if (typeof propertyData.amenities === 'string') {
+      // If it's already a comma-separated string -> convert to JSON
+      try {
+        // If already JSON string, keep it
+        JSON.parse(propertyData.amenities);
+      } catch (e) {
+        propertyData.amenities = JSON.stringify(
+          propertyData.amenities
+            .split(',')
+            .map((a) => a.trim())
+            .filter(Boolean)
+        );
+      }
+    }
+
+    // Normalize numeric fields and lat/lng
+    const parseNullableFloat = (value) => {
+      if (value === undefined || value === null || value === '') return null;
+      const parsed = parseFloat(value);
+      return Number.isNaN(parsed) ? null : parsed;
+    };
+
+    propertyData.latitude = parseNullableFloat(propertyData.latitude);
+    propertyData.longitude = parseNullableFloat(propertyData.longitude);
+    propertyData.price = parseNullableFloat(propertyData.price);
+    propertyData.area = parseNullableFloat(propertyData.area);
+
+    const parseNullableInt = (value) => {
+      if (value === undefined || value === null || value === '') return null;
+      const parsed = parseInt(value);
+      return Number.isNaN(parsed) ? null : parsed;
+    };
+
+    propertyData.bedrooms = parseNullableInt(propertyData.bedrooms);
+    propertyData.bathrooms = parseNullableInt(propertyData.bathrooms);
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'Not authenticated',
+      });
+    }
+    console.log('Creating property for user:', userId);
+    console.log('Incoming property payload:', propertyData);
+
+    // Don't pass userId scalar directly; use relation connect
+    delete propertyData.userId;
     const newProperty = await prisma.property.create({
       data: {
         ...propertyData,
@@ -168,12 +251,20 @@ export const createProperty = async (req, res) => {
       },
     });
 
+    const parsedProperty = {
+      ...newProperty,
+      amenities:
+        typeof newProperty.amenities === 'string'
+          ? JSON.parse(newProperty.amenities)
+          : newProperty.amenities || [],
+    };
     res.status(201).json({
       success: true,
       message: 'Property created successfully',
-      data: newProperty,
+      data: parsedProperty,
     });
   } catch (error) {
+    console.error('Error in createProperty:', error?.stack || error);
     res.status(500).json({
       success: false,
       message: 'Failed to create property',
@@ -185,8 +276,57 @@ export const createProperty = async (req, res) => {
 export const updateProperty = async (req, res) => {
   try {
     const { id } = req.params;
-    const { userId, ...propertyData } = req.body;
+    // Prefer authenticated user ID; fall back to body if provided
+    const userId = req.user?.id || req.body?.userId;
+    const propertyData = { ...req.body };
 
+    // Normalize amenities: store as JSON string in DB
+    if (Array.isArray(propertyData.amenities)) {
+      propertyData.amenities = JSON.stringify(propertyData.amenities);
+    } else if (typeof propertyData.amenities === 'string') {
+      try {
+        JSON.parse(propertyData.amenities);
+      } catch (e) {
+        propertyData.amenities = JSON.stringify(
+          propertyData.amenities
+            .split(',')
+            .map((a) => a.trim())
+            .filter(Boolean)
+        );
+      }
+    }
+
+    // Normalize numeric fields and lat/lng (same helper functions)
+    const parseNullableFloat = (value) => {
+      if (value === undefined || value === null || value === '') return null;
+      const parsed = parseFloat(value);
+      return Number.isNaN(parsed) ? null : parsed;
+    };
+    propertyData.latitude = parseNullableFloat(propertyData.latitude);
+    propertyData.longitude = parseNullableFloat(propertyData.longitude);
+    propertyData.price = parseNullableFloat(propertyData.price);
+    propertyData.area = parseNullableFloat(propertyData.area);
+
+    const parseNullableInt = (value) => {
+      if (value === undefined || value === null || value === '') return null;
+      const parsed = parseInt(value);
+      return Number.isNaN(parsed) ? null : parsed;
+    };
+    propertyData.bedrooms = parseNullableInt(propertyData.bedrooms);
+    propertyData.bathrooms = parseNullableInt(propertyData.bathrooms);
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'Not authenticated',
+      });
+    }
+
+    console.log('Updating property for user:', userId);
+    console.log('Incoming property update payload:', propertyData);
+
+    // Don't pass userId scalar when updating; use relation connect
+    delete propertyData.userId;
     const updatedProperty = await prisma.property.update({
       where: { id },
       data: {
@@ -208,12 +348,20 @@ export const updateProperty = async (req, res) => {
       },
     });
 
+    const parsedProperty = {
+      ...updatedProperty,
+      amenities:
+        typeof updatedProperty.amenities === 'string'
+          ? JSON.parse(updatedProperty.amenities)
+          : updatedProperty.amenities || [],
+    };
     res.status(200).json({
       success: true,
       message: 'Property updated successfully',
-      data: updatedProperty,
+      data: parsedProperty,
     });
   } catch (error) {
+    console.error('Error in updateProperty:', error?.stack || error);
     res.status(500).json({
       success: false,
       message: 'Failed to update property',
@@ -225,7 +373,7 @@ export const updateProperty = async (req, res) => {
 export const deleteProperty = async (req, res) => {
   try {
     const { id } = req.params;
-    const { userId } = req.body;
+    const userId = req.user?.id || req.body?.userId;
 
     const existingProperty = await prisma.property.findUnique({
       where: { id },
@@ -238,7 +386,11 @@ export const deleteProperty = async (req, res) => {
       });
     }
 
-    if (existingProperty.userId !== userId) {
+    // Allow deletion if the user is the owner or if they are an admin
+    const isOwner = existingProperty.userId === userId;
+    const isAdmin = req.user?.role === 'ADMIN';
+
+    if (!isOwner && !isAdmin) {
       return res.status(403).json({
         success: false,
         message: 'Not authorized to delete this property',
@@ -248,12 +400,15 @@ export const deleteProperty = async (req, res) => {
     await prisma.property.delete({
       where: { id },
     });
+    console.log(`Property ${id} deleted by user ${userId}`);
 
     res.status(200).json({
       success: true,
       message: 'Property deleted successfully',
+      deletedBy: userId,
     });
   } catch (error) {
+    console.error('Error in deleteProperty:', error?.stack || error);
     res.status(500).json({
       success: false,
       message: 'Failed to delete property',
@@ -265,19 +420,46 @@ export const deleteProperty = async (req, res) => {
 export const uploadPropertyImages = async (req, res) => {
   try {
     const { id } = req.params;
-    const { userId } = req.body;
+    const userId = req.user?.id || req.body?.userId;
 
-    if (!req.files || !req.files.images) {
+    // Debug: log incoming request content type and file fields
+    console.log(
+      'UploadPropertyImages: content-type:',
+      req.headers['content-type']
+    );
+    console.log('UploadPropertyImages: req.files present?', !!req.files);
+    if (req.files)
+      console.log('UploadPropertyImages: files keys:', Object.keys(req.files));
+
+    // Accept 'images' or 'images[]' field names to be more forgiving to different clients
+    const fileField = req.files?.images
+      ? 'images'
+      : req.files?.['images[]']
+        ? 'images[]'
+        : null;
+    if (!req.files || !fileField) {
+      // Provide debug details to help diagnose upload issues during dev
+      const received = req.files ? Object.keys(req.files) : 'No files';
+      console.warn(
+        'UploadPropertyImages: missing files or invalid field. received:',
+        received
+      );
       return res.status(400).json({
         success: false,
         message: 'No files uploaded or invalid file field name',
-        receivedFiles: req.files ? Object.keys(req.files) : 'No files',
+        receivedFiles: received,
+        contentType: req.headers['content-type'],
       });
     }
 
-    const files = Array.isArray(req.files.images)
-      ? req.files.images
-      : [req.files.images];
+    const files = Array.isArray(req.files[fileField])
+      ? req.files[fileField]
+      : [req.files[fileField]];
+
+    // Log each file name/size for debugging
+    for (let f of files) {
+      console.log('Upload file:', f.name, f.size, f.mimetype);
+    }
 
     // Check property ownership
     const existingProperty = await prisma.property.findUnique({
@@ -302,26 +484,42 @@ export const uploadPropertyImages = async (req, res) => {
         .json({ success: false, message: 'Not authorized' });
     }
 
-    // Upload to Cloudinary
+    // Upload to Cloudinary - continue on per-file errors and return details
     const uploadedImages = [];
+    const uploadErrors = [];
     for (let file of files) {
-      const { url, publicId } = await uploadToCloudinary(file, 'properties');
-      const image = await prisma.image.create({
-        data: {
-          url,
-          publicId,
-          propertyId: id,
-        },
-      });
-      uploadedImages.push(image);
+      try {
+        const { url, publicId } = await uploadToCloudinary(file, 'properties');
+        console.log(`Upload success for ${file.name}: ${url}`);
+        const image = await prisma.image.create({
+          data: {
+            url,
+            publicId,
+            propertyId: id,
+          },
+        });
+        uploadedImages.push(image);
+      } catch (fileErr) {
+        console.error(
+          'Failed to upload a file to Cloudinary:',
+          file?.name,
+          fileErr?.message || fileErr
+        );
+        uploadErrors.push({
+          file: file?.name || 'unknown',
+          error: fileErr?.message || String(fileErr),
+        });
+      }
     }
 
     res.status(200).json({
       success: true,
-      message: 'Images uploaded successfully',
+      message: 'Images processed',
       data: uploadedImages,
+      errors: uploadErrors,
     });
   } catch (error) {
+    console.error('Error in uploadPropertyImages:', error?.stack || error);
     res.status(500).json({
       success: false,
       message: 'Error uploading images',

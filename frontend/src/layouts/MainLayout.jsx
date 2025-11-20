@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import InquiryModal from '../components/InquiryModal';
+// Inquiry modal removed — contact via phone/email
 
 const MainLayout = () => {
   return (
@@ -11,7 +11,7 @@ const MainLayout = () => {
         <Outlet />
       </main>
       <Footer />
-      <InquiryModal />
+      {/* Inquiry modal removed — use contact info in property pages */}
     </div>
   );
 };

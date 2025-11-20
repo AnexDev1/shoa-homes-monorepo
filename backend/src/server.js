@@ -3,11 +3,11 @@ import cors from 'cors';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import fileUpload from 'express-fileupload';
+import os from 'os';
 
 // Import routes
 import authRoutes from './routes/auth.routes.js';
 import propertyRoutes from './routes/property.routes.js';
-import inquiryRoutes from './routes/inquiry.routes.js';
 import dashboardRoutes from './routes/dashboard.routes.js';
 
 // Load environment variables
@@ -20,7 +20,8 @@ const PORT = process.env.PORT || 5000;
 app.use(
   cors({
     origin: [
-      'http://localhost:3000', // Local development
+      'http://localhost:3000', // Local development (legacy)
+      'http://localhost:5173', // Vite dev server
       'https://shoa-0vtw.onrender.com', // frontend domain
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -37,14 +38,18 @@ app.use(morgan('dev'));
 app.use(
   fileUpload({
     useTempFiles: true,
-    tempFileDir: '/tmp/',
+    // Use OS temporary directory which works cross-platform
+    tempFileDir: os.tmpdir(),
+    preserveExtension: true,
+    // Optional limits (tune as needed)
+    limits: { fileSize: 20 * 1024 * 1024 }, // 20 MB
   })
 );
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/properties', propertyRoutes);
-app.use('/api/inquiries', inquiryRoutes);
+// Inquiries removed — contact via phone/email
 app.use('/api/dashboard', dashboardRoutes);
 
 // Health check
@@ -72,4 +77,11 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📍 API available at http://localhost:${PORT}/api`);
+  console.log(
+    `🌐 CORS allowed origins: ${JSON.stringify([
+      'http://localhost:3000',
+      'http://localhost:5173',
+      'https://shoa-0vtw.onrender.com',
+    ])}`
+  );
 });

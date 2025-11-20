@@ -1,6 +1,7 @@
 # 📁 Shoa Homes Monorepo - Complete Directory Structure
 
 ## Root Level
+
 ```
 shoa-homes-monorepo/
 ├── .env.example                 # Environment variables template
@@ -17,6 +18,7 @@ shoa-homes-monorepo/
 ```
 
 ## Frontend Structure (React + Vite)
+
 ```
 frontend/
 ├── index.html                  # HTML template
@@ -71,6 +73,7 @@ frontend/
 ```
 
 ## Backend Structure (Node.js + Express)
+
 ```
 backend/
 ├── package.json              # Backend dependencies
@@ -103,6 +106,7 @@ backend/
 ```
 
 ## DevOps
+
 ```
 .github/
 └── workflows/
@@ -110,6 +114,7 @@ backend/
 ```
 
 ## Husky Git Hooks
+
 ```
 .husky/
 ├── pre-commit                # Pre-commit hook
@@ -121,6 +126,7 @@ backend/
 ## Key Files Description
 
 ### Root Configuration Files
+
 - **package.json**: Workspace configuration with npm workspaces
 - **.env.example**: Template for environment variables
 - **.eslintrc.json**: Linting rules for JavaScript/JSX
@@ -129,6 +135,7 @@ backend/
 - **.lintstagedrc.json**: Pre-commit file linting
 
 ### Frontend Files
+
 - **vite.config.js**: Vite bundler configuration with proxy
 - **tailwind.config.js**: Tailwind theme customization
 - **index.html**: Main HTML with SEO meta tags
@@ -136,10 +143,11 @@ backend/
 - **App.jsx**: Root component with React Router setup
 
 ### Backend Files
+
 - **server.js**: Express server with middleware and routes
 - **schema.prisma**: Database schema with models
-- ***.controller.js**: Business logic for each resource
-- ***.routes.js**: API endpoint definitions
+- **\*.controller.js**: Business logic for each resource
+- **\*.routes.js**: API endpoint definitions
 - **auth.middleware.js**: JWT authentication
 
 ---
@@ -208,17 +216,6 @@ Image
 ├── publicId
 ├── propertyId (FK)
 └── createdAt
-
-Inquiry
-├── id
-├── name
-├── email
-├── phone
-├── message
-├── status
-├── propertyId (FK)
-├── userId (FK)
-└── createdAt
 ```
 
 ---
@@ -239,7 +236,7 @@ App
     │   │   ├── LoginPage
     │   │   └── RegisterPage
     │   ├── Footer
-    │   └── InquiryModal
+    │   └── InquiryModal (removed - inquiries handled offline)
     │
     └── AdminLayout (ProtectedRoute)
         ├── Header
@@ -248,7 +245,6 @@ App
             ├── AdminDashboard
             │   └── Charts (Recharts)
             ├── PropertyManagement
-            ├── InquiryManagement
             └── SettingsPage
 ```
 
@@ -267,17 +263,13 @@ Zustand Stores:
 │   └── updateUser()
 │
 └── modalStore
-    ├── isInquiryModalOpen
-    ├── selectedProperty
-    ├── openInquiryModal()
-    └── closeInquiryModal()
+    └── (removed - no app-level modals required)
 
 React Query:
 ├── ['featured-properties']
 ├── ['properties', filters, page]
 ├── ['property', id]
 ├── ['admin-properties']
-├── ['inquiries', filter]
 └── ['dashboard-stats']
 ```
 
@@ -286,6 +278,7 @@ React Query:
 ## Build Output
 
 ### Frontend (Vite)
+
 ```
 frontend/dist/
 ├── index.html
@@ -296,6 +289,7 @@ frontend/dist/
 ```
 
 ### Backend (Node)
+
 ```
 backend/
 └── src/ (no build needed, runs directly)
@@ -305,14 +299,14 @@ backend/
 
 ## Total File Count
 
-| Category | Count |
-|----------|-------|
-| Frontend Components | 15+ |
-| Frontend Pages | 8 |
-| Backend Controllers | 4 |
-| Backend Routes | 4 |
-| Config Files | 10+ |
-| Database Models | 4 |
+| Category            | Count   |
+| ------------------- | ------- |
+| Frontend Components | 15+     |
+| Frontend Pages      | 8       |
+| Backend Controllers | 4       |
+| Backend Routes      | 4       |
+| Config Files        | 10+     |
+| Database Models     | 3       |
 | Total Created Files | **60+** |
 
 ---
@@ -320,6 +314,7 @@ backend/
 ## Dependencies Summary
 
 ### Frontend (15 packages)
+
 - react, react-dom, react-router-dom
 - @tanstack/react-query
 - axios, zustand
@@ -329,12 +324,14 @@ backend/
 - vite, @vitejs/plugin-react
 
 ### Backend (10 packages)
+
 - express, cors, morgan, dotenv
 - @prisma/client, prisma
 - bcryptjs, jsonwebtoken
 - cloudinary, express-fileupload
 
 ### Dev Tools (8 packages)
+
 - eslint, prettier
 - husky, lint-staged
 - @commitlint/cli, @commitlint/config-conventional

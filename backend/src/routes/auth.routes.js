@@ -1,6 +1,5 @@
 import express from 'express';
 import {
-  register,
   login,
   getCurrentUser,
   updateProfile,
@@ -11,7 +10,7 @@ import { authenticate } from '../middleware/auth.middleware.js';
 const router = express.Router();
 
 // Public routes
-router.post('/register', register);
+// Registration disabled — admin accounts are pre-provisioned
 router.post('/login', login);
 
 // Protected routes

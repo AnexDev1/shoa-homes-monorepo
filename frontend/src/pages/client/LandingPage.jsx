@@ -29,16 +29,16 @@ const LandingPage = () => {
   });
   const navigate = useNavigate();
 
-  // Fetch featured properties
+  // Fetch latest properties
   const {
-    data: featuredProperties = [],
+    data: latestProperties = [],
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['properties', 'featured'],
+    queryKey: ['properties', 'latest'],
     queryFn: async () => {
       const res = await propertiesAPI.getAll({
-        featured: true,
+        sort: 'newest',
         limit: 6,
         _t: Date.now(),
       });
@@ -118,37 +118,37 @@ const LandingPage = () => {
         </div>
 
         {/* Hero Content */}
-        <div className="container-custom relative z-10 py-20">
+        <div className="container-custom relative z-10 py-12 sm:py-16 md:py-20">
           <div className="max-w-4xl mx-auto text-center text-white">
             <div className="animate-slide-down">
-              <span className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider text-gold-400 bg-gold-400/10 border border-gold-400/30 rounded-full backdrop-blur-sm">
+              <span className="inline-block px-3 sm:px-4 py-2 mb-6 text-xs sm:text-sm font-semibold tracking-wider text-gold-400 bg-gold-400/10 border border-gold-400/30 rounded-full backdrop-blur-sm">
                 ✨ PREMIUM REAL ESTATE IN ETHIOPIA
               </span>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 leading-tight animate-slide-up">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold mb-6 leading-tight animate-slide-up">
               Find Your Dream Home in{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-300 to-gold-500">
                 Addis Ababa
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl mb-10 text-gray-200 max-w-3xl mx-auto animate-fade-in">
+            <p className="text-lg md:text-xl lg:text-2xl mb-10 text-gray-200 max-w-3xl mx-auto animate-fade-in">
               Discover luxury properties, modern apartments, and premium
               commercial spaces with Ethiopia&apos;s most trusted real estate
               partner
             </p>
 
-            <div className="flex flex-wrap justify-center gap-4 animate-fade-in">
+            <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-4 animate-fade-in">
               <Link
                 to="/properties"
-                className="px-8 py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-navy-900 font-bold rounded-lg hover:from-gold-400 hover:to-gold-500 transform hover:scale-105 transition-all duration-300 shadow-premium"
+                className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-navy-900 font-bold rounded-lg hover:from-gold-400 hover:to-gold-500 transform hover:scale-105 transition-all duration-300 shadow-premium text-center"
               >
                 Browse Properties
               </Link>
               <a
                 href="#featured"
-                className="px-8 py-4 bg-white/10 text-white font-bold rounded-lg hover:bg-white/20 backdrop-blur-sm border-2 border-white/30 transform hover:scale-105 transition-all duration-300"
+                className="px-6 sm:px-8 py-3 sm:py-4 bg-white/10 text-white font-bold rounded-lg hover:bg-white/20 backdrop-blur-sm border-2 border-white/30 transform hover:scale-105 transition-all duration-300 text-center"
               >
                 View Featured
               </a>
@@ -157,7 +157,7 @@ const LandingPage = () => {
         </div>
 
         {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
+        <div className="absolute bottom-6 sm:bottom-8 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
           <div className="flex flex-col items-center text-white/60">
             <span className="text-xs mb-2">Scroll Down</span>
             <svg
@@ -178,9 +178,9 @@ const LandingPage = () => {
       </section>
 
       {/* Quick Search Card */}
-      <section className="container-custom -mt-16 relative z-20">
-        <div className="bg-white rounded-2xl shadow-premium-lg p-8 border border-gray-100">
-          <h3 className="text-2xl font-bold mb-6 text-navy-800">
+      <section className="container-custom -mt-12 sm:-mt-16 relative z-20">
+        <div className="bg-white rounded-2xl shadow-premium-lg p-6 sm:p-8 border border-gray-100">
+          <h3 className="text-xl sm:text-2xl font-bold mb-6 text-navy-800">
             Find Your Perfect Property
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -220,7 +220,7 @@ const LandingPage = () => {
             </select>
             <button
               onClick={handleSearch}
-              className="px-6 py-3 bg-gradient-to-r from-navy-700 to-navy-900 text-white font-semibold rounded-lg hover:from-navy-600 hover:to-navy-800 transition-all duration-300 flex items-center justify-center gap-2"
+              className="px-4 sm:px-6 py-3 bg-gradient-to-r from-navy-700 to-navy-900 text-white font-semibold rounded-lg hover:from-navy-600 hover:to-navy-800 transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base"
             >
               <Search className="h-4 w-4" />
               Search Properties
@@ -230,14 +230,14 @@ const LandingPage = () => {
       </section>
 
       {/* Company Stats */}
-      <section className="container-custom py-20">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+      <section className="container-custom py-16 sm:py-20">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
           {companyStats.map((stat, index) => (
             <div
               key={index}
               className="text-center p-6 rounded-xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover:shadow-premium transition-all duration-300 transform hover:-translate-y-1"
             >
-              <div className="text-5xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-navy-700 to-gold-600 mb-2">
+              <div className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-navy-700 to-gold-600 mb-2">
                 {stat.value}
               </div>
               <div className="text-gray-600 font-medium">{stat.label}</div>
@@ -246,22 +246,22 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Featured Properties */}
+      {/* Latest Properties */}
       <section
         id="featured"
-        className="bg-gradient-to-b from-gray-50 to-white py-20"
+        className="bg-gradient-to-b from-gray-50 to-white py-16 sm:py-20"
       >
         <div className="container-custom">
-          <div className="text-center mb-16">
-            <span className="inline-block px-4 py-2 mb-4 text-sm font-semibold tracking-wider text-gold-600 bg-gold-50 rounded-full">
-              HANDPICKED FOR YOU
+          <div className="text-center mb-12 sm:mb-16">
+            <span className="inline-block px-3 sm:px-4 py-2 mb-4 text-xs sm:text-sm font-semibold tracking-wider text-gold-600 bg-gold-50 rounded-full">
+              NEWLY ADDED
             </span>
-            <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 text-navy-900">
-              Featured Properties
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4 text-navy-900">
+              Latest Properties
             </h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              Discover our carefully selected premium properties in the best
-              locations of Addis Ababa
+            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
+              Check out the newest properties added to our collection in Addis
+              Ababa
             </p>
           </div>
 
@@ -271,11 +271,11 @@ const LandingPage = () => {
             </div>
           ) : error ? (
             <div className="text-center py-12 text-red-500">
-              Error loading featured properties. Please try again later.
+              Error loading latest properties. Please try again later.
             </div>
-          ) : featuredProperties.length > 0 ? (
+          ) : latestProperties.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-              {featuredProperties.map((property, index) => (
+              {latestProperties.map((property, index) => (
                 <div
                   key={property.id}
                   className="animate-fade-in"
@@ -287,7 +287,7 @@ const LandingPage = () => {
             </div>
           ) : (
             <div className="text-center py-12 text-gray-500">
-              No featured properties available at the moment.
+              No properties available at the moment.
             </div>
           )}
 
@@ -316,15 +316,15 @@ const LandingPage = () => {
       </section>
 
       {/* Why Choose Us */}
-      <section className="container-custom py-20">
-        <div className="text-center mb-16">
-          <span className="inline-block px-4 py-2 mb-4 text-sm font-semibold tracking-wider text-navy-600 bg-navy-50 rounded-full">
+      <section className="container-custom py-16 sm:py-20">
+        <div className="text-center mb-12 sm:mb-16">
+          <span className="inline-block px-3 sm:px-4 py-2 mb-4 text-xs sm:text-sm font-semibold tracking-wider text-navy-600 bg-navy-50 rounded-full">
             WHY SHOA HOMES
           </span>
-          <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 text-navy-900">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4 text-navy-900">
             Your Trusted Real Estate Partner
           </h2>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
             We combine local expertise with world-class service to deliver
             exceptional results
           </p>
@@ -361,16 +361,16 @@ const LandingPage = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="bg-gradient-to-br from-navy-900 to-navy-800 py-20 text-white">
+      <section className="bg-gradient-to-br from-navy-900 to-navy-800 py-16 sm:py-20 text-white">
         <div className="container-custom">
-          <div className="text-center mb-16">
-            <span className="inline-block px-4 py-2 mb-4 text-sm font-semibold tracking-wider text-gold-400 bg-gold-400/10 rounded-full border border-gold-400/30">
+          <div className="text-center mb-12 sm:mb-16">
+            <span className="inline-block px-3 sm:px-4 py-2 mb-4 text-xs sm:text-sm font-semibold tracking-wider text-gold-400 bg-gold-400/10 rounded-full border border-gold-400/30">
               CLIENT TESTIMONIALS
             </span>
-            <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4">
               What Our Clients Say
             </h2>
-            <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-300 max-w-2xl mx-auto">
               Real stories from real people who found their dream properties
               with us
             </p>
@@ -411,7 +411,7 @@ const LandingPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="relative py-24 overflow-hidden">
+      <section className="relative py-16 sm:py-20 lg:py-24 overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
@@ -422,24 +422,24 @@ const LandingPage = () => {
         <div className="absolute inset-0 bg-navy-900/90" />
 
         <div className="container-custom relative z-10 text-center text-white">
-          <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-6">
             Ready to Find Your Dream Home?
           </h2>
-          <p className="text-xl mb-10 text-gray-200 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl mb-10 text-gray-200 max-w-2xl mx-auto">
             Let our expert team help you discover the perfect property that
             matches your lifestyle and budget
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-4">
             <Link
               to="/properties"
-              className="px-8 py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-navy-900 font-bold rounded-lg hover:from-gold-400 hover:to-gold-500 transform hover:scale-105 transition-all duration-300 shadow-premium flex items-center gap-2"
+              className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-navy-900 font-bold rounded-lg hover:from-gold-400 hover:to-gold-500 transform hover:scale-105 transition-all duration-300 shadow-premium flex items-center justify-center gap-2"
             >
               Browse Properties
               <ChevronRight className="w-5 h-5" />
             </Link>
             <a
               href="tel:+251911000000"
-              className="px-8 py-4 bg-white/10 text-white font-bold rounded-lg hover:bg-white/20 backdrop-blur-sm border-2 border-white/30 transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
+              className="px-6 sm:px-8 py-3 sm:py-4 bg-white/10 text-white font-bold rounded-lg hover:bg-white/20 backdrop-blur-sm border-2 border-white/30 transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2"
             >
               <Phone className="w-5 h-5" />
               Call Us Now
