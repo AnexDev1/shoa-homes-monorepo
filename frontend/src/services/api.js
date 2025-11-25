@@ -95,3 +95,75 @@ export const dashboardAPI = {
     return data.data;
   },
 };
+
+// User Management API
+export const userAPI = {
+  // Agent-specific endpoints
+  getAgentStats: async () => {
+    const { data } = await apiClient.get('/agent/stats');
+    return data.data;
+  },
+  // Get clients for a specific agent (admin only)
+  getAgentClients: async (agentId) => {
+    const { data } = await apiClient.get(`/users/agents/${agentId}/clients`);
+    return data.data || [];
+  },
+  addClient: async (clientData) => {
+    const { data } = await apiClient.post('/agent/clients', clientData);
+    return data.data;
+  },
+  updateClient: async (clientId, clientData) => {
+    const { data } = await apiClient.put(
+      `/agent/clients/${clientId}`,
+      clientData
+    );
+    return data.data;
+  },
+
+  deleteClient: async (clientId) => {
+    const { data } = await apiClient.delete(`/agent/clients/${clientId}`);
+    return data.data;
+  },
+
+  updatePassword: async (passwordData) => {
+    const { data } = await apiClient.put('/auth/change-password', passwordData);
+    return data.data;
+  },
+  // Get all users (admin only)
+  getAll: async () => {
+    const { data } = await apiClient.get('/users');
+    return data.data;
+  },
+
+  // Create a new user (admin only)
+  create: async (userData) => {
+    const { data } = await apiClient.post('/users', userData);
+    return data.data;
+  },
+
+  // Delete a user (admin only)
+  delete: async (userId) => {
+    const { data } = await apiClient.delete(`/users/${userId}`);
+    return data;
+  },
+
+  // Update user role (admin only)
+  updateRole: async (userId, role) => {
+    const { data } = await apiClient.put(`/users/${userId}/role`, { role });
+    return data.data;
+  },
+
+  // Toggle agent status (admin only)
+  toggleStatus: async (userId, isActive) => {
+    const { data } = await apiClient.patch(`/users/${userId}/status`, {
+      isActive,
+    });
+    return data.data;
+  },
+
+  // Get user by ID (admin only)
+  getById: async (userId) => {
+    const { data } = await apiClient.get(`/users/${userId}`);
+    return data.data;
+  },
+};

@@ -1,25 +1,30 @@
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuthStore } from '../store/authStore';
 import { Menu, X } from 'lucide-react';
 
-const AdminLayout = () => {
+const AgentLayout = () => {
   const location = useLocation();
   const { user, logout } = useAuthStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const navigate = useNavigate();
 
   const navigation = [
-    { name: 'Dashboard', path: '/admin', icon: '📊' },
-    { name: 'Create User', path: '/admin/create_user', icon: '👤' },
-    { name: 'Properties', path: '/admin/properties', icon: '🏠' },
-    { name: 'Settings', path: '/admin/settings', icon: '⚙️' },
+    { name: 'Dashboard', path: '/agent', icon: '📊' },
+    { name: 'Clients', path: '/agent/clients', icon: '👥' },
+    { name: 'Settings', path: '/agent/settings', icon: '⚙️' },
   ];
 
   const isActive = (path) => {
-    if (path === '/admin') {
+    if (path === '/agent') {
       return location.pathname === path;
     }
     return location.pathname.startsWith(path);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
   return (
@@ -48,16 +53,20 @@ const AdminLayout = () => {
                   className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
                 />
                 <span className="text-lg sm:text-xl font-bold text-gray-900 hidden sm:block">
-                  Shoa Homes Admin
+                  Shoa Homes Agent
                 </span>
               </Link>
             </div>
 
             <div className="flex items-center space-x-4">
               <span className="text-gray-700 text-sm sm:text-base">
-                Welcome, <span className="font-semibold">{user?.name}</span>
+                Welcome,{' '}
+                <span className="font-semibold">{user?.name || 'Agent'}</span>
               </span>
-              <button onClick={logout} className="btn-secondary text-sm">
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-md transition-colors"
+              >
                 Logout
               </button>
             </div>
@@ -85,7 +94,7 @@ const AdminLayout = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                onClick={() => setSidebarOpen(false)} // Close sidebar on mobile after navigation
+                onClick={() => setSidebarOpen(false)}
                 className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                   isActive(item.path)
                     ? 'bg-primary-50 text-primary-600 font-semibold'
@@ -116,4 +125,4 @@ const AdminLayout = () => {
   );
 };
 
-export default AdminLayout;
+export default AgentLayout;

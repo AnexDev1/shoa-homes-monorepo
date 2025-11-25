@@ -5,12 +5,12 @@ import {
   useNavigate,
   useLocation,
 } from 'react-router-dom';
-import { useAuthStore } from './store/authStore';
 import { useEffect } from 'react';
 
 // Layouts
 import MainLayout from './layouts/MainLayout';
 import AdminLayout from './layouts/AdminLayout';
+import AgentLayout from './layouts/AgentLayout';
 
 // Client Pages
 import LandingPage from './pages/client/LandingPage';
@@ -23,7 +23,12 @@ import LoginPage from './pages/auth/LoginPage';
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
 import PropertyManagement from './pages/admin/PropertyManagement';
+import CreateUser from './pages/admin/CreateUser';
 import SettingsPage from './pages/admin/SettingsPage';
+
+import AgentDashboard from './pages/agent/AgentDashboard';
+import ClientsPage from './pages/agent/ClientsPage';
+import AgentSettingsPage from './pages/agent/AgentSettingsPage';
 
 // Protected Route Component
 import ProtectedRoute from './components/ProtectedRoute';
@@ -57,15 +62,29 @@ function AppContent() {
       <Route
         path="/admin"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['ADMIN']}>
             <AdminLayout />
           </ProtectedRoute>
         }
       >
         <Route index element={<AdminDashboard />} />
         <Route path="properties" element={<PropertyManagement />} />
-        {/* Inquiries management removed — contact is phone/email */}
+        <Route path="create_user" element={<CreateUser />} />
         <Route path="settings" element={<SettingsPage />} />
+      </Route>
+
+      {/* Agent Routes */}
+      <Route
+        path="/agent"
+        element={
+          <ProtectedRoute allowedRoles={['AGENT']}>
+            <AgentLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<AgentDashboard />} />
+        <Route path="clients" element={<ClientsPage />} />
+        <Route path="settings" element={<AgentSettingsPage />} />
       </Route>
 
       {/* 404 Route */}

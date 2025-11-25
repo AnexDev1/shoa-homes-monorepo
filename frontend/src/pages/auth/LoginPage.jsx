@@ -18,7 +18,14 @@ const LoginPage = () => {
     mutationFn: authAPI.login,
     onSuccess: (data) => {
       setAuth(data.user, data.token);
-      navigate(data.user.role === 'ADMIN' ? '/admin' : '/');
+      // Redirect based on user role
+      if (data.user.role === 'ADMIN') {
+        navigate('/admin');
+      } else if (data.user.role === 'AGENT') {
+        navigate('/agent');
+      } else {
+        navigate('/');
+      }
     },
     onError: (err) => {
       setError(

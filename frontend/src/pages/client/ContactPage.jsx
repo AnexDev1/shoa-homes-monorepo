@@ -1,4 +1,10 @@
 import { useState } from 'react';
+import {
+  FaFacebookF,
+  FaTwitter,
+  FaInstagram,
+  FaLinkedinIn,
+} from 'react-icons/fa';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -142,25 +148,25 @@ const ContactPage = () => {
                         href="#"
                         className="w-10 h-10 bg-navy-100 rounded-full flex items-center justify-center hover:bg-navy-200 transition-colors"
                       >
-                        <span className="text-navy-600">📘</span>
+                        <FaFacebookF className="text-navy-600 w-5 h-5" />
                       </a>
                       <a
                         href="#"
                         className="w-10 h-10 bg-navy-100 rounded-full flex items-center justify-center hover:bg-navy-200 transition-colors"
                       >
-                        <span className="text-navy-600">🐦</span>
+                        <FaTwitter className="text-navy-600 w-5 h-5" />
                       </a>
                       <a
                         href="#"
                         className="w-10 h-10 bg-navy-100 rounded-full flex items-center justify-center hover:bg-navy-200 transition-colors"
                       >
-                        <span className="text-navy-600">📷</span>
+                        <FaInstagram className="text-navy-600 w-5 h-5" />
                       </a>
                       <a
                         href="#"
                         className="w-10 h-10 bg-navy-100 rounded-full flex items-center justify-center hover:bg-navy-200 transition-colors"
                       >
-                        <span className="text-navy-600">💼</span>
+                        <FaLinkedinIn className="text-navy-600 w-5 h-5" />
                       </a>
                     </div>
                   </div>

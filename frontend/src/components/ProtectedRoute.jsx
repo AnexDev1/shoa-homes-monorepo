@@ -1,17 +1,19 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children, allowedRoles = ['ADMIN'] }) => {
   const { isAuthenticated, user } = useAuthStore();
-
-  console.log('ProtectedRoute - Auth:', isAuthenticated, 'User:', user);
+  const location = useLocation();
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (user?.role !== 'ADMIN') {
-    console.log('User role is not ADMIN:', user?.role);
+  // Check if the user's role is allowed for the current route
+  const isAllowed = allowedRoles.some((role) => user?.role === role);
+
+  if (!isAllowed) {
+    // Redirect to home if not authorized
     return <Navigate to="/" replace />;
   }
 

@@ -15,11 +15,13 @@ model User {
   password  String
   name      String
   phone     String?
-  role      String   @default("USER") // "USER", "ADMIN"
+  role      String   @default("USER") // Possible values: "USER", "AGENT", "ADMIN"
+  isActive  Boolean  @default(true)    // For agent activation/deactivation
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   properties Property[]
+  clients   Client[]  // Added clients relationship
   // inquiries removed: user inquiries are no longer supported (contact via phone/email)
 
   @@map("users")
@@ -66,3 +68,20 @@ model Image {
 }
 
 // Inquiry model removed — inquiries are now handled offline via phone/email contact
+
+model Client {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  phone     String?
+  status    String   @default("Active") // Active, Inactive
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  agentId   String
+  agent     User     @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  @@unique([email, agentId])
+  @@map("clients")
+}

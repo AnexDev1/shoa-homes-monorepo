@@ -9,6 +9,8 @@ import os from 'os';
 import authRoutes from './routes/auth.routes.js';
 import propertyRoutes from './routes/property.routes.js';
 import dashboardRoutes from './routes/dashboard.routes.js';
+import userRoutes from './routes/user.routes.js';
+import agentRoutes from './routes/agent.routes.js';
 
 // Load environment variables
 dotenv.config();
@@ -48,9 +50,11 @@ app.use(
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/properties', propertyRoutes);
 // Inquiries removed — contact via phone/email
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/agent', agentRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

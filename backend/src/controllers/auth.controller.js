@@ -4,13 +4,11 @@ import prisma from '../config/prisma.js';
 
 export const register = async (req, res) => {
   // Registration disabled — admin accounts are pre-provisioned
-  res
-    .status(410)
-    .json({
-      success: false,
-      message:
-        'Registration disabled. Contact site administrator for admin access.',
-    });
+  res.status(410).json({
+    success: false,
+    message:
+      'Registration disabled. Contact site administrator for admin access.',
+  });
 };
 
 export const login = async (req, res) => {
@@ -29,13 +27,19 @@ export const login = async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    // Only allow admins to login to the system
-    if (user.role !== 'ADMIN') {
-      return res
-        .status(403)
-        .json({
-          error: 'Public user login is disabled. Contact administrator.',
-        });
+    // Only allow active admins and agents to login to the system
+    if (!['ADMIN', 'AGENT'].includes(user.role)) {
+      return res.status(403).json({
+        error: 'Access denied. Only admin and agent accounts can log in.',
+      });
+    }
+
+    // Check if the account is active
+    if (user.role === 'AGENT' && user.isActive === false) {
+      return res.status(403).json({
+        error:
+          'This account has been deactivated. Please contact an administrator.',
+      });
     }
 
     const token = generateToken({
@@ -43,6 +47,7 @@ export const login = async (req, res) => {
       role: user.role,
     });
 
+    // eslint-disable-next-line no-unused-vars
     const { password: _, ...userWithoutPassword } = user;
 
     res.json({
