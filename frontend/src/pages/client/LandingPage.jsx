@@ -315,6 +315,263 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Project Portfolio */}
+      <section className="container-custom py-20 bg-gray-50">
+        <div className="text-center mb-16">
+          <span className="inline-block px-4 py-2 mb-4 text-sm font-semibold tracking-wider text-gold-600 bg-gold-50 rounded-full">
+            OUR PROJECTS
+          </span>
+          <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 text-navy-900">
+            Project Portfolio
+          </h2>
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            Discover our portfolio of modern, sustainable residential projects
+            designed for contemporary Ethiopian living.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Flagship Project */}
+          <div className="bg-white rounded-2xl shadow-premium overflow-hidden hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-1 flex flex-col">
+            <div className="h-48 relative">
+              <img
+                src="https://images.unsplash.com/photo-1574362848149-11496d93a7c7?w=800&q=80"
+                alt="Flagship Project"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-navy-900/20"></div>
+              <div className="absolute top-4 right-4 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                Flagship
+              </div>
+            </div>
+            <div className="p-6 flex-grow">
+              <h3 className="text-xl font-bold mb-2 text-navy-900">
+                Flagship Project (44,000 m²)
+              </h3>
+              <p className="text-gray-600 mb-4 text-sm">
+                Prime real estate featuring diverse housing options on a massive
+                44,000 sq. meter site.
+              </p>
+              <div className="space-y-2 text-sm text-gray-500 mb-4">
+                <p className="flex items-start">
+                  <span className="mr-2 text-gold-500">✓</span> Multiple blocks
+                  (157, 60, 80, 95 & 85 units)
+                </p>
+                <p className="flex items-start">
+                  <span className="mr-2 text-gold-500">✓</span> B+G+10 to
+                  2B+G+17+Terrace
+                </p>
+                <p className="flex items-start">
+                  <span className="mr-2 text-gold-500">✓</span> Diverse housing
+                  options
+                </p>
+              </div>
+              <div className="mt-auto pt-4 border-t border-gray-100">
+                <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">
+                  Construction & Delivery
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Jackros Site */}
+          <div className="bg-white rounded-2xl shadow-premium overflow-hidden hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-1 flex flex-col">
+            <div className="h-48 relative">
+              <img
+                src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80"
+                alt="Jackros Site"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-navy-900/20"></div>
+            </div>
+            <div className="p-6 flex-grow">
+              <h3 className="text-xl font-bold mb-2 text-navy-900">
+                Jackros Site
+              </h3>
+              <p className="text-gray-600 mb-4 text-sm">
+                A mix of luxurious villas and modern apartment blocks with
+                comprehensive amenities.
+              </p>
+              <div className="space-y-2 text-sm text-gray-500 mb-4">
+                <p className="flex items-start">
+                  <span className="mr-2 text-gold-500">✓</span> Villas: 175m² -
+                  200m² (G+3)
+                </p>
+                <p className="flex items-start">
+                  <span className="mr-2 text-gold-500">✓</span> Apartments: 11
+                  to 18 Stories
+                </p>
+                <p className="flex items-start">
+                  <span className="mr-2 text-gold-500">✓</span> Commercial
+                  Centre, Gym, Library
+                </p>
+              </div>
+              <div className="mt-auto pt-4 border-t border-gray-100">
+                <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">
+                  Construction & Delivery
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Wello Sefer */}
+          <div className="bg-white rounded-2xl shadow-premium overflow-hidden hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-1 flex flex-col">
+            <div className="h-48 relative">
+              <img
+                src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80"
+                alt="Wello Sefer Site"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-navy-900/20"></div>
+            </div>
+            <div className="p-6 flex-grow">
+              <h3 className="text-xl font-bold mb-2 text-navy-900">
+                Wello Sefer Site
+              </h3>
+              <p className="text-gray-600 mb-4 text-sm">
+                Premium apartment building located near Peacock.
+              </p>
+              <div className="space-y-2 text-sm text-gray-500 mb-4">
+                <p className="flex items-start">
+                  <span className="mr-2 text-gold-500">✓</span> 3 Basement & 19
+                  Stories
+                </p>
+                <p className="flex items-start">
+                  <span className="mr-2 text-gold-500">✓</span> Gym, Cafeteria,
+                  Generator
+                </p>
+                <p className="flex items-start">
+                  <span className="mr-2 text-gold-500">✓</span> Ground Water &
+                  Communal Parking
+                </p>
+              </div>
+              <div className="mt-auto pt-4 border-t border-gray-100">
+                <span className="inline-block px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full">
+                  Under Construction
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Bisrate Gabriel */}
+          <div className="bg-white rounded-2xl shadow-premium overflow-hidden hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-1 flex flex-col">
+            <div className="h-48 relative">
+              <img
+                src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80"
+                alt="Bisrate Gabriel Site"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-navy-900/20"></div>
+            </div>
+            <div className="p-6 flex-grow">
+              <h3 className="text-xl font-bold mb-2 text-navy-900">
+                Bisrate Gabriel Site
+              </h3>
+              <p className="text-gray-600 mb-4 text-sm">
+                Contemporary residential building with modern amenities.
+              </p>
+              <div className="space-y-2 text-sm text-gray-500 mb-4">
+                <p className="flex items-start">
+                  <span className="mr-2 text-gold-500">✓</span> 1 Basement & 14
+                  Stories
+                </p>
+                <p className="flex items-start">
+                  <span className="mr-2 text-gold-500">✓</span> Gym, Cafeteria,
+                  Generator
+                </p>
+                <p className="flex items-start">
+                  <span className="mr-2 text-gold-500">✓</span> Ground Water &
+                  Communal Parking
+                </p>
+              </div>
+              <div className="mt-auto pt-4 border-t border-gray-100">
+                <span className="inline-block px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full">
+                  Under Construction
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Bole Matemiya */}
+          <div className="bg-white rounded-2xl shadow-premium overflow-hidden hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-1 flex flex-col">
+            <div className="h-48 relative">
+              <img
+                src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&q=80"
+                alt="Bole Matemiya Site"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-navy-900/20"></div>
+            </div>
+            <div className="p-6 flex-grow">
+              <h3 className="text-xl font-bold mb-2 text-navy-900">
+                Bole Matemiya Site
+              </h3>
+              <p className="text-gray-600 mb-4 text-sm">
+                Modern residential complex currently in design phase.
+              </p>
+              <div className="space-y-2 text-sm text-gray-500 mb-4">
+                <p className="flex items-start">
+                  <span className="mr-2 text-gold-500">✓</span> 2 Basement & 16
+                  Stories
+                </p>
+                <p className="flex items-start">
+                  <span className="mr-2 text-gold-500">✓</span> Gym, Cafeteria,
+                  Generator
+                </p>
+                <p className="flex items-start">
+                  <span className="mr-2 text-gold-500">✓</span> Ground Water &
+                  Communal Parking
+                </p>
+              </div>
+              <div className="mt-auto pt-4 border-t border-gray-100">
+                <span className="inline-block px-3 py-1 bg-indigo-100 text-indigo-800 text-xs font-semibold rounded-full">
+                  On Design Progress
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Bulbula Site */}
+          <div className="bg-white rounded-2xl shadow-premium overflow-hidden hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-1 flex flex-col">
+            <div className="h-48 relative">
+              <img
+                src="https://images.unsplash.com/photo-1515263487990-61b07816b324?w=800&q=80"
+                alt="Bulbula Site"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-navy-900/20"></div>
+            </div>
+            <div className="p-6 flex-grow">
+              <h3 className="text-xl font-bold mb-2 text-navy-900">
+                Bulbula Site (First Apartment)
+              </h3>
+              <p className="text-gray-600 mb-4 text-sm">
+                Our pioneering apartment project in Bole Bulbula.
+              </p>
+              <div className="space-y-2 text-sm text-gray-500 mb-4">
+                <p className="flex items-start">
+                  <span className="mr-2 text-gold-500">✓</span> 1 Basement & 11
+                  Stories
+                </p>
+                <p className="flex items-start">
+                  <span className="mr-2 text-gold-500">✓</span> Delivered
+                  Successfully
+                </p>
+                <p className="flex items-start">
+                  <span className="mr-2 text-gold-500">✓</span> Historic
+                  Milestone
+                </p>
+              </div>
+              <div className="mt-auto pt-4 border-t border-gray-100">
+                <span className="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">
+                  Delivered
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Why Choose Us */}
       <section className="container-custom py-16 sm:py-20">
         <div className="text-center mb-12 sm:mb-16">
