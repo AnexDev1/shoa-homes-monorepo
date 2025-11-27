@@ -30,18 +30,20 @@ const Navbar = () => {
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
       <div className="container-custom">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center space-x-2"
+            className="flex items-center space-x-0 h-16 md:h-20 overflow-hidden"
             onClick={handleLinkClick}
           >
-            <img
-              src="/images/logo.png"
-              alt="Shoa Homes Logo"
-              className="w-10 h-10 object-contain"
-            />
+            <div className="flex items-center h-16 md:h-20">
+              <img
+                src="/images/logo.png"
+                alt="Shoa Homes Logo"
+                className="w-20 h-20 md:w-[6.75rem] md:h-[6.75rem] object-contain"
+              />
+            </div>
             <span className="text-xl font-bold text-gray-900">Shoa Homes</span>
           </Link>
 
