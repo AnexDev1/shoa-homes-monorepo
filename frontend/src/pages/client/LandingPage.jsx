@@ -109,31 +109,30 @@ const LandingPage = () => {
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
-              backgroundImage:
-                'url(https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80)',
+              backgroundImage: 'url("/images/Type 1.1.jpg")',
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-navy-900/95 via-navy-800/90 to-navy-900/95" />
-          <div className="absolute inset-0 bg-gradient-to-t from-navy-900 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-navy-900/70 via-navy-800/60 to-navy-900/70" />
+          <div className="absolute inset-0 bg-gradient-to-t from-navy-900/50 via-transparent to-transparent" />
         </div>
 
         {/* Hero Content */}
-        <div className="container-custom relative z-10 py-12 sm:py-16 md:py-20">
+        <div className="container-custom relative z-10 py-10 sm:py-14 md:py-16">
           <div className="max-w-4xl mx-auto text-center text-white">
             <div className="animate-slide-down">
-              <span className="inline-block px-3 sm:px-4 py-2 mb-6 text-xs sm:text-sm font-semibold tracking-wider text-gold-400 bg-gold-400/10 border border-gold-400/30 rounded-full backdrop-blur-sm">
+              <span className="inline-block px-3 sm:px-4 py-1.5 mb-5 text-[10px] sm:text-xs font-semibold tracking-wider text-gold-400 bg-gold-400/10 border border-gold-400/30 rounded-full backdrop-blur-sm">
                 ✨ PREMIUM REAL ESTATE IN ETHIOPIA
               </span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold mb-6 leading-tight animate-slide-up">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-display font-bold mb-4 leading-snug animate-slide-up">
               Find Your Dream Home in{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-300 to-gold-500">
                 Addis Ababa
               </span>
             </h1>
 
-            <p className="text-lg md:text-xl lg:text-2xl mb-10 text-gray-200 max-w-3xl mx-auto animate-fade-in">
+            <p className="text-base md:text-lg lg:text-xl mb-8 text-gray-200 max-w-3xl mx-auto animate-fade-in">
               Discover luxury properties, modern apartments, and premium
               commercial spaces with Ethiopia&apos;s most trusted real estate
               partner
@@ -142,13 +141,14 @@ const LandingPage = () => {
             <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-4 animate-fade-in">
               <Link
                 to="/properties"
-                className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-navy-900 font-bold rounded-lg hover:from-gold-400 hover:to-gold-500 transform hover:scale-105 transition-all duration-300 shadow-premium text-center"
+                className="px-6 sm:px-8 py-3 sm:py-4 text-white font-bold rounded-lg border-2 border-gold-500 hover:border-gold-400 hover:text-gold-300 transform hover:scale-105 transition-all duration-300 text-center"
               >
                 Browse Properties
               </Link>
+
               <a
                 href="#featured"
-                className="px-6 sm:px-8 py-3 sm:py-4 bg-white/10 text-white font-bold rounded-lg hover:bg-white/20 backdrop-blur-sm border-2 border-white/30 transform hover:scale-105 transition-all duration-300 text-center"
+                className="px-6 sm:px-8 py-3 sm:py-4 text-white font-bold rounded-lg border-2 border-white/40 hover:border-white/60 transform hover:scale-105 transition-all duration-300 text-center"
               >
                 View Featured
               </a>
