@@ -26,7 +26,7 @@ const getImageUrl = (img) => {
 
 const PropertyCard = ({ property }) => {
   const formatPrice = (price) => {
-    if (property.status === 'For Rent') {
+    if (property.status === 'Sold') {
       return `${(price / 1000).toFixed(0)}K ETB/mo`;
     }
     if (price >= 1000000) {

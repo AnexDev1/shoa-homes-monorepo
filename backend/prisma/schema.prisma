@@ -34,7 +34,7 @@ model Property {
   price       Float
   priceType   String   // "total", "per-month", "per-year"
   type        String   // "apartment", "house", "villa", "commercial", "land"
-  status      String   // "for-sale", "for-rent"
+  status      String   // "For Sale", "Sold"
   location    String
   latitude    Float?
   longitude   Float?

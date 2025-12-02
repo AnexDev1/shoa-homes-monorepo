@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { userAPI } from '../../services/api';
 import { useAuthStore } from '../../store/authStore';
-import { Plus, Pencil, Trash2, User, Phone, Mail, Search } from 'lucide-react';
+import { Plus, User, Phone, Mail, Search } from 'lucide-react';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { toast } from 'react-hot-toast';
 import { Toaster } from 'react-hot-toast';
@@ -40,16 +40,6 @@ const ClientsPage = () => {
     },
     onError: (err) =>
       toast.error(err.response?.data?.message || 'Failed to add client'),
-  });
-
-  const deleteClientMutation = useMutation({
-    mutationFn: (id) => userAPI.deleteClient(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['agent-clients']);
-      toast.success('Client deleted');
-    },
-    onError: (err) =>
-      toast.error(err.response?.data?.message || 'Failed to delete client'),
   });
 
   const handleInputChange = (e) => {
@@ -132,9 +122,6 @@ const ClientsPage = () => {
                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
                   Notes
                 </th>
-                <th className="px-6 py-3 text-right text-sm font-semibold text-gray-900">
-                  Actions
-                </th>
               </tr>
             </thead>
 
@@ -180,33 +167,6 @@ const ClientsPage = () => {
                           <span className="text-gray-400">No notes</span>
                         )}
                       </div>
-                    </td>
-
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <button
-                        className="text-blue-600 hover:text-blue-900 mr-4"
-                        onClick={() => {
-                          // TODO: Implement edit functionality
-                          toast.success('Edit functionality coming soon');
-                        }}
-                      >
-                        <Pencil className="h-5 w-5" />
-                      </button>
-                      <button
-                        className="text-red-600 hover:text-red-900"
-                        onClick={() => {
-                          if (
-                            window.confirm(
-                              'Are you sure you want to delete this client?'
-                            )
-                          ) {
-                            deleteClientMutation.mutate(client.id);
-                          }
-                        }}
-                        disabled={deleteClientMutation.isLoading}
-                      >
-                        <Trash2 className="h-5 w-5" />
-                      </button>
                     </td>
                   </tr>
                 ))

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { userAPI } from '../../services/api';
-import { toast } from 'react-hot-toast';
+import LoadingSpinner from '../../components/LoadingSpinner';
+import toast, { Toaster } from 'react-hot-toast';
 
 const AgentSettingsPage = () => {
   const [formData, setFormData] = useState({
@@ -15,7 +16,10 @@ const AgentSettingsPage = () => {
   const updatePasswordMutation = useMutation({
     mutationFn: (passwords) => userAPI.updatePassword(passwords),
     onSuccess: () => {
-      toast.success('Password updated successfully');
+      toast.success('Password updated successfully!', {
+        position: 'top-center',
+        duration: 4000,
+      });
       setFormData((prev) => ({
         ...prev,
         currentPassword: '',
@@ -24,7 +28,20 @@ const AgentSettingsPage = () => {
       }));
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Failed to update password');
+      if (error.response?.status === 401) {
+        toast.error('Incorrect current password. Please try again.', {
+          position: 'top-center',
+          duration: 4000,
+        });
+      } else {
+        toast.error(
+          error.response?.data?.message || 'Failed to update password',
+          {
+            position: 'top-center',
+            duration: 4000,
+          }
+        );
+      }
     },
   });
 
@@ -39,7 +56,10 @@ const AgentSettingsPage = () => {
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
     if (formData.newPassword !== formData.confirmPassword) {
-      toast.error('New passwords do not match');
+      toast.error('Passwords do not match!', {
+        position: 'top-center',
+        duration: 4000,
+      });
       return;
     }
     updatePasswordMutation.mutate({
@@ -49,7 +69,8 @@ const AgentSettingsPage = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 p-4">
+      <Toaster position="top-center" duration={4000} />
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
         <p className="mt-1 text-sm text-gray-600">
@@ -57,91 +78,65 @@ const AgentSettingsPage = () => {
         </p>
       </div>
 
-      {/* Account Settings */}
       <div className="space-y-6">
-        <div className="bg-white shadow sm:rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
-            <h3 className="text-lg font-medium leading-6 text-gray-900">
-              Change Password
-            </h3>
-            <div className="mt-5">
-              <form onSubmit={handlePasswordSubmit} className="space-y-6">
-                <div>
-                  <label
-                    htmlFor="currentPassword"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Current Password
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      id="currentPassword"
-                      name="currentPassword"
-                      type="password"
-                      required
-                      value={formData.currentPassword}
-                      onChange={handleInputChange}
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="newPassword"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    New Password
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      id="newPassword"
-                      name="newPassword"
-                      type="password"
-                      required
-                      minLength={8}
-                      value={formData.newPassword}
-                      onChange={handleInputChange}
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="confirmPassword"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Confirm New Password
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type="password"
-                      required
-                      minLength={8}
-                      value={formData.confirmPassword}
-                      onChange={handleInputChange}
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex justify-end">
-                  <button
-                    type="submit"
-                    disabled={updatePasswordMutation.isLoading}
-                    className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
-                  >
-                    {updatePasswordMutation.isLoading
-                      ? 'Updating...'
-                      : 'Update Password'}
-                  </button>
-                </div>
-              </form>
+        {/* Change Password */}
+        <div className="bg-white rounded-xl shadow-md p-6">
+          <h2 className="text-xl font-bold mb-6">Change Password</h2>
+          <form onSubmit={handlePasswordSubmit} className="space-y-4">
+            <div className="max-w-md space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Current Password
+                </label>
+                <input
+                  type="password"
+                  required
+                  name="currentPassword"
+                  value={formData.currentPassword}
+                  onChange={handleInputChange}
+                  className="input-field w-full"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  New Password
+                </label>
+                <input
+                  type="password"
+                  required
+                  minLength={8}
+                  name="newPassword"
+                  value={formData.newPassword}
+                  onChange={handleInputChange}
+                  className="input-field w-full"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Confirm New Password
+                </label>
+                <input
+                  type="password"
+                  required
+                  minLength={8}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  className="input-field w-full"
+                />
+              </div>
             </div>
-          </div>
+            <button
+              type="submit"
+              disabled={updatePasswordMutation.isLoading}
+              className="btn-primary flex items-center justify-center gap-2"
+            >
+              {updatePasswordMutation.isLoading && <LoadingSpinner size="sm" />}
+              {updatePasswordMutation.isLoading
+                ? 'Updating...'
+                : 'Update Password'}
+            </button>
+          </form>
         </div>
 
         {/* Notification Preferences */}

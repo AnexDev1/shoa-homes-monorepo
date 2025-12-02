@@ -1,10 +1,5 @@
 import { useState } from 'react';
-import {
-  FaFacebookF,
-  FaTwitter,
-  FaInstagram,
-  FaLinkedinIn,
-} from 'react-icons/fa';
+import { FaTiktok, FaWhatsapp } from 'react-icons/fa';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -145,28 +140,16 @@ const ContactPage = () => {
                     </h3>
                     <div className="flex space-x-4">
                       <a
-                        href="#"
+                        href="https://www.tiktok.com/@shoa.homes.real.e?_r=1&_t=ZM-91kbY2bbRKC"
                         className="w-10 h-10 bg-navy-100 rounded-full flex items-center justify-center hover:bg-navy-200 transition-colors"
                       >
-                        <FaFacebookF className="text-navy-600 w-5 h-5" />
+                        <FaTiktok className="text-navy-600 w-5 h-5" />
                       </a>
                       <a
-                        href="#"
+                        href="https://wa.me/message/SDB2K275RXQAB1"
                         className="w-10 h-10 bg-navy-100 rounded-full flex items-center justify-center hover:bg-navy-200 transition-colors"
                       >
-                        <FaTwitter className="text-navy-600 w-5 h-5" />
-                      </a>
-                      <a
-                        href="#"
-                        className="w-10 h-10 bg-navy-100 rounded-full flex items-center justify-center hover:bg-navy-200 transition-colors"
-                      >
-                        <FaInstagram className="text-navy-600 w-5 h-5" />
-                      </a>
-                      <a
-                        href="#"
-                        className="w-10 h-10 bg-navy-100 rounded-full flex items-center justify-center hover:bg-navy-200 transition-colors"
-                      >
-                        <FaLinkedinIn className="text-navy-600 w-5 h-5" />
+                        <FaWhatsapp className="text-navy-600 w-5 h-5" />
                       </a>
                     </div>
                   </div>
