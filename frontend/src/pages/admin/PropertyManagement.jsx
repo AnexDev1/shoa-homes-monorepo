@@ -77,7 +77,7 @@ const PropertyManagement = () => {
       title: '',
       description: '',
       type: 'apartment',
-      status: 'for-sale',
+      status: 'For Sale',
       location: '',
       bedrooms: '',
       bathrooms: '',
@@ -85,6 +85,37 @@ const PropertyManagement = () => {
       amenities: '',
     });
     setImages([]);
+  };
+
+  const handleToggleFeatured = async (id, isFeatured) => {
+    try {
+      await propertiesAPI.update(id, {
+        featured: isFeatured,
+        // Include required fields to prevent validation errors
+        title: 'Updating featured status',
+        status: 'For Sale',
+        location: 'Temporary',
+        bedrooms: 1,
+        bathrooms: 1,
+        area: 1,
+        amenities: [],
+      });
+      await Promise.all([
+        queryClient.invalidateQueries(['admin-properties']),
+        queryClient.invalidateQueries({
+          queryKey: ['properties'],
+          exact: false,
+        }),
+      ]);
+      toast.success(
+        `Property ${isFeatured ? 'marked as featured' : 'removed from featured'}`
+      );
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || 'Failed to update featured status'
+      );
+      // The toggle will automatically revert if the update fails
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -97,7 +128,7 @@ const PropertyManagement = () => {
         title: formData.title,
         description: formData.description,
         type: formData.type,
-        status: formData.status,
+        status: formData.status, // 'For Sale' or 'Sold'
         location: formData.location,
         latitude: formData.latitude ? parseFloat(formData.latitude) : null,
         longitude: formData.longitude ? parseFloat(formData.longitude) : null,
@@ -381,6 +412,9 @@ const PropertyManagement = () => {
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
                     Location
                   </th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
+                    Featured
+                  </th>
                   <th className="px-6 py-3 text-right text-sm font-semibold text-gray-900">
                     Actions
                   </th>
@@ -411,6 +445,22 @@ const PropertyManagement = () => {
                     <td className="px-6 py-4">{property.status}</td>
                     <td className="px-6 py-4 text-gray-600">
                       {property.location}
+                    </td>
+                    <td className="px-6 py-4">
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={property.featured || false}
+                          onChange={() =>
+                            handleToggleFeatured(
+                              property.id,
+                              !property.featured
+                            )
+                          }
+                          className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      </label>
                     </td>
                     <td className="px-6 py-4 text-right space-x-2">
                       <button
@@ -513,8 +563,8 @@ const PropertyManagement = () => {
                     required
                     className="input-field"
                   >
-                    <option value="for-sale">For Sale</option>
-                    <option value="for-rent">Sold</option>
+                    <option value="For Sale">For Sale</option>
+                    <option value="Sold">Sold</option>
                   </select>
                 </div>
 

@@ -175,6 +175,15 @@ export const createProperty = async (req, res) => {
     const userId = req.user?.id || req.body?.userId;
     const propertyData = { ...req.body };
 
+    // Validate status if provided (default to 'For Sale' if not provided)
+    if (propertyData.status && !VALID_STATUSES.includes(propertyData.status)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid status. Must be one of: ${VALID_STATUSES.join(', ')}`,
+      });
+    }
+    propertyData.status = propertyData.status || 'For Sale';
+
     // Normalize amenities: store as JSON string in DB
     if (Array.isArray(propertyData.amenities)) {
       propertyData.amenities = JSON.stringify(propertyData.amenities);
@@ -220,8 +229,6 @@ export const createProperty = async (req, res) => {
         message: 'Not authenticated',
       });
     }
-    console.log('Creating property for user:', userId);
-    console.log('Incoming property payload:', propertyData);
 
     // Don't pass userId scalar directly; use relation connect
     delete propertyData.userId;
@@ -267,6 +274,9 @@ export const createProperty = async (req, res) => {
   }
 };
 
+// Valid property status values
+const VALID_STATUSES = ['For Sale', 'Sold'];
+
 export const updateProperty = async (req, res) => {
   try {
     const { id } = req.params;
@@ -274,20 +284,47 @@ export const updateProperty = async (req, res) => {
     const userId = req.user?.id || req.body?.userId;
     const propertyData = { ...req.body };
 
+    // Validate status if provided
+    if (propertyData.status && !VALID_STATUSES.includes(propertyData.status)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid status. Must be one of: ${VALID_STATUSES.join(', ')}`,
+      });
+    }
+
+    // Get the existing property first
+    const existingProperty = await prisma.property.findUnique({
+      where: { id },
+    });
+
+    if (!existingProperty) {
+      return res.status(404).json({
+        success: false,
+        message: 'Property not found',
+      });
+    }
+
     // Normalize amenities: store as JSON string in DB
-    if (Array.isArray(propertyData.amenities)) {
-      propertyData.amenities = JSON.stringify(propertyData.amenities);
-    } else if (typeof propertyData.amenities === 'string') {
-      try {
-        JSON.parse(propertyData.amenities);
-      } catch (e) {
-        propertyData.amenities = JSON.stringify(
-          propertyData.amenities
-            .split(',')
-            .map((a) => a.trim())
-            .filter(Boolean)
-        );
+    if (propertyData.amenities) {
+      if (Array.isArray(propertyData.amenities)) {
+        propertyData.amenities = JSON.stringify(propertyData.amenities);
+      } else if (typeof propertyData.amenities === 'string') {
+        try {
+          // Check if it's already a JSON string
+          JSON.parse(propertyData.amenities);
+        } catch (e) {
+          // If not, convert from comma-separated string to JSON array string
+          propertyData.amenities = JSON.stringify(
+            propertyData.amenities
+              .split(',')
+              .map((a) => a.trim())
+              .filter(Boolean)
+          );
+        }
       }
+    } else {
+      // If amenities is not provided, keep the existing value
+      delete propertyData.amenities;
     }
 
     // Normalize numeric fields and lat/lng (same helper functions)
@@ -319,16 +356,46 @@ export const updateProperty = async (req, res) => {
     console.log('Updating property for user:', userId);
     console.log('Incoming property update payload:', propertyData);
 
-    // Don't pass userId scalar when updating; use relation connect
-    delete propertyData.userId;
+    // Prepare the update data
+    const updateData = {
+      title: propertyData.title || existingProperty.title,
+      description: propertyData.description || existingProperty.description,
+      type: propertyData.type || existingProperty.type,
+      status: propertyData.status || existingProperty.status,
+      location: propertyData.location || existingProperty.location,
+      latitude:
+        propertyData.latitude !== undefined
+          ? propertyData.latitude
+          : existingProperty.latitude,
+      longitude:
+        propertyData.longitude !== undefined
+          ? propertyData.longitude
+          : existingProperty.longitude,
+      bedrooms:
+        propertyData.bedrooms !== undefined
+          ? propertyData.bedrooms
+          : existingProperty.bedrooms,
+      bathrooms:
+        propertyData.bathrooms !== undefined
+          ? propertyData.bathrooms
+          : existingProperty.bathrooms,
+      area:
+        propertyData.area !== undefined
+          ? propertyData.area
+          : existingProperty.area,
+      amenities: propertyData.amenities || existingProperty.amenities,
+      featured:
+        propertyData.featured !== undefined
+          ? propertyData.featured
+          : existingProperty.featured,
+      user: {
+        connect: { id: userId },
+      },
+    };
+
     const updatedProperty = await prisma.property.update({
       where: { id },
-      data: {
-        ...propertyData,
-        user: {
-          connect: { id: userId },
-        },
-      },
+      data: updateData,
       include: {
         images: true,
         user: {
