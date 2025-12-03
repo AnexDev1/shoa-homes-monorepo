@@ -26,13 +26,6 @@ const PropertyDetailPage = () => {
     queryFn: () => propertiesAPI.getById(id),
   });
 
-  const formatPrice = (price) =>
-    new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'ETB',
-      minimumFractionDigits: 0,
-    }).format(price);
-
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -167,13 +160,8 @@ const PropertyDetailPage = () => {
                 </span>
               </div>
 
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 pb-4 sm:pb-6 border-b">
-                <div className="text-2xl sm:text-3xl font-bold text-primary-600 mb-2 sm:mb-0">
-                  {formatPrice(property.data.price)}
-                </div>
-                <div className="text-gray-600 text-sm sm:text-base">
-                  {property.data.priceType}
-                </div>
+              <div className="mb-4 sm:mb-6 pb-4 sm:pb-6 border-b">
+                {/* Price section removed */}
               </div>
 
               {/* Key Features */}

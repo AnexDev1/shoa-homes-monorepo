@@ -182,31 +182,6 @@ const PropertyListingPage = () => {
                   </select>
                 </div>
 
-                {/* Price Range */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Price Range (ETB)
-                  </label>
-                  <div className="grid grid-cols-2 gap-2">
-                    <input
-                      type="number"
-                      name="priceMin"
-                      value={filters.priceMin}
-                      onChange={handleFilterChange}
-                      placeholder="Min"
-                      className="input-field"
-                    />
-                    <input
-                      type="number"
-                      name="priceMax"
-                      value={filters.priceMax}
-                      onChange={handleFilterChange}
-                      placeholder="Max"
-                      className="input-field"
-                    />
-                  </div>
-                </div>
-
                 {/* Bedrooms */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -263,8 +238,6 @@ const PropertyListingPage = () => {
                     className="px-3 py-2 border border-gray-300 rounded-lg focus:border-primary-500 focus:outline-none text-sm"
                   >
                     <option value="newest">Newest First</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
                     <option value="area">Area: Largest First</option>
                   </select>
                 </div>

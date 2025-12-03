@@ -46,12 +46,6 @@ export const getAllProperties = async (req, res) => {
     // Handle sorting
     const orderBy = {};
     switch (sort) {
-      case 'price-low':
-        orderBy.price = 'asc';
-        break;
-      case 'price-high':
-        orderBy.price = 'desc';
-        break;
       case 'area':
         orderBy.area = 'desc';
         break;

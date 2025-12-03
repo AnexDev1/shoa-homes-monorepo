@@ -31,8 +31,6 @@ model Property {
   id          String   @id @default(uuid())
   title       String
   description String
-  price       Float
-  priceType   String   // "total", "per-month", "per-year"
   type        String   // "apartment", "house", "villa", "commercial", "land"
   status      String   // "For Sale", "Sold"
   location    String

@@ -3,9 +3,8 @@ export const mockProperties = [
   {
     id: '1',
     title: 'Luxury Villa in Bole',
-    description: 'Beautiful modern villa with stunning views and premium amenities. Features spacious living areas, modern kitchen, and landscaped garden.',
-    price: 15000000,
-    priceType: 'total',
+    description:
+      'Beautiful modern villa with stunning views and premium amenities. Features spacious living areas, modern kitchen, and landscaped garden.',
     type: 'villa',
     status: 'for-sale',
     location: 'Bole, Addis Ababa',
@@ -23,7 +22,8 @@ export const mockProperties = [
   {
     id: '2',
     title: 'Modern Apartment in Kirkos',
-    description: 'Contemporary apartment in prime location with excellent transport links.',
+    description:
+      'Contemporary apartment in prime location with excellent transport links.',
     price: 35000,
     priceType: 'per-month',
     type: 'apartment',

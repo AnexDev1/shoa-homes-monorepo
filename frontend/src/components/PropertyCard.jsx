@@ -25,16 +25,6 @@ const getImageUrl = (img) => {
 };
 
 const PropertyCard = ({ property }) => {
-  const formatPrice = (price) => {
-    if (property.status === 'Sold') {
-      return `${(price / 1000).toFixed(0)}K ETB/mo`;
-    }
-    if (price >= 1000000) {
-      return `${(price / 1000000).toFixed(1)}M ETB`;
-    }
-    return `${(price / 1000).toFixed(0)}K ETB`;
-  };
-
   // Defensive amenities parsing: ensure we have an array
   const amenities = Array.isArray(property.amenities)
     ? property.amenities
@@ -103,13 +93,10 @@ const PropertyCard = ({ property }) => {
         {/* Content */}
         <div className="p-6">
           {/* Property Type */}
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center mb-3">
             <span className="text-xs font-semibold text-navy-600 bg-navy-50 px-3 py-1 rounded-full">
               {property.type}
             </span>
-            <div className="text-3xl font-display font-bold text-navy-900">
-              {formatPrice(property.price)}
-            </div>
           </div>
 
           <h3 className="text-xl font-bold text-navy-900 mb-2 line-clamp-2 group-hover:text-gold-600 transition-colors">

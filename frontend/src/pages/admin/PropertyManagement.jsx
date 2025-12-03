@@ -13,8 +13,6 @@ const PropertyManagement = () => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    price: '',
-    priceType: 'total',
     type: 'apartment',
     status: 'for-sale',
     location: '',
@@ -78,8 +76,6 @@ const PropertyManagement = () => {
     setFormData({
       title: '',
       description: '',
-      price: '',
-      priceType: 'total',
       type: 'apartment',
       status: 'for-sale',
       location: '',
@@ -100,8 +96,6 @@ const PropertyManagement = () => {
       const propertyData = {
         title: formData.title,
         description: formData.description,
-        price: parseFloat(formData.price) || 0,
-        priceType: formData.priceType,
         type: formData.type,
         status: formData.status,
         location: formData.location,
@@ -265,8 +259,6 @@ const PropertyManagement = () => {
     setFormData({
       title: property.title,
       description: property.description,
-      price: property.price,
-      priceType: property.priceType,
       type: property.type,
       status: property.status,
       location: property.location,
@@ -384,9 +376,6 @@ const PropertyManagement = () => {
                     Type
                   </th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    Price
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
                     Status
                   </th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
@@ -419,9 +408,6 @@ const PropertyManagement = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 capitalize">{property.type}</td>
-                    <td className="px-6 py-4 font-semibold">
-                      {property.price} ETB
-                    </td>
                     <td className="px-6 py-4">{property.status}</td>
                     <td className="px-6 py-4 text-gray-600">
                       {property.location}
@@ -529,37 +515,6 @@ const PropertyManagement = () => {
                   >
                     <option value="for-sale">For Sale</option>
                     <option value="for-rent">Sold</option>
-                  </select>
-                </div>
-
-                {/* Price */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Price (ETB) *
-                  </label>
-                  <input
-                    type="number"
-                    name="price"
-                    value={formData.price}
-                    onChange={handleChange}
-                    required
-                    className="input-field"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Price Type *
-                  </label>
-                  <select
-                    name="priceType"
-                    value={formData.priceType}
-                    onChange={handleChange}
-                    required
-                    className="input-field"
-                  >
-                    <option value="total">Total</option>
-                    <option value="per-month">Per Month</option>
-                    <option value="per-year">Per Year</option>
                   </select>
                 </div>
 
