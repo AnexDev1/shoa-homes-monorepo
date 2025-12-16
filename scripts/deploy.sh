@@ -20,7 +20,7 @@ npx prisma generate
 
 echo "Starting / restarting with PM2..."
 # startOrRestart will add the process if missing
-pm2 startOrRestart ecosystem.config.js --env production
+pm2 startOrRestart ecosystem.config.cjs --env production
 pm2 save
 
 echo "Building frontend..."
