@@ -21,11 +21,18 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(
   cors({
-    origin: [
-      'http://localhost:3000', // Local development (legacy)
-      'http://localhost:5173', // Vite dev server
-      'https://shoa-0vtw.onrender.com', // frontend domain
-    ],
+    origin: (() => {
+      const defaultOrigins = [
+        'http://localhost:3000', // Local development (legacy)
+        'http://localhost:5173', // Vite dev server
+        'https://shoa-0vtw.onrender.com', // legacy frontend domain
+      ];
+      // Allow setting the frontend origin via env var (e.g., https://shoa-homes.com)
+      if (process.env.FRONTEND_URL)
+        defaultOrigins.push(process.env.FRONTEND_URL);
+      // Remove falsy values and duplicates
+      return Array.from(new Set(defaultOrigins.filter(Boolean)));
+    })(),
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
@@ -82,10 +89,16 @@ app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📍 API available at http://localhost:${PORT}/api`);
   console.log(
-    `🌐 CORS allowed origins: ${JSON.stringify([
-      'http://localhost:3000',
-      'http://localhost:5173',
-      'https://shoa-0vtw.onrender.com',
-    ])}`
+    `🌐 CORS allowed origins: ${JSON.stringify(
+      (() => {
+        const origins = [
+          'http://localhost:3000',
+          'http://localhost:5173',
+          'https://shoa-0vtw.onrender.com',
+        ];
+        if (process.env.FRONTEND_URL) origins.push(process.env.FRONTEND_URL);
+        return Array.from(new Set(origins.filter(Boolean)));
+      })()
+    )}`
   );
 });

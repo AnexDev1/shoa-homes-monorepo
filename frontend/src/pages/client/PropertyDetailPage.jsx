@@ -55,7 +55,12 @@ const PropertyDetailPage = () => {
   const getImageUrl = (img) => {
     if (!img) return DEFAULT_800_PLACEHOLDER;
     if (typeof img === 'string') {
-      if (img.startsWith('/uploads/')) return `http://localhost:5000${img}`;
+      const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+      if (img.startsWith('/uploads/')) {
+        // Normalize base and append upload path
+        const base = API_BASE.replace(/\/$/, '');
+        return `${base}${img}`;
+      }
       return img;
     }
     if (img instanceof File) return URL.createObjectURL(img);
