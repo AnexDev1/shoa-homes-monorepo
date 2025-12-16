@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FaTiktok, FaWhatsapp } from 'react-icons/fa';
+import { contactAPI } from '../../services/api';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -17,19 +18,50 @@ const ContactPage = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log('Form submitted:', formData);
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      subject: '',
-      message: '',
-    });
-    alert('Thank you for your message! We will get back to you soon.');
+
+    setIsSubmitting(true);
+    setSubmitError('');
+    setSubmitSuccess(false);
+
+    try {
+      const messageData = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        subject: formData.subject,
+        message: formData.message,
+      };
+
+      const response = await contactAPI.sendMessage(messageData);
+
+      if (response.success) {
+        setSubmitSuccess(true);
+        // Reset form
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          subject: '',
+          message: '',
+        });
+      } else {
+        setSubmitError(response.error || 'Failed to send message');
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      setSubmitError(
+        error.response?.data?.error ||
+          'Failed to send message. Please try again.'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -170,6 +202,20 @@ const ContactPage = () => {
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-6">
+              {submitSuccess && (
+                <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6">
+                  <p>
+                    Thank you for your message! We will get back to you soon.
+                  </p>
+                </div>
+              )}
+
+              {submitError && (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6">
+                  <p>{submitError}</p>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label
@@ -274,9 +320,10 @@ const ContactPage = () => {
 
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-navy-600 to-navy-700 text-white font-bold py-4 px-6 rounded-lg hover:from-navy-700 hover:to-navy-800 transform hover:scale-105 transition-all duration-300 shadow-premium"
+                disabled={isSubmitting}
+                className={`w-full bg-gradient-to-r from-navy-600 to-navy-700 text-white font-bold py-4 px-6 rounded-lg hover:from-navy-700 hover:to-navy-800 transform hover:scale-105 transition-all duration-300 shadow-premium ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
               >
-                Send Message
+                {isSubmitting ? 'Sending...' : 'Send Message'}
               </button>
             </form>
           </div>

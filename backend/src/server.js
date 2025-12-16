@@ -11,6 +11,7 @@ import propertyRoutes from './routes/property.routes.js';
 import dashboardRoutes from './routes/dashboard.routes.js';
 import userRoutes from './routes/user.routes.js';
 import agentRoutes from './routes/agent.routes.js';
+import contactRoutes from './routes/contact.routes.js';
 
 // Load environment variables
 dotenv.config();
@@ -62,6 +63,7 @@ app.use('/api/properties', propertyRoutes);
 // Inquiries removed — contact via phone/email
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/agent', agentRoutes);
+app.use('/api/contact', contactRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
