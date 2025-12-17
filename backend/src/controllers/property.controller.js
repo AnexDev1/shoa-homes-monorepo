@@ -247,6 +247,7 @@ export const createProperty = async (req, res) => {
       'area',
       'amenities',
       'featured',
+      'price', // include price defensively for DBs that still have it (set default below)
     ];
     const dataToCreate = {};
     for (const k of allowedFields) {
@@ -254,6 +255,13 @@ export const createProperty = async (req, res) => {
         dataToCreate[k] = propertyData[k];
       }
     }
+
+    // If the DB still has a non-null price column (legacy), ensure we provide a default
+    // (Use 0 if price not provided by request)
+    if (!Object.prototype.hasOwnProperty.call(dataToCreate, 'price')) {
+      dataToCreate.price = propertyData.price !== undefined && propertyData.price !== null ? propertyData.price : 0;
+    }
+
     dataToCreate.user = { connect: { id: userId } };
 
     const newProperty = await prisma.property.create({
