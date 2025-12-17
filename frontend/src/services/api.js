@@ -86,6 +86,14 @@ export const propertiesAPI = {
 // Inquiries API
 // Inquiries API removed — use direct contact channels
 
+// Contact API
+export const contactAPI = {
+  sendMessage: async (messageData) => {
+    const { data } = await apiClient.post('/contact', messageData);
+    return data;
+  },
+};
+
 // Dashboard API
 export const dashboardAPI = {
   getStats: async () => {
