@@ -232,13 +232,32 @@ export const createProperty = async (req, res) => {
 
     // Don't pass userId scalar directly; use relation connect
     delete propertyData.userId;
+
+    // Only include fields that exist in the Prisma Property model to avoid validation errors
+    const allowedFields = [
+      'title',
+      'description',
+      'type',
+      'status',
+      'location',
+      'latitude',
+      'longitude',
+      'bedrooms',
+      'bathrooms',
+      'area',
+      'amenities',
+      'featured',
+    ];
+    const dataToCreate = {};
+    for (const k of allowedFields) {
+      if (Object.prototype.hasOwnProperty.call(propertyData, k)) {
+        dataToCreate[k] = propertyData[k];
+      }
+    }
+    dataToCreate.user = { connect: { id: userId } };
+
     const newProperty = await prisma.property.create({
-      data: {
-        ...propertyData,
-        user: {
-          connect: { id: userId },
-        },
-      },
+      data: dataToCreate,
       include: {
         images: true,
         user: {

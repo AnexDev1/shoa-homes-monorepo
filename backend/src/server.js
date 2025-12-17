@@ -4,6 +4,9 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import fileUpload from 'express-fileupload';
 import os from 'os';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 // Import routes
 import authRoutes from './routes/auth.routes.js';
@@ -59,6 +62,17 @@ app.use(
     limits: { fileSize: 20 * 1024 * 1024 }, // 20 MB
   })
 );
+
+// Ensure persistent uploads directory exists and serve it at /uploads
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const uploadsDir = process.env.UPLOADS_DIR || path.resolve(__dirname, '../uploads');
+fs.mkdirSync(uploadsDir, { recursive: true });
+app.use('/uploads', express.static(uploadsDir));
+// Avoid noisy console logs in production — use console.info only for critical messages
+if (process.env.NODE_ENV !== 'production') {
+  console.info(`Serving uploads from ${uploadsDir} at /uploads`);
+}
 
 // Routes
 app.use('/api/auth', authRoutes);

@@ -40,23 +40,51 @@ if (isConfigured) {
   );
 }
 
+import fs from 'fs';
+import os from 'os';
+
 export const uploadToCloudinary = async (file, folder = 'shoa-homes') => {
   try {
-    // If Cloudinary is not configured properly (development), skip uploading and return placeholder
-    if (!isConfigured) {
-      console.warn(
-        'Cloudinary is not configured correctly, using placeholder image for uploads'
-      );
-      // Inline SVG placeholder (data URI) to avoid external network calls
-      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'><rect width='800' height='600' fill='%23E5E7EB'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23737475' font-family='Arial' font-size='24'>No Image Available</text></svg>`;
-      const dataUri = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
-      return {
-        url: dataUri,
-        publicId: `placeholder_${Date.now()}`,
-      };
+    // Allow forcing local storage via STORAGE_PROVIDER=local or use local if Cloudinary isn't configured
+    const useLocal = process.env.STORAGE_PROVIDER === 'local' || !isConfigured;
+
+    // Compute uploads base dir (backend/uploads by default)
+    const uploadsBase = process.env.UPLOADS_DIR || path.resolve(__dirname, '../../uploads');
+    const targetFolder = path.join(uploadsBase, folder);
+
+    // Ensure upload directory exists
+    fs.mkdirSync(targetFolder, { recursive: true });
+
+    // If using local storage, move the uploaded temp file into our uploads area and return a URL
+    if (useLocal) {
+      try {
+        // Source temp path provided by express-fileupload
+        const srcPath = (file.tempFilePath || file.path || '').replace(/\\/g, '/');
+        const originalName = file.name || path.basename(srcPath);
+        const safeName = `${Date.now()}-${originalName.replace(/[^a-zA-Z0-9.\-_]/g, '_')}`;
+        const destPath = path.join(targetFolder, safeName);
+
+        // Move temp file to destination
+        fs.renameSync(srcPath, destPath);
+
+        // Build a public URL for the file. If BACKEND_BASE_URL is set, use absolute URL; otherwise return a root-relative path.
+        const base = process.env.BACKEND_BASE_URL
+          ? process.env.BACKEND_BASE_URL.replace(/\/$/, '')
+          : '';
+        const url = base + `/uploads/${folder}/${safeName}`;
+
+        return {
+          url,
+          publicId: `${folder}/${safeName}`,
+          raw: { path: destPath },
+        };
+      } catch (err) {
+        throw new Error(`Failed to save image locally: ${err.message}`);
+      }
     }
+
     // Normalize the file path for Windows
-    const normalizedPath = file.tempFilePath.replace(/\\/g, '/');
+    const normalizedPath = (file.tempFilePath || '').replace(/\\/g, '/');
 
     // Use the normalized temp file path for upload
     const result = await cloudinary.uploader.upload(normalizedPath, {
@@ -77,6 +105,18 @@ export const uploadToCloudinary = async (file, folder = 'shoa-homes') => {
 
 export const deleteFromCloudinary = async (publicId) => {
   try {
+    const useLocal = process.env.STORAGE_PROVIDER === 'local' || !isConfigured;
+    if (useLocal) {
+      // publicId for local files is stored as folder/filename
+      const uploadsBase = process.env.UPLOADS_DIR || path.resolve(__dirname, '../../uploads');
+      const filePath = path.join(uploadsBase, publicId);
+      try {
+        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+      } catch (e) {
+        // ignore local delete errors
+      }
+      return;
+    }
     await cloudinary.uploader.destroy(publicId);
   } catch (error) {
     // Silently handle delete errors
