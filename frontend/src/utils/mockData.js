@@ -24,8 +24,6 @@ export const mockProperties = [
     title: 'Modern Apartment in Kirkos',
     description:
       'Contemporary apartment in prime location with excellent transport links.',
-    price: 35000,
-    priceType: 'per-month',
     type: 'apartment',
     status: 'for-rent',
     location: 'Kirkos, Addis Ababa',
@@ -43,8 +41,6 @@ export const mockProperties = [
     id: '3',
     title: 'Spacious House in Yeka',
     description: 'Family home with large garden and modern interiors.',
-    price: 8000000,
-    priceType: 'total',
     type: 'house',
     status: 'for-sale',
     location: 'Yeka, Addis Ababa',

@@ -10,8 +10,6 @@ const PropertyListingPage = () => {
   const [filters, setFilters] = useState({
     search: '',
     type: '',
-    priceMin: '',
-    priceMax: '',
     bedrooms: '',
     location: '',
     status: '',
@@ -25,8 +23,6 @@ const PropertyListingPage = () => {
     const urlFilters = {
       search: searchParams.get('search') || '',
       type: searchParams.get('type') || '',
-      priceMin: searchParams.get('priceMin') || '',
-      priceMax: searchParams.get('priceMax') || '',
       bedrooms: searchParams.get('bedrooms') || '',
       location: searchParams.get('location') || '',
       status: searchParams.get('status') || '',
@@ -87,8 +83,6 @@ const PropertyListingPage = () => {
     const clearedFilters = {
       search: '',
       type: '',
-      priceMin: '',
-      priceMax: '',
       bedrooms: '',
       location: '',
       status: '',

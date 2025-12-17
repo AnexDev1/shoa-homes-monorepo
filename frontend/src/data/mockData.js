@@ -5,7 +5,6 @@ export const mockProperties = [
     title: 'Luxury Villa with Pool & Garden',
     description:
       'Experience unparalleled luxury in this stunning 5-bedroom villa featuring a private pool, landscaped garden, and modern amenities. Located in the prestigious Bole area, this property offers the perfect blend of elegance and comfort.',
-    price: 45000000,
     location: 'Bole, Addis Ababa',
     address: 'Bole Subcity, Woreda 03, House No. 245',
     type: 'Villa',
@@ -45,7 +44,6 @@ export const mockProperties = [
     title: 'Modern Penthouse with City View',
     description:
       'Stunning penthouse apartment with panoramic views of Addis Ababa. Features floor-to-ceiling windows, Italian marble flooring, and a spacious balcony perfect for entertaining.',
-    price: 28000000,
     location: 'Kazanchis, Addis Ababa',
     address: 'Kirkos Subcity, Kazanchis Area',
     type: 'Apartment',
@@ -83,7 +81,6 @@ export const mockProperties = [
     title: 'Spacious Family Home with Garden',
     description:
       'Perfect family home in a quiet neighborhood with a large garden and plenty of space for children to play. Recently renovated with modern finishes throughout.',
-    price: 18500000,
     location: 'CMC, Addis Ababa',
     address: 'Yeka Subcity, CMC Area',
     type: 'House',
@@ -120,7 +117,6 @@ export const mockProperties = [
     title: 'Contemporary Condo Near Shopping Mall',
     description:
       'Modern 2-bedroom condo in prime location near major shopping centers and entertainment venues. Perfect for young professionals and couples.',
-    price: 12000000,
     location: 'Megenagna, Addis Ababa',
     address: 'Bole Subcity, Megenagna',
     type: 'Condo',
@@ -149,7 +145,6 @@ export const mockProperties = [
     title: 'Elegant Townhouse in Gated Community',
     description:
       'Beautiful townhouse in secure gated community with 24/7 security, playground, and community center. Modern design with high-quality finishes.',
-    price: 22000000,
     location: '22 Mazoria, Addis Ababa',
     address: 'Bole Subcity, 22 Mazoria',
     type: 'Townhouse',
@@ -184,7 +179,6 @@ export const mockProperties = [
     title: 'Commercial Building in Business District',
     description:
       'Prime commercial property in the heart of business district. Ideal for offices, retail, or mixed-use development. Excellent investment opportunity.',
-    price: 85000000,
     location: 'Arat Kilo, Addis Ababa',
     address: 'Arada Subcity, Arat Kilo',
     type: 'Commercial',
@@ -220,7 +214,6 @@ export const mockProperties = [
     title: 'Cozy Studio Apartment for Rent',
     description:
       'Fully furnished studio apartment perfect for singles or students. Located near universities and public transportation.',
-    price: 15000,
     location: 'Saris, Addis Ababa',
     address: 'Addis Ketema Subcity, Saris',
     type: 'Apartment',
@@ -249,7 +242,6 @@ export const mockProperties = [
     title: 'Luxury Apartment with Smart Features',
     description:
       'State-of-the-art smart apartment with voice control, automated lighting, and climate control. Premium finishes and stunning views.',
-    price: 32000000,
     location: 'Bole Medhanialem, Addis Ababa',
     address: 'Bole Subcity, Medhanialem Area',
     type: 'Apartment',
@@ -286,7 +278,6 @@ export const mockProperties = [
     title: 'Executive Villa with Home Office',
     description:
       'Perfect for professionals working from home. Features dedicated home office, high-speed internet infrastructure, and quiet location.',
-    price: 38000000,
     location: 'Old Airport, Addis Ababa',
     address: 'Bole Subcity, Old Airport Area',
     type: 'Villa',
@@ -322,7 +313,6 @@ export const mockProperties = [
     title: 'Affordable Apartment Near Stadium',
     description:
       'Great value apartment in developing area with good transport links. Perfect for first-time buyers or investment.',
-    price: 8500000,
     location: 'Stadium Area, Addis Ababa',
     address: 'Kirkos Subcity, Stadium',
     type: 'Apartment',
@@ -351,7 +341,6 @@ export const mockProperties = [
     title: 'Boutique Condo with Rooftop Access',
     description:
       'Exclusive boutique building with only 8 units. Features rooftop terrace with BBQ area and stunning city views.',
-    price: 19500000,
     location: 'Sarbet, Addis Ababa',
     address: 'Arada Subcity, Sarbet',
     type: 'Condo',
@@ -386,7 +375,6 @@ export const mockProperties = [
     title: 'Renovated Heritage Home',
     description:
       'Beautifully restored traditional Ethiopian home with modern amenities. Unique character and charm with historical significance.',
-    price: 16000000,
     location: 'Piazza, Addis Ababa',
     address: 'Arada Subcity, Piazza',
     type: 'House',

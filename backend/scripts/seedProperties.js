@@ -332,9 +332,11 @@ async function main() {
   let createdCount = 0;
   for (const propertyData of mockProperties) {
     try {
+      // Remove legacy price fields before creating (schema no longer contains them)
+      const { price, priceType, ...data } = propertyData;
       const property = await prisma.property.create({
         data: {
-          ...propertyData,
+          ...data,
           userId: admin.id,
         },
       });

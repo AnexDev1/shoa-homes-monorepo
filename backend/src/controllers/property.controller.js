@@ -9,8 +9,6 @@ export const getAllProperties = async (req, res) => {
       page = 1,
       search,
       type,
-      priceMin,
-      priceMax,
       bedrooms,
       location,
       status,
@@ -27,12 +25,6 @@ export const getAllProperties = async (req, res) => {
       where.bedrooms = { gte: parseInt(bedrooms) };
     if (location && location !== '') where.location = { contains: location };
 
-    // Handle price range
-    if ((priceMin && priceMin !== '') || (priceMax && priceMax !== '')) {
-      where.price = {};
-      if (priceMin && priceMin !== '') where.price.gte = parseFloat(priceMin);
-      if (priceMax && priceMax !== '') where.price.lte = parseFloat(priceMax);
-    }
 
     // Handle search across multiple fields
     if (search && search !== '') {
@@ -86,7 +78,6 @@ export const getAllProperties = async (req, res) => {
           location: where.location
             ? { contains: where.location.contains }
             : undefined,
-          price: where.price,
           OR: where.OR,
         },
       }),
@@ -202,22 +193,26 @@ export const createProperty = async (req, res) => {
       }
     }
 
+    // Debug: log incoming property payload (omit sensitive tokens)
+    console.log('createProperty: received payload keys:', Object.keys(propertyData));
+
     // Normalize numeric fields and lat/lng
     const parseNullableFloat = (value) => {
-      if (value === undefined || value === null || value === '') return null;
+      // Return undefined when the value is missing or empty so we don't explicitly set null
+      if (value === undefined || value === null || value === '') return undefined;
       const parsed = parseFloat(value);
-      return Number.isNaN(parsed) ? null : parsed;
+      return Number.isNaN(parsed) ? undefined : parsed;
     };
 
     propertyData.latitude = parseNullableFloat(propertyData.latitude);
     propertyData.longitude = parseNullableFloat(propertyData.longitude);
-    propertyData.price = parseNullableFloat(propertyData.price);
     propertyData.area = parseNullableFloat(propertyData.area);
 
     const parseNullableInt = (value) => {
-      if (value === undefined || value === null || value === '') return null;
+      // Return undefined when the value is missing or empty so we don't explicitly set null
+      if (value === undefined || value === null || value === '') return undefined;
       const parsed = parseInt(value);
-      return Number.isNaN(parsed) ? null : parsed;
+      return Number.isNaN(parsed) ? undefined : parsed;
     };
 
     propertyData.bedrooms = parseNullableInt(propertyData.bedrooms);
@@ -247,19 +242,43 @@ export const createProperty = async (req, res) => {
       'area',
       'amenities',
       'featured',
-      'price', // include price defensively for DBs that still have it (set default below)
     ];
     const dataToCreate = {};
     for (const k of allowedFields) {
-      if (Object.prototype.hasOwnProperty.call(propertyData, k)) {
+      // Only include fields that are present and not null/undefined to avoid sending explicit nulls to Prisma
+      if (
+        Object.prototype.hasOwnProperty.call(propertyData, k) &&
+        propertyData[k] !== null &&
+        propertyData[k] !== undefined
+      ) {
         dataToCreate[k] = propertyData[k];
       }
     }
 
-    // If the DB still has a non-null price column (legacy), ensure we provide a default
-    // (Use 0 if price not provided by request)
-    if (!Object.prototype.hasOwnProperty.call(dataToCreate, 'price')) {
-      dataToCreate.price = propertyData.price !== undefined && propertyData.price !== null ? propertyData.price : 0;
+    // Ensure amenities exists in DB as a JSON-string (schema requires String)
+    if (!dataToCreate.amenities) {
+      dataToCreate.amenities = JSON.stringify([]);
+    }
+
+    // Validate required fields before creating so we can return 400 instead of 500
+    const requiredFields = [
+      'title',
+      'description',
+      'type',
+      'location',
+      'bedrooms',
+      'bathrooms',
+      'area',
+    ];
+    const missing = requiredFields.filter(
+      (f) => dataToCreate[f] === undefined || dataToCreate[f] === null || dataToCreate[f] === ''
+    );
+    if (missing.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required property fields',
+        missing,
+      });
     }
 
     dataToCreate.user = { connect: { id: userId } };
@@ -282,65 +301,8 @@ export const createProperty = async (req, res) => {
       });
     } catch (e) {
       // Handle common Prisma validation/runtime errors caused by schema/db drift
-      const msg = String(e.message || '').toLowerCase();
-      // If error mentions unknown argument 'price', remove it and retry once
-      if (msg.includes('unknown argument `price`') || msg.includes("unknown argument `price`") || msg.includes('unknown argument `price`')) {
-        delete dataToCreate.price;
-        try {
-          newProperty = await prisma.property.create({
-            data: dataToCreate,
-            include: {
-              images: true,
-              user: {
-                select: {
-                  id: true,
-                  name: true,
-                  email: true,
-                  phone: true,
-                },
-              },
-            },
-          });
-        } catch (e2) {
-          console.error('Retry after removing price failed:', e2?.stack || e2);
-          throw e2;
-        }
-      } else if (msg.includes('null constraint violation') && msg.includes('price')) {
-        // DB requires price but Prisma schema may not have it; attempt to create with minimal data
-        const minimal = {
-          title: dataToCreate.title,
-          description: dataToCreate.description,
-          type: dataToCreate.type,
-          status: dataToCreate.status,
-          location: dataToCreate.location,
-          bedrooms: dataToCreate.bedrooms,
-          bathrooms: dataToCreate.bathrooms,
-          area: dataToCreate.area,
-          amenities: dataToCreate.amenities,
-          user: dataToCreate.user,
-        };
-        try {
-          newProperty = await prisma.property.create({
-            data: minimal,
-            include: {
-              images: true,
-              user: {
-                select: {
-                  id: true,
-                  name: true,
-                  email: true,
-                  phone: true,
-                },
-              },
-            },
-          });
-        } catch (e3) {
-          console.error('Minimal create attempt failed:', e3?.stack || e3);
-          throw e3;
-        }
-      } else {
-        throw e;
-      }
+      console.error('Prisma error in createProperty:', e?.stack || e);
+      throw e;
     }
 
     const parsedProperty = {
@@ -420,19 +382,20 @@ export const updateProperty = async (req, res) => {
 
     // Normalize numeric fields and lat/lng (same helper functions)
     const parseNullableFloat = (value) => {
-      if (value === undefined || value === null || value === '') return null;
+      // Return undefined when the value is missing or empty so we don't explicitly set null
+      if (value === undefined || value === null || value === '') return undefined;
       const parsed = parseFloat(value);
-      return Number.isNaN(parsed) ? null : parsed;
+      return Number.isNaN(parsed) ? undefined : parsed;
     };
     propertyData.latitude = parseNullableFloat(propertyData.latitude);
     propertyData.longitude = parseNullableFloat(propertyData.longitude);
-    propertyData.price = parseNullableFloat(propertyData.price);
     propertyData.area = parseNullableFloat(propertyData.area);
 
     const parseNullableInt = (value) => {
-      if (value === undefined || value === null || value === '') return null;
+      // Return undefined when the value is missing or empty so we don't explicitly set null
+      if (value === undefined || value === null || value === '') return undefined;
       const parsed = parseInt(value);
-      return Number.isNaN(parsed) ? null : parsed;
+      return Number.isNaN(parsed) ? undefined : parsed;
     };
     propertyData.bedrooms = parseNullableInt(propertyData.bedrooms);
     propertyData.bathrooms = parseNullableInt(propertyData.bathrooms);
@@ -535,6 +498,14 @@ export const deleteProperty = async (req, res) => {
       return res.status(404).json({
         success: false,
         message: 'Property not found',
+      });
+    }
+
+    // Ensure the request is authenticated
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'Not authenticated',
       });
     }
 

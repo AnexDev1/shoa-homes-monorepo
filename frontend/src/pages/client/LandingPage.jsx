@@ -25,7 +25,6 @@ const LandingPage = () => {
   const [searchFilters, setSearchFilters] = useState({
     location: '',
     type: '',
-    priceRange: '',
   });
   const navigate = useNavigate();
 
@@ -77,25 +76,7 @@ const LandingPage = () => {
       params.set('type', searchFilters.type.toLowerCase());
     }
 
-    // Convert price range to min/max
-    if (searchFilters.priceRange) {
-      switch (searchFilters.priceRange) {
-        case 'Under 5M ETB':
-          params.set('priceMax', '5000000');
-          break;
-        case '5M - 15M ETB':
-          params.set('priceMin', '5000000');
-          params.set('priceMax', '15000000');
-          break;
-        case '15M - 30M ETB':
-          params.set('priceMin', '15000000');
-          params.set('priceMax', '30000000');
-          break;
-        case '30M+ ETB':
-          params.set('priceMin', '30000000');
-          break;
-      }
-    }
+    // Note: pricing filters removed - backend no longer supports price filtering
 
     navigate(`/properties?${params.toString()}`);
   };
@@ -192,19 +173,7 @@ const LandingPage = () => {
               <option value="Condo">Condo</option>
               <option value="Commercial">Commercial</option>
             </select>
-            <select
-              value={searchFilters.priceRange}
-              onChange={(e) =>
-                handleSearchFilterChange('priceRange', e.target.value)
-              }
-              className="px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-gold-500 focus:outline-none transition-colors"
-            >
-              <option value="">Price Range</option>
-              <option value="Under 5M ETB">Under 5M ETB</option>
-              <option value="5M - 15M ETB">5M - 15M ETB</option>
-              <option value="15M - 30M ETB">15M - 30M ETB</option>
-              <option value="30M+ ETB">30M+ ETB</option>
-            </select>
+            {/* Price Range removed (deprecated) */}
             <button
               onClick={handleSearch}
               className="px-4 sm:px-6 py-3 bg-gradient-to-r from-navy-700 to-navy-900 text-white font-semibold rounded-lg hover:from-navy-600 hover:to-navy-800 transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base"

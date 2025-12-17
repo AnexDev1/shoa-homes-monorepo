@@ -109,13 +109,7 @@ const LandingPage = () => {
               <option>Condo</option>
               <option>Commercial</option>
             </select>
-            <select className="px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-gold-500 focus:outline-none transition-colors">
-              <option>Price Range</option>
-              <option>Under 5M ETB</option>
-              <option>5M - 15M ETB</option>
-              <option>15M - 30M ETB</option>
-              <option>30M+ ETB</option>
-            </select>
+            {/* Price Range removed (deprecated) */}
             <Link
               to="/properties"
               className="px-6 py-3 bg-gradient-to-r from-navy-700 to-navy-900 text-white font-semibold rounded-lg hover:from-navy-600 hover:to-navy-800 transition-all duration-300 text-center"

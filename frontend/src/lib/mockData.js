@@ -3,7 +3,6 @@ export const mockProperties = [
   {
     id: 1,
     title: "Luxury Villa in Bole",
-    price: 8500000,
     location: "Bole, Addis Ababa",
     images: [
       "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800",
@@ -28,7 +27,6 @@ export const mockProperties = [
   {
     id: 2,
     title: "Modern Apartment in Kazanchis",
-    price: 4200000,
     location: "Kazanchis, Addis Ababa",
     images: [
       "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800",
@@ -52,7 +50,6 @@ export const mockProperties = [
   {
     id: 3,
     title: "Townhouse in CMC",
-    price: 6500000,
     location: "CMC, Addis Ababa",
     images: [
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800",
@@ -76,7 +73,6 @@ export const mockProperties = [
   {
     id: 4,
     title: "Condo in Piazza",
-    price: 3800000,
     location: "Piazza, Addis Ababa",
     images: [
       "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800",
@@ -100,7 +96,6 @@ export const mockProperties = [
   {
     id: 5,
     title: "Penthouse in Bole",
-    price: 12000000,
     location: "Bole, Addis Ababa",
     images: [
       "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=800",
