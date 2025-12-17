@@ -264,20 +264,84 @@ export const createProperty = async (req, res) => {
 
     dataToCreate.user = { connect: { id: userId } };
 
-    const newProperty = await prisma.property.create({
-      data: dataToCreate,
-      include: {
-        images: true,
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            phone: true,
+    let newProperty;
+    try {
+      newProperty = await prisma.property.create({
+        data: dataToCreate,
+        include: {
+          images: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              phone: true,
+            },
           },
         },
-      },
-    });
+      });
+    } catch (e) {
+      // Handle common Prisma validation/runtime errors caused by schema/db drift
+      const msg = String(e.message || '').toLowerCase();
+      // If error mentions unknown argument 'price', remove it and retry once
+      if (msg.includes('unknown argument `price`') || msg.includes("unknown argument `price`") || msg.includes('unknown argument `price`')) {
+        delete dataToCreate.price;
+        try {
+          newProperty = await prisma.property.create({
+            data: dataToCreate,
+            include: {
+              images: true,
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                  phone: true,
+                },
+              },
+            },
+          });
+        } catch (e2) {
+          console.error('Retry after removing price failed:', e2?.stack || e2);
+          throw e2;
+        }
+      } else if (msg.includes('null constraint violation') && msg.includes('price')) {
+        // DB requires price but Prisma schema may not have it; attempt to create with minimal data
+        const minimal = {
+          title: dataToCreate.title,
+          description: dataToCreate.description,
+          type: dataToCreate.type,
+          status: dataToCreate.status,
+          location: dataToCreate.location,
+          bedrooms: dataToCreate.bedrooms,
+          bathrooms: dataToCreate.bathrooms,
+          area: dataToCreate.area,
+          amenities: dataToCreate.amenities,
+          user: dataToCreate.user,
+        };
+        try {
+          newProperty = await prisma.property.create({
+            data: minimal,
+            include: {
+              images: true,
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                  phone: true,
+                },
+              },
+            },
+          });
+        } catch (e3) {
+          console.error('Minimal create attempt failed:', e3?.stack || e3);
+          throw e3;
+        }
+      } else {
+        throw e;
+      }
+    }
 
     const parsedProperty = {
       ...newProperty,
