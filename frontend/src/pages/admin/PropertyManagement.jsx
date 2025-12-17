@@ -2,6 +2,7 @@ import { useState, useRef, useMemo, useEffect } from 'react';
 const DEFAULT_SMALL_PLACEHOLDER = `data:image/svg+xml;utf8,${encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'><rect width='50' height='50' fill='%23E5E7EB'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23737475' font-family='Arial' font-size='8'>No Image</text></svg>")}`;
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import PlaceSearch from '../../components/PlaceSearch';
 import { propertiesAPI } from '../../services/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import toast, { Toaster } from 'react-hot-toast';
@@ -83,6 +84,8 @@ const PropertyManagement = () => {
       bathrooms: '',
       area: '',
       amenities: '',
+      latitude: null,
+      longitude: null,
     });
     setImages([]);
   };
@@ -120,6 +123,11 @@ const PropertyManagement = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Ensure a location is selected via the search box or map
+    if (!formData.location) {
+      toast.error('Please select a location using the search box or map');
+      return;
+    }
     try {
       setIsUploading(true);
 
@@ -568,23 +576,30 @@ const PropertyManagement = () => {
                   </select>
                 </div>
 
-                {/* Location */}
+                {/* Location/map picker: single input is the place search */}
                 <div className="col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Location / Map Picker
+                    Location
                   </label>
-                  <input
-                    type="text"
-                    name="location"
+
+                  {/* Place search (Geocoding) - this is the primary location input */}
+                  <PlaceSearch
                     value={formData.location}
-                    onChange={handleChange}
-                    required
-                    className="input-field mb-2"
+                    onSelect={(place) =>
+                      setFormData({
+                        ...formData,
+                        location: place.display_name,
+                        latitude: parseFloat(place.lat),
+                        longitude: parseFloat(place.lon),
+                      })
+                    }
                   />
+
                   <div className="text-sm text-gray-500 mb-1">
-                    Click on the map to set the precise latitude & longitude for
-                    the property.
+                    Search for a place above or click on the map to pick a location.
+                    The search box serves as the single location field.
                   </div>
+
                   <LocationPicker
                     lat={formData.latitude}
                     lng={formData.longitude}
@@ -592,41 +607,6 @@ const PropertyManagement = () => {
                       setFormData({ ...formData, ...coords })
                     }
                   />
-                  <div className="mt-2 flex gap-2">
-                    <div className="flex-1">
-                      <label className="block text-xs text-gray-600">
-                        Latitude
-                      </label>
-                      <input
-                        type="number"
-                        step="any"
-                        name="latitude"
-                        value={formData.latitude ?? ''}
-                        onChange={(e) =>
-                          setFormData({ ...formData, latitude: e.target.value })
-                        }
-                        className="input-field"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <label className="block text-xs text-gray-600">
-                        Longitude
-                      </label>
-                      <input
-                        type="number"
-                        step="any"
-                        name="longitude"
-                        value={formData.longitude ?? ''}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            longitude: e.target.value,
-                          })
-                        }
-                        className="input-field"
-                      />
-                    </div>
-                  </div>
                 </div>
 
                 {/* Bedrooms, Bathrooms, Area */}

@@ -19,20 +19,24 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
+const allowedOrigins = (() => {
+  const origins = [
+    'http://localhost:3000', // Local development (legacy)
+    'http://localhost:5173', // Vite dev server
+    'https://shoa-0vtw.onrender.com', // legacy frontend domain
+  ];
+  if (process.env.FRONTEND_URL) origins.push(process.env.FRONTEND_URL);
+  return new Set(origins.filter(Boolean));
+})();
+
 app.use(
   cors({
-    origin: (() => {
-      const defaultOrigins = [
-        'http://localhost:3000', // Local development (legacy)
-        'http://localhost:5173', // Vite dev server
-        'https://shoa-0vtw.onrender.com', // legacy frontend domain
-      ];
-      // Allow setting the frontend origin via env var (e.g., https://shoa-homes.com)
-      if (process.env.FRONTEND_URL)
-        defaultOrigins.push(process.env.FRONTEND_URL);
-      // Remove falsy values and duplicates
-      return Array.from(new Set(defaultOrigins.filter(Boolean)));
-    })(),
+    origin: (origin, callback) => {
+      // Allow requests with no origin (curl, server-to-server)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.has(origin)) return callback(null, true);
+      callback(new Error('Not allowed by CORS'));
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
