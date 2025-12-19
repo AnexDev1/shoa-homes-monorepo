@@ -107,9 +107,9 @@ const LandingPage = () => {
             </div>
 
             <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-display font-bold mb-4 leading-snug animate-slide-up">
-              Find Your Dream Home in{' '}
+              Building for the future{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-300 to-gold-500">
-                Addis Ababa
+                Generation
               </span>
             </h1>
 
@@ -651,7 +651,7 @@ const LandingPage = () => {
               <ChevronRight className="w-5 h-5" />
             </Link>
             <a
-              href="tel:+251911000000"
+              href="tel:+251981850022"
               className="px-6 sm:px-8 py-3 sm:py-4 bg-white/10 text-white font-bold rounded-lg hover:bg-white/20 backdrop-blur-sm border-2 border-white/30 transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2"
             >
               <Phone className="w-5 h-5" />

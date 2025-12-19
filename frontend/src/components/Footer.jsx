@@ -7,7 +7,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center space-x-2 mb-4">
               <img
-                src="/images/logo.png"
+                src="/images/logo.jpg"
                 alt="Shoa Homes Logo"
                 className="w-10 h-10 object-contain"
               />
@@ -94,8 +94,9 @@ const Footer = () => {
           <div>
             <h3 className="font-semibold text-lg mb-4">Contact Us</h3>
             <ul className="space-y-2 text-gray-400 text-sm">
-              <li>📍 Addis Ababa, Ethiopia</li>
-              <li>📞 +251 11 123 4567</li>
+              <li>📍 Kasanchis, Addis Ababa, Ethiopia — Jonny Building, 1st floor</li>
+              <li>📞 Sales: +251981850022</li>
+              <li>📞 Support: +251981868609</li>
               <li>✉️ info@shoahomes.com</li>
               <li className="flex space-x-4 pt-2">
                 <a href="#" className="hover:text-white transition-colors">

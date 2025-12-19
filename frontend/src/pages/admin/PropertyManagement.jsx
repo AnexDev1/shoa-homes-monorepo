@@ -434,10 +434,12 @@ const PropertyManagement = () => {
                     <td className="px-6 py-4">
                       <div className="flex items-center">
                         <img
-                          src={
-                            property.images?.[0]?.url ||
-                            DEFAULT_SMALL_PLACEHOLDER
-                          }
+                          src={(() => {
+                            const img = property.images?.[0]?.url;
+                            if (!img) return DEFAULT_SMALL_PLACEHOLDER;
+                            if (img.startsWith('http') || img.startsWith('blob:')) return img;
+                            return 'https://api.shoahomes.com' + img;
+                          })()}
                           alt={property.title}
                           className="w-12 h-12 rounded object-cover mr-3"
                         />
@@ -675,7 +677,14 @@ const PropertyManagement = () => {
                           className="relative w-24 h-24 border rounded overflow-hidden"
                         >
                           <img
-                            src={img.url || URL.createObjectURL(img.file)}
+                            src={(() => {
+                              if (img.url) {
+                                if (img.url.startsWith('http') || img.url.startsWith('blob:')) return img.url;
+                                return 'https://api.shoahomes.com' + img.url;
+                              }
+                              if (img.file) return URL.createObjectURL(img.file);
+                              return DEFAULT_SMALL_PLACEHOLDER;
+                            })()}
                             alt="Property"
                             className="w-full h-full object-cover"
                           />

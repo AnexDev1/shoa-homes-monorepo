@@ -39,12 +39,12 @@ const Navbar = () => {
           >
             <div className="flex items-center h-16 md:h-20">
               <img
-                src="/images/logo.png"
+                src="/images/logo.jpg"
                 alt="Shoa Homes Logo"
                 className="w-20 h-20 md:w-[6.75rem] md:h-[6.75rem] object-contain"
               />
             </div>
-            <span className="text-xl font-bold text-gray-900">Shoa Homes</span>
+            <span className="text-xl font-bold text-gray-900">Shoa Homes Real Estate</span>
           </Link>
 
           {/* Desktop Navigation Links */}

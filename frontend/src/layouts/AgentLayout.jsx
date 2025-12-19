@@ -48,7 +48,7 @@ const AgentLayout = () => {
 
               <Link to="/" className="flex items-center space-x-2">
                 <img
-                  src="/images/logo.png"
+                  src="/images/logo.jpg"
                   alt="Shoa Homes Logo"
                   className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
                 />

@@ -19,7 +19,7 @@ export const mockProperties = [
     agent: {
       name: "Sarah Mengesha",
       avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150",
-      phone: "+251 911 123 456",
+      phone: "+251981850022",
       email: "sarah@shoahomes.com"
     },
     featured: true
@@ -42,7 +42,7 @@ export const mockProperties = [
     agent: {
       name: "David Tadesse",
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
-      phone: "+251 922 987 654",
+      phone: "+251981850022",
       email: "david@shoahomes.com"
     },
     featured: true
@@ -65,7 +65,7 @@ export const mockProperties = [
     agent: {
       name: "Helen Abebe",
       avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150",
-      phone: "+251 933 456 789",
+      phone: "+251981850022",
       email: "helen@shoahomes.com"
     },
     featured: false
@@ -88,7 +88,7 @@ export const mockProperties = [
     agent: {
       name: "Michael Kebede",
       avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
-      phone: "+251 944 321 098",
+      phone: "+251981850022",
       email: "michael@shoahomes.com"
     },
     featured: false
@@ -111,7 +111,7 @@ export const mockProperties = [
     agent: {
       name: "Anna Desta",
       avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150",
-      phone: "+251 955 654 321",
+      phone: "+251981850022",
       email: "anna@shoahomes.com"
     },
     featured: true
@@ -123,7 +123,7 @@ export const mockAgents = [
     id: 1,
     name: "Sarah Mengesha",
     avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150",
-    phone: "+251 911 123 456",
+    phone: "+251981850022",
     email: "sarah@shoahomes.com",
     listingsCount: 12
   },
@@ -131,7 +131,7 @@ export const mockAgents = [
     id: 2,
     name: "David Tadesse",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
-    phone: "+251 922 987 654",
+    phone: "+251981850022",
     email: "david@shoahomes.com",
     listingsCount: 8
   },
@@ -139,7 +139,7 @@ export const mockAgents = [
     id: 3,
     name: "Helen Abebe",
     avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150",
-    phone: "+251 933 456 789",
+    phone: "+251981850022",
     email: "helen@shoahomes.com",
     listingsCount: 15
   },
@@ -147,7 +147,7 @@ export const mockAgents = [
     id: 4,
     name: "Michael Kebede",
     avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
-    phone: "+251 944 321 098",
+    phone: "+251981850022",
     email: "michael@shoahomes.com",
     listingsCount: 6
   },
@@ -155,7 +155,7 @@ export const mockAgents = [
     id: 5,
     name: "Anna Desta",
     avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150",
-    phone: "+251 955 654 321",
+    phone: "+251981850022",
     email: "anna@shoahomes.com",
     listingsCount: 10
   }
@@ -197,7 +197,7 @@ export const mockInquiries = [
     propertyId: 1,
     name: "Meseret Assefa",
     email: "meseret@email.com",
-    phone: "+251 966 789 012",
+    phone: "+251981850022",
     message: "I'm interested in the Luxury Villa in Bole. Can we schedule a viewing?",
     date: "2024-11-01",
     status: "New"
@@ -207,7 +207,7 @@ export const mockInquiries = [
     propertyId: 2,
     name: "Solomon Gebremariam",
     email: "solomon@email.com",
-    phone: "+251 977 345 678",
+    phone: "+251981850022",
     message: "Please send more details about the Modern Apartment in Kazanchis.",
     date: "2024-10-28",
     status: "Responded"

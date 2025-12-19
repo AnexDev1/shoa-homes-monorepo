@@ -102,9 +102,9 @@ const ContactPage = () => {
                       Headquarters
                     </h3>
                     <p className="text-gray-600 mb-2">
-                      Bole, Addis Ababa
+                      Kasanchis, Addis Ababa, Ethiopia
                       <br />
-                      Ethiopia
+                      Jonny Building, 1st floor
                     </p>
                     <p className="text-gray-600">
                       Serving clients across Addis Ababa and surrounding areas
@@ -124,10 +124,10 @@ const ContactPage = () => {
                       Phone
                     </h3>
                     <p className="text-gray-600 mb-1">
-                      <strong>Sales Inquiries:</strong> +251 911 123 456
+                      <strong>Sales Inquiries:</strong> +251981850022
                     </p>
                     <p className="text-gray-600 mb-1">
-                      <strong>Customer Support:</strong> +251 911 234 567
+                      <strong>Customer Support:</strong> +251981868609
                     </p>
                     <p className="text-gray-600">
                       <strong>Business Hours:</strong> Mon-Fri 8:00 AM - 6:00 PM
@@ -263,15 +263,15 @@ const ContactPage = () => {
                   >
                     Phone Number
                   </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-gold-500 focus:outline-none transition-colors"
-                    placeholder="+251 911 123 456"
-                  />
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-gold-500 focus:outline-none transition-colors"
+                      placeholder="+251981850022"
+                    />
                 </div>
                 <div>
                   <label
@@ -348,15 +348,15 @@ const ContactPage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Main Office */}
-            <div className="bg-gray-50 p-6 rounded-2xl hover:shadow-premium transition-all duration-300 transform hover:-translate-y-1">
+              <div className="bg-gray-50 p-6 rounded-2xl hover:shadow-premium transition-all duration-300 transform hover:-translate-y-1">
               <div className="text-4xl mb-4">🏢</div>
               <h3 className="text-xl font-bold mb-2 text-navy-900">
                 Main Office
               </h3>
               <p className="text-gray-600 mb-3">
-                Bole Bulbula Area
+                Kasanchis, Addis Ababa, Ethiopia
                 <br />
-                Addis Ababa, Ethiopia
+                Jonny Building, 1st floor
               </p>
               <p className="text-gray-600 text-sm">
                 Our headquarters and primary sales office
@@ -364,15 +364,15 @@ const ContactPage = () => {
             </div>
 
             {/* Sales Office */}
-            <div className="bg-gray-50 p-6 rounded-2xl hover:shadow-premium transition-all duration-300 transform hover:-translate-y-1">
+              <div className="bg-gray-50 p-6 rounded-2xl hover:shadow-premium transition-all duration-300 transform hover:-translate-y-1">
               <div className="text-4xl mb-4">🏬</div>
               <h3 className="text-xl font-bold mb-2 text-navy-900">
                 Sales Center
               </h3>
               <p className="text-gray-600 mb-3">
-                Kazanchis Area
+                Kasanchis, Addis Ababa, Ethiopia
                 <br />
-                Addis Ababa, Ethiopia
+                Jonny Building, 1st floor
               </p>
               <p className="text-gray-600 text-sm">
                 Dedicated to property consultations and viewings

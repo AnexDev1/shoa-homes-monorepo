@@ -39,9 +39,9 @@ const LandingPage = () => {
             </div>
 
             <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 leading-tight animate-slide-up">
-              Find Your Dream Home in{' '}
+              Build for the future{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-300 to-gold-500">
-                Addis Ababa
+                Generation
               </span>
             </h1>
 
@@ -692,11 +692,24 @@ const LandingPage = () => {
                 className="p-8 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300"
               >
                 <div className="flex items-center mb-6">
-                  <img
-                    src={testimonial.avatar}
-                    alt={testimonial.name}
-                    className="w-16 h-16 rounded-full mr-4 border-2 border-gold-400"
-                  />
+                  <div className="w-16 h-16 rounded-full mr-4 bg-white/5 flex items-center justify-center border-2 border-gold-400 text-gold-400">
+                    {testimonial.avatar ? (
+                      <img
+                        src={testimonial.avatar}
+                        alt={testimonial.name}
+                        className="w-16 h-16 rounded-full object-cover"
+                      />
+                    ) : (
+                      <span className="font-semibold text-lg">
+                        {testimonial.name
+                          .split(' ')
+                          .map((n) => n[0])
+                          .slice(0, 2)
+                          .join('')
+                          .toUpperCase()}
+                      </span>
+                    )}
+                  </div>
                   <div>
                     <h4 className="font-bold text-lg">{testimonial.name}</h4>
                     <p className="text-gray-400 text-sm">{testimonial.role}</p>

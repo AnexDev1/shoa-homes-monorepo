@@ -33,7 +33,7 @@ export const mockProperties = [
     agent: {
       id: 'agent1',
       name: 'Abebe Kebede',
-      phone: '+251 911 234567',
+      phone: '+251981850022',
       email: 'abebe@shoahomes.com',
       avatar: 'https://i.pravatar.cc/150?img=12',
       listingsCount: 23,
@@ -70,7 +70,7 @@ export const mockProperties = [
     agent: {
       id: 'agent2',
       name: 'Tigist Hailu',
-      phone: '+251 911 345678',
+      phone: '+251981850022',
       email: 'tigist@shoahomes.com',
       avatar: 'https://i.pravatar.cc/150?img=5',
       listingsCount: 18,
@@ -106,7 +106,7 @@ export const mockProperties = [
     agent: {
       id: 'agent3',
       name: 'Daniel Tesfaye',
-      phone: '+251 911 456789',
+      phone: '+251981850022',
       email: 'daniel@shoahomes.com',
       avatar: 'https://i.pravatar.cc/150?img=8',
       listingsCount: 15,
@@ -134,7 +134,7 @@ export const mockProperties = [
     agent: {
       id: 'agent1',
       name: 'Abebe Kebede',
-      phone: '+251 911 234567',
+      phone: '+251981850022',
       email: 'abebe@shoahomes.com',
       avatar: 'https://i.pravatar.cc/150?img=12',
       listingsCount: 23,
@@ -168,7 +168,7 @@ export const mockProperties = [
     agent: {
       id: 'agent2',
       name: 'Tigist Hailu',
-      phone: '+251 911 345678',
+      phone: '+251981850022',
       email: 'tigist@shoahomes.com',
       avatar: 'https://i.pravatar.cc/150?img=5',
       listingsCount: 18,
@@ -203,7 +203,7 @@ export const mockProperties = [
     agent: {
       id: 'agent4',
       name: 'Meron Assefa',
-      phone: '+251 911 567890',
+      phone: '+251981850022',
       email: 'meron@shoahomes.com',
       avatar: 'https://i.pravatar.cc/150?img=9',
       listingsCount: 12,
@@ -231,7 +231,7 @@ export const mockProperties = [
     agent: {
       id: 'agent5',
       name: 'Yonas Bekele',
-      phone: '+251 911 678901',
+      phone: '+251981850022',
       email: 'yonas@shoahomes.com',
       avatar: 'https://i.pravatar.cc/150?img=13',
       listingsCount: 20,
@@ -267,7 +267,7 @@ export const mockProperties = [
     agent: {
       id: 'agent1',
       name: 'Abebe Kebede',
-      phone: '+251 911 234567',
+      phone: '+251981850022',
       email: 'abebe@shoahomes.com',
       avatar: 'https://i.pravatar.cc/150?img=12',
       listingsCount: 23,
@@ -302,7 +302,7 @@ export const mockProperties = [
     agent: {
       id: 'agent3',
       name: 'Daniel Tesfaye',
-      phone: '+251 911 456789',
+      phone: '+251981850022',
       email: 'daniel@shoahomes.com',
       avatar: 'https://i.pravatar.cc/150?img=8',
       listingsCount: 15,
@@ -330,7 +330,7 @@ export const mockProperties = [
     agent: {
       id: 'agent5',
       name: 'Yonas Bekele',
-      phone: '+251 911 678901',
+      phone: '+251981850022',
       email: 'yonas@shoahomes.com',
       avatar: 'https://i.pravatar.cc/150?img=13',
       listingsCount: 20,
@@ -364,7 +364,7 @@ export const mockProperties = [
     agent: {
       id: 'agent2',
       name: 'Tigist Hailu',
-      phone: '+251 911 345678',
+      phone: '+251981850022',
       email: 'tigist@shoahomes.com',
       avatar: 'https://i.pravatar.cc/150?img=5',
       listingsCount: 18,
@@ -392,7 +392,7 @@ export const mockProperties = [
     agent: {
       id: 'agent4',
       name: 'Meron Assefa',
-      phone: '+251 911 567890',
+      phone: '+251981850022',
       email: 'meron@shoahomes.com',
       avatar: 'https://i.pravatar.cc/150?img=9',
       listingsCount: 12,
@@ -405,7 +405,7 @@ export const mockAgents = [
   {
     id: 'agent1',
     name: 'Abebe Kebede',
-    phone: '+251 911 234567',
+    phone: '+251981850022',
     email: 'abebe@shoahomes.com',
     avatar:
       'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
@@ -416,7 +416,7 @@ export const mockAgents = [
   {
     id: 'agent2',
     name: 'Tigist Hailu',
-    phone: '+251 911 345678',
+    phone: '+251981850022',
     email: 'tigist@shoahomes.com',
     avatar:
       'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
@@ -427,7 +427,7 @@ export const mockAgents = [
   {
     id: 'agent3',
     name: 'Daniel Tesfaye',
-    phone: '+251 911 456789',
+    phone: '+251981850022',
     email: 'daniel@shoahomes.com',
     avatar:
       'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
@@ -438,7 +438,7 @@ export const mockAgents = [
   {
     id: 'agent4',
     name: 'Meron Assefa',
-    phone: '+251 911 567890',
+    phone: '+251981850022',
     email: 'meron@shoahomes.com',
     avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150',
     listingsCount: 12,
@@ -448,7 +448,7 @@ export const mockAgents = [
   {
     id: 'agent5',
     name: 'Yonas Bekele',
-    phone: '+251 911 678901',
+    phone: '+251981850022',
     email: 'yonas@shoahomes.com',
     avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150',
     listingsCount: 20,
@@ -461,32 +461,33 @@ export const mockAgents = [
 export const mockTestimonials = [
   {
     id: '1',
-    name: 'Alemayehu Bekele',
+    name: 'Abel Worku',
     role: 'Homeowner',
-    avatar:
-      'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
+    avatar: '/images/logo.jpg',
     rating: 5,
-    text: 'Working with Shoa Homes was an absolute pleasure. They helped us find our dream home in Bole within just two weeks. Professional, responsive, and truly caring about our needs.',
-    date: '2024-10-15',
+    text:
+      "We were worried the house wouldn't be finished on time, but you kept your promise. The construction was done exactly when you said it would be. Now me and my kids are finally home. Thank you for being someone we can trust!",
+    date: '2025-12-18',
   },
   {
     id: '2',
-    name: 'Tigist Haile',
-    role: 'Property Investor',
-    avatar:
-      'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150',
+    name: 'Belachew Dagne',
+    role: 'Homeowner',
+    avatar: '/images/logo.jpg',
     rating: 5,
-    text: 'As an Ethiopian investor, I needed a trustworthy partner in Addis Ababa. Shoa Homes exceeded my expectations with their deep market knowledge and transparent communication.',
-    date: '2024-09-22',
+    text:
+      "Many people make promises, but you actually delivered. We didn't think the building would be ready, but you made it happen. Me and my wife are so happy in our new home. You are a man of your word.",
+    date: '2025-12-18',
   },
   {
     id: '3',
-    name: 'Yohannes Mekonnen',
-    role: 'First-time Buyer',
-    avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150',
+    name: 'Helen Teshome',
+    role: 'Homeowner',
+    avatar: '/images/logo.jpg',
     rating: 5,
-    text: 'Being a first-time buyer was overwhelming, but the team at Shoa Homes guided me through every step. I found the perfect apartment that fits my budget. Highly recommended!',
-    date: '2024-11-01',
+    text:
+      'You promised, and you delivered. The house was finished right on time for me and my husband. It is hard to find a real estate partner you can trust this much. Thank you for everything!',
+    date: '2025-12-18',
   },
 ];
 
@@ -498,7 +499,7 @@ export const mockInquiries = [
     propertyTitle: 'Luxury Villa with Pool & Garden',
     name: 'John Doe',
     email: 'john.doe@email.com',
-    phone: '+251 911 111111',
+    phone: '+251981850022',
     message:
       'I am interested in scheduling a viewing for this property. Are weekends available?',
     status: 'pending',
@@ -510,7 +511,7 @@ export const mockInquiries = [
     propertyTitle: 'Modern Penthouse with City View',
     name: 'Jane Smith',
     email: 'jane.smith@email.com',
-    phone: '+251 911 222222',
+    phone: '+251981850022',
     message: 'Is the price negotiable? I would like to make an offer.',
     status: 'contacted',
     createdAt: '2024-11-04T14:20:00Z',
@@ -521,7 +522,7 @@ export const mockInquiries = [
     propertyTitle: 'Spacious Family Home with Garden',
     name: 'Ahmed Ali',
     email: 'ahmed.ali@email.com',
-    phone: '+251 911 333333',
+    phone: '+251981850022',
     message:
       'Can you provide more information about the neighborhood and schools nearby?',
     status: 'pending',

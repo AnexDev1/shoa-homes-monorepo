@@ -3,6 +3,7 @@ import { MapPin, Bed, Bath, Maximize2, Star } from 'lucide-react';
 
 // Helper function to get image URL from different formats
 const DEFAULT_PLACEHOLDER = `data:image/svg+xml;utf8,${encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'><rect width='400' height='300' fill='%23E5E7EB'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23737475' font-family='Arial' font-size='18'>No Image Available</text></svg>")}`;
+const API_BASE_URL = "https://api.shoahomes.com";
 const getImageUrl = (img) => {
   if (!img) return DEFAULT_PLACEHOLDER;
   // If it's a full URL, return as is
@@ -18,7 +19,12 @@ const getImageUrl = (img) => {
   }
   // If it's an object with a path or url
   if (typeof img === 'object' && (img.path || img.url)) {
-    return img.path || img.url;
+    const url = img.path || img.url;
+    if (url.startsWith('http') || url.startsWith('blob:')) {
+      return url;
+    }
+    // Prepend API base URL if it's a relative path
+    return API_BASE_URL + url;
   }
   // Fallback to placeholder
   return DEFAULT_PLACEHOLDER;

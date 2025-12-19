@@ -52,25 +52,27 @@ const PropertyDetailPage = () => {
   const DEFAULT_800_PLACEHOLDER = `data:image/svg+xml;utf8,${encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'><rect width='800' height='600' fill='%23E5E7EB'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23737475' font-family='Arial' font-size='24'>No Image Available</text></svg>")}`;
   const DEFAULT_200_PLACEHOLDER = `data:image/svg+xml;utf8,${encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='200' height='150' viewBox='0 0 200 150'><rect width='200' height='150' fill='%23E5E7EB'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23737475' font-family='Arial' font-size='14'>Image Not Available</text></svg>")}`;
 
+  const API_BASE_URL = "https://api.shoahomes.com";
   const getImageUrl = (img) => {
     if (!img) return DEFAULT_800_PLACEHOLDER;
     if (typeof img === 'string') {
-      const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
-      if (img.startsWith('/uploads/')) {
-        // Normalize base and append upload path
-        const base = API_BASE.replace(/\/$/, '');
-        return `${base}${img}`;
+      if (img.startsWith('http') || img.startsWith('blob:')) {
+        return img;
       }
-      return img;
+      // Prepend API base URL if it's a relative path
+      return API_BASE_URL + img;
     }
     if (img instanceof File) return URL.createObjectURL(img);
-    if (typeof img === 'object')
-      return (
-        img.imageUrl ||
-        img.url ||
-        img.path ||
-        'https://via.placeholder.com/800x600?text=No+Image'
-      );
+    if (typeof img === 'object') {
+      const url = img.imageUrl || img.url || img.path;
+      if (url) {
+        if (url.startsWith('http') || url.startsWith('blob:')) {
+          return url;
+        }
+        return API_BASE_URL + url;
+      }
+      return 'https://via.placeholder.com/800x600?text=No+Image';
+    }
     return DEFAULT_800_PLACEHOLDER;
   };
 
@@ -281,10 +283,10 @@ const PropertyDetailPage = () => {
                 Contact via Email
               </a>
               <a
-                href={`tel:+251111234567`}
+                href={`tel:+251981850022`}
                 className="btn-secondary w-full inline-flex items-center justify-center text-sm sm:text-base"
               >
-                Call +251 11 123 4567
+                Call +251981850022
               </a>
 
               <div className="space-y-3 sm:space-y-4 pt-4 border-t">
@@ -295,7 +297,7 @@ const PropertyDetailPage = () => {
                       Call Us
                     </div>
                     <div className="font-semibold text-sm sm:text-base">
-                      +251 11 123 4567
+                      +251981850022
                     </div>
                   </div>
                 </div>

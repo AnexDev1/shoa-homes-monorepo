@@ -27,7 +27,10 @@ echo "Building frontend..."
 cd "$REPO_DIR/frontend"
 # Allow overriding API base URL via env var, default to production API
 export VITE_API_BASE_URL="${VITE_API_BASE_URL:-https://api.shoahomes.com/api}"
+# Increase Node memory for large builds to avoid OOM (adjust as needed, e.g. 4096 or 8192)
+export NODE_OPTIONS="${NODE_OPTIONS:---max_old_space_size=4096}"
 npm ci
+echo "Running build with NODE_OPTIONS=$NODE_OPTIONS"
 npm run build
 
 echo "Deploying built frontend to /var/www/shoa-frontend..."
