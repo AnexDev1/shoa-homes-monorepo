@@ -1,5 +1,8 @@
 import prisma from '../config/prisma.js';
-import { uploadToCloudinary } from '../config/cloudinary.js';
+import {
+  uploadToCloudinary,
+  deleteFromCloudinary,
+} from '../config/cloudinary.js';
 
 export const getAllProperties = async (req, res) => {
   try {
@@ -680,5 +683,69 @@ export const uploadPropertyImages = async (req, res) => {
       message: 'Error uploading images',
       error: error.message,
     });
+  }
+};
+
+export const deletePropertyImage = async (req, res) => {
+  try {
+    const { id: propertyId, imageId } = req.params;
+    const userId = req.user?.id || req.body?.userId;
+
+    // Find the image
+    const image = await prisma.image.findUnique({ where: { id: imageId } });
+    if (!image) {
+      return res
+        .status(404)
+        .json({ success: false, message: 'Image not found' });
+    }
+
+    // Validate property id matches
+    if (image.propertyId !== propertyId) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: 'Image does not belong to the specified property',
+        });
+    }
+
+    // Check property ownership or admin
+    const existingProperty = await prisma.property.findUnique({
+      where: { id: propertyId },
+    });
+    if (!existingProperty) {
+      return res
+        .status(404)
+        .json({ success: false, message: 'Property not found' });
+    }
+    const isOwner = existingProperty.userId === userId;
+    const isAdmin = req.user?.role === 'ADMIN';
+    if (!isOwner && !isAdmin) {
+      return res
+        .status(403)
+        .json({ success: false, message: 'Not authorized' });
+    }
+
+    // Delete from storage (Cloudinary/local)
+    try {
+      await deleteFromCloudinary(image.publicId);
+    } catch (e) {
+      // ignore storage delete errors but log
+      console.warn('Failed to delete image from storage:', e?.message || e);
+    }
+
+    // Delete DB record
+    await prisma.image.delete({ where: { id: imageId } });
+
+    res.status(200).json({ success: true, message: 'Image deleted' });
+  } catch (error) {
+    console.error('Error in deletePropertyImage:', error?.stack || error);
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: 'Failed to delete image',
+        error: error.message,
+      });
   }
 };

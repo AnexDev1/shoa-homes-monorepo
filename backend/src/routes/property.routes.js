@@ -27,4 +27,19 @@ router.post(
   uploadPropertyImages
 );
 
+// Delete a single image from a property
+router.delete(
+  '/:id/images/:imageId',
+  authenticate,
+  authorize(['ADMIN']),
+  // controller function implemented in property.controller.js
+  // deletes image record and removes from Cloudinary/local storage
+  // signature: deletePropertyImage(req, res)
+  (req, res, next) => {
+    import('../controllers/property.controller.js').then((mod) =>
+      mod.deletePropertyImage(req, res, next)
+    );
+  }
+);
+
 export default router;

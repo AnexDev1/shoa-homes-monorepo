@@ -25,6 +25,7 @@ const PropertyManagement = () => {
     longitude: null,
   });
   const [images, setImages] = useState([]);
+  const [removedImageIds, setRemovedImageIds] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -88,6 +89,7 @@ const PropertyManagement = () => {
       longitude: null,
     });
     setImages([]);
+    setRemovedImageIds([]);
   };
 
   const handleToggleFeatured = async (id, isFeatured) => {
@@ -186,6 +188,7 @@ const PropertyManagement = () => {
             setImages((prev) => [
               ...prev,
               ...result.data.map((img) => ({
+                id: img.id,
                 url: img.url,
                 publicId: img.publicId,
               })),
@@ -214,6 +217,29 @@ const PropertyManagement = () => {
       // Refresh the properties list and dashboard stats
       await queryClient.invalidateQueries(['admin-properties']);
       await queryClient.invalidateQueries(['dashboard-stats']);
+
+      // Delete any images the user removed while editing
+      if (editingProperty && removedImageIds.length > 0) {
+        await Promise.all(
+          removedImageIds.map((imageId) =>
+            propertiesAPI
+              .deleteImage(editingProperty.id, imageId)
+              .catch((e) => {
+                console.warn(
+                  'Failed to delete image',
+                  imageId,
+                  e?.message || e
+                );
+              })
+          )
+        );
+        // Invalidate queries so UI reflects deletions
+        await queryClient.invalidateQueries(['property', editingProperty.id]);
+        await queryClient.invalidateQueries({
+          queryKey: ['properties'],
+          exact: false,
+        });
+      }
 
       // Reset form and close modal only if upload was successful or no images
       if (uploadSuccessful) {
@@ -272,11 +298,15 @@ const PropertyManagement = () => {
   const removeImage = (index) => {
     setImages((prev) => {
       const newImages = [...prev];
-      // Revoke the object URL to prevent memory leaks
-      if (newImages[index]?.preview) {
-        URL.revokeObjectURL(newImages[index].preview);
+      const removed = newImages.splice(index, 1)[0];
+      // If the removed image exists in the DB, track it for deletion
+      if (removed && !removed.isNew && removed.id) {
+        setRemovedImageIds((ids) => [...ids, removed.id]);
       }
-      newImages.splice(index, 1);
+      // Revoke the object URL to prevent memory leaks
+      if (removed?.preview) {
+        URL.revokeObjectURL(removed.preview);
+      }
       return newImages;
     });
   };
@@ -310,9 +340,14 @@ const PropertyManagement = () => {
     });
     if (property.images?.length) {
       setImages(
-        property.images.map((img) => ({ url: img.url, publicId: img.publicId }))
+        property.images.map((img) => ({
+          id: img.id,
+          url: img.url,
+          publicId: img.publicId,
+        }))
       );
     }
+    setRemovedImageIds([]);
     setIsModalOpen(true);
   };
 
@@ -437,7 +472,11 @@ const PropertyManagement = () => {
                           src={(() => {
                             const img = property.images?.[0]?.url;
                             if (!img) return DEFAULT_SMALL_PLACEHOLDER;
-                            if (img.startsWith('http') || img.startsWith('blob:')) return img;
+                            if (
+                              img.startsWith('http') ||
+                              img.startsWith('blob:')
+                            )
+                              return img;
                             return 'https://api.shoahomes.com' + img;
                           })()}
                           alt={property.title}
@@ -598,8 +637,9 @@ const PropertyManagement = () => {
                   />
 
                   <div className="text-sm text-gray-500 mb-1">
-                    Search for a place above or click on the map to pick a location.
-                    The search box serves as the single location field.
+                    Search for a place above or click on the map to pick a
+                    location. The search box serves as the single location
+                    field.
                   </div>
 
                   <LocationPicker
@@ -679,10 +719,15 @@ const PropertyManagement = () => {
                           <img
                             src={(() => {
                               if (img.url) {
-                                if (img.url.startsWith('http') || img.url.startsWith('blob:')) return img.url;
+                                if (
+                                  img.url.startsWith('http') ||
+                                  img.url.startsWith('blob:')
+                                )
+                                  return img.url;
                                 return 'https://api.shoahomes.com' + img.url;
                               }
-                              if (img.file) return URL.createObjectURL(img.file);
+                              if (img.file)
+                                return URL.createObjectURL(img.file);
                               return DEFAULT_SMALL_PLACEHOLDER;
                             })()}
                             alt="Property"

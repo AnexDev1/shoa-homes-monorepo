@@ -81,6 +81,13 @@ export const propertiesAPI = {
     if (!res.ok) throw new Error(data?.message || 'Failed to upload images');
     return data;
   },
+
+  deleteImage: async (propertyId, imageId) => {
+    const { data } = await apiClient.delete(
+      `/properties/${propertyId}/images/${imageId}`
+    );
+    return data;
+  },
 };
 
 // Inquiries API
