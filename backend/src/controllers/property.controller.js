@@ -54,7 +54,7 @@ export const getAllProperties = async (req, res) => {
       prisma.property.findMany({
         where,
         include: {
-          images: { orderBy: { createdAt: 'desc' } },
+          images: true,
           user: {
             select: {
               id: true,
@@ -82,14 +82,22 @@ export const getAllProperties = async (req, res) => {
       }),
     ]);
 
-    // Parse amenities before returning to clients so they get arrays
-    const parsedProperties = properties.map((p) => ({
-      ...p,
-      amenities:
-        typeof p.amenities === 'string'
-          ? JSON.parse(p.amenities)
-          : p.amenities || [],
-    }));
+    // Parse amenities and sort images before returning to clients
+    const parsedProperties = properties.map((p) => {
+      const images = Array.isArray(p.images)
+        ? p.images
+            .slice()
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        : [];
+      return {
+        ...p,
+        images,
+        amenities:
+          typeof p.amenities === 'string'
+            ? JSON.parse(p.amenities)
+            : p.amenities || [],
+      };
+    });
 
     res.status(200).json({
       success: true,
@@ -119,7 +127,7 @@ export const getPropertyById = async (req, res) => {
     const property = await prisma.property.findUnique({
       where: { id },
       include: {
-        images: { orderBy: { createdAt: 'desc' } },
+        images: true,
         user: {
           select: {
             id: true,
@@ -140,6 +148,11 @@ export const getPropertyById = async (req, res) => {
 
     const parsedProperty = {
       ...property,
+      images: Array.isArray(property.images)
+        ? property.images
+            .slice()
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        : [],
       amenities:
         typeof property.amenities === 'string'
           ? JSON.parse(property.amenities)
@@ -295,7 +308,7 @@ export const createProperty = async (req, res) => {
       newProperty = await prisma.property.create({
         data: dataToCreate,
         include: {
-          images: { orderBy: { createdAt: 'desc' } },
+          images: true,
           user: {
             select: {
               id: true,
@@ -314,6 +327,11 @@ export const createProperty = async (req, res) => {
 
     const parsedProperty = {
       ...newProperty,
+      images: Array.isArray(newProperty.images)
+        ? newProperty.images
+            .slice()
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        : [],
       amenities:
         typeof newProperty.amenities === 'string'
           ? JSON.parse(newProperty.amenities)
@@ -460,7 +478,7 @@ export const updateProperty = async (req, res) => {
       where: { id },
       data: updateData,
       include: {
-        images: { orderBy: { createdAt: 'desc' } },
+        images: true,
         user: {
           select: {
             id: true,
@@ -474,6 +492,11 @@ export const updateProperty = async (req, res) => {
 
     const parsedProperty = {
       ...updatedProperty,
+      images: Array.isArray(updatedProperty.images)
+        ? updatedProperty.images
+            .slice()
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        : [],
       amenities:
         typeof updatedProperty.amenities === 'string'
           ? JSON.parse(updatedProperty.amenities)
