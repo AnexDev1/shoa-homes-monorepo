@@ -25,7 +25,6 @@ export const getAllProperties = async (req, res) => {
       where.bedrooms = { gte: parseInt(bedrooms) };
     if (location && location !== '') where.location = { contains: location };
 
-
     // Handle search across multiple fields
     if (search && search !== '') {
       where.OR = [
@@ -55,7 +54,7 @@ export const getAllProperties = async (req, res) => {
       prisma.property.findMany({
         where,
         include: {
-          images: true,
+          images: { orderBy: { createdAt: 'desc' } },
           user: {
             select: {
               id: true,
@@ -120,7 +119,7 @@ export const getPropertyById = async (req, res) => {
     const property = await prisma.property.findUnique({
       where: { id },
       include: {
-        images: true,
+        images: { orderBy: { createdAt: 'desc' } },
         user: {
           select: {
             id: true,
@@ -194,12 +193,16 @@ export const createProperty = async (req, res) => {
     }
 
     // Debug: log incoming property payload (omit sensitive tokens)
-    console.log('createProperty: received payload keys:', Object.keys(propertyData));
+    console.log(
+      'createProperty: received payload keys:',
+      Object.keys(propertyData)
+    );
 
     // Normalize numeric fields and lat/lng
     const parseNullableFloat = (value) => {
       // Return undefined when the value is missing or empty so we don't explicitly set null
-      if (value === undefined || value === null || value === '') return undefined;
+      if (value === undefined || value === null || value === '')
+        return undefined;
       const parsed = parseFloat(value);
       return Number.isNaN(parsed) ? undefined : parsed;
     };
@@ -210,7 +213,8 @@ export const createProperty = async (req, res) => {
 
     const parseNullableInt = (value) => {
       // Return undefined when the value is missing or empty so we don't explicitly set null
-      if (value === undefined || value === null || value === '') return undefined;
+      if (value === undefined || value === null || value === '')
+        return undefined;
       const parsed = parseInt(value);
       return Number.isNaN(parsed) ? undefined : parsed;
     };
@@ -271,7 +275,10 @@ export const createProperty = async (req, res) => {
       'area',
     ];
     const missing = requiredFields.filter(
-      (f) => dataToCreate[f] === undefined || dataToCreate[f] === null || dataToCreate[f] === ''
+      (f) =>
+        dataToCreate[f] === undefined ||
+        dataToCreate[f] === null ||
+        dataToCreate[f] === ''
     );
     if (missing.length > 0) {
       return res.status(400).json({
@@ -288,7 +295,7 @@ export const createProperty = async (req, res) => {
       newProperty = await prisma.property.create({
         data: dataToCreate,
         include: {
-          images: true,
+          images: { orderBy: { createdAt: 'desc' } },
           user: {
             select: {
               id: true,
@@ -383,7 +390,8 @@ export const updateProperty = async (req, res) => {
     // Normalize numeric fields and lat/lng (same helper functions)
     const parseNullableFloat = (value) => {
       // Return undefined when the value is missing or empty so we don't explicitly set null
-      if (value === undefined || value === null || value === '') return undefined;
+      if (value === undefined || value === null || value === '')
+        return undefined;
       const parsed = parseFloat(value);
       return Number.isNaN(parsed) ? undefined : parsed;
     };
@@ -393,7 +401,8 @@ export const updateProperty = async (req, res) => {
 
     const parseNullableInt = (value) => {
       // Return undefined when the value is missing or empty so we don't explicitly set null
-      if (value === undefined || value === null || value === '') return undefined;
+      if (value === undefined || value === null || value === '')
+        return undefined;
       const parsed = parseInt(value);
       return Number.isNaN(parsed) ? undefined : parsed;
     };
@@ -451,7 +460,7 @@ export const updateProperty = async (req, res) => {
       where: { id },
       data: updateData,
       include: {
-        images: true,
+        images: { orderBy: { createdAt: 'desc' } },
         user: {
           select: {
             id: true,
