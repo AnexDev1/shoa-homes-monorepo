@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
+    "lint": "eslint . --ext js --report-unused-disable-directives --max-warnings 0",
     "migrate": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy",
     "generate": "prisma generate",
@@ -25,6 +26,7 @@
     "nodemailer": "^7.0.11"
   },
   "devDependencies": {
+    "eslint": "^8.55.0",
     "nodemon": "^3.0.2",
     "prisma": "^5.8.0"
   }

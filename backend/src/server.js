@@ -112,16 +112,6 @@ app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📍 API available at http://localhost:${PORT}/api`);
   console.log(
-    `🌐 CORS allowed origins: ${JSON.stringify(
-      (() => {
-        const origins = [
-          'http://localhost:3000',
-          'http://localhost:5173',
-          'https://shoa-0vtw.onrender.com',
-        ];
-        if (process.env.FRONTEND_URL) origins.push(process.env.FRONTEND_URL);
-        return Array.from(new Set(origins.filter(Boolean)));
-      })()
-    )}`
+    `🌐 CORS allowed origins: ${JSON.stringify(Array.from(allowedOrigins))}`
   );
 });
