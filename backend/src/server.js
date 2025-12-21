@@ -28,6 +28,8 @@ const allowedOrigins = (() => {
     'http://localhost:3000', // Local development (legacy)
     'http://localhost:5173', // Vite dev server
     'https://shoa-0vtw.onrender.com', // legacy frontend domain
+    'https://shoahomes.com', // Production domain
+    'https://www.shoahomes.com', // Production domain with www
   ];
   if (process.env.FRONTEND_URL) origins.push(process.env.FRONTEND_URL);
   return new Set(origins.filter(Boolean));
@@ -66,7 +68,8 @@ app.use(
 // Ensure persistent uploads directory exists and serve it at /uploads
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const uploadsDir = process.env.UPLOADS_DIR || path.resolve(__dirname, '../uploads');
+const uploadsDir =
+  process.env.UPLOADS_DIR || path.resolve(__dirname, '../uploads');
 fs.mkdirSync(uploadsDir, { recursive: true });
 app.use('/uploads', express.static(uploadsDir));
 // Avoid noisy console logs in production — use console.info only for critical messages
