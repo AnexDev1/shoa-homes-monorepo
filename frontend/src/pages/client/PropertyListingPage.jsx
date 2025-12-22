@@ -38,8 +38,7 @@ const PropertyListingPage = () => {
       // Filter out empty values before sending to API
       const cleanFilters = Object.fromEntries(
         Object.entries(filters).filter(
-          ([key, value]) =>
-            value !== '' && value !== null && value !== undefined
+          ([_, value]) => value !== '' && value !== null && value !== undefined
         )
       );
       return propertiesAPI.getAll({

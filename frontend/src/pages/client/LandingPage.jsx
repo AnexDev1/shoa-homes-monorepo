@@ -21,7 +21,6 @@ import PropertyCard from '../../components/PropertyCard';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { FaChevronDown } from 'react-icons/fa';
 const LandingPage = () => {
-  const [scrolled, setScrolled] = useState(false);
   const [searchFilters, setSearchFilters] = useState({
     location: '',
     type: '',
@@ -49,14 +48,6 @@ const LandingPage = () => {
     refetchOnMount: true,
     refetchOnReconnect: true,
   });
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const handleSearchFilterChange = (field, value) => {
     setSearchFilters((prev) => ({

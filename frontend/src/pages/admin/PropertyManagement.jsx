@@ -227,11 +227,7 @@ const PropertyManagement = () => {
             propertiesAPI
               .deleteImage(editingProperty.id, imageId)
               .catch((e) => {
-                console.warn(
-                  'Failed to delete image',
-                  imageId,
-                  e?.message || e
-                );
+                // Failed to delete image - silently ignore
               })
           )
         );
@@ -474,6 +470,17 @@ const PropertyManagement = () => {
             <SortablePropertiesList
               properties={properties?.data || []}
               onEdit={(property) => {
+                const amenityString = Array.isArray(property.amenities)
+                  ? property.amenities.join(', ')
+                  : typeof property.amenities === 'string'
+                    ? (() => {
+                        try {
+                          return JSON.parse(property.amenities).join(', ');
+                        } catch (e) {
+                          return property.amenities;
+                        }
+                      })()
+                    : '';
                 setEditingProperty(property);
                 setFormData({
                   title: property.title,
@@ -499,7 +506,11 @@ const PropertyManagement = () => {
                 setIsModalOpen(true);
               }}
               onDelete={(id) => {
-                if (window.confirm('Are you sure you want to delete this property?')) {
+                if (
+                  window.confirm(
+                    'Are you sure you want to delete this property?'
+                  )
+                ) {
                   deleteMutation.mutate(id);
                 }
               }}
