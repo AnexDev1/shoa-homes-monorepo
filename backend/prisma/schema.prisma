@@ -41,6 +41,7 @@ model Property {
   area        Float
   amenities   String   // JSON string of amenities array
   featured    Boolean  @default(false)
+  order       Int      @default(0) // For drag-and-drop reordering
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   

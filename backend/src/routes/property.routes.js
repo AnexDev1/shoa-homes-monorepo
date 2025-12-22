@@ -5,6 +5,7 @@ import {
   createProperty,
   updateProperty,
   deleteProperty,
+  reorderProperties,
   uploadPropertyImages,
 } from '../controllers/property.controller.js';
 import { authenticate, authorize } from '../middleware/auth.middleware.js';
@@ -20,6 +21,7 @@ router.get('/:id', getPropertyById);
 router.post('/', authenticate, authorize(['ADMIN']), createProperty);
 router.put('/:id', authenticate, authorize(['ADMIN']), updateProperty);
 router.delete('/:id', authenticate, authorize(['ADMIN']), deleteProperty);
+router.post('/reorder', authenticate, authorize(['ADMIN']), reorderProperties);
 router.post(
   '/:id/images',
   authenticate,

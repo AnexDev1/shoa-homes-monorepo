@@ -38,14 +38,17 @@ export const getAllProperties = async (req, res) => {
     }
 
     // Handle sorting
-    const orderBy = {};
+    let orderBy;
     switch (sort) {
       case 'area':
-        orderBy.area = 'desc';
+        orderBy = { area: 'desc' };
+        break;
+      case 'order':
+        orderBy = { order: 'asc' };
         break;
       case 'newest':
       default:
-        orderBy.createdAt = 'desc';
+        orderBy = { createdAt: 'desc' };
         break;
     }
 
@@ -72,16 +75,7 @@ export const getAllProperties = async (req, res) => {
         take,
       }),
       prisma.property.count({
-        where: {
-          featured: where.featured,
-          type: where.type ? where.type.equals : undefined,
-          status: where.status ? where.status.equals : undefined,
-          bedrooms: where.bedrooms,
-          location: where.location
-            ? { contains: where.location.contains }
-            : undefined,
-          OR: where.OR,
-        },
+        where,
       }),
     ]);
 
@@ -262,6 +256,7 @@ export const createProperty = async (req, res) => {
       'area',
       'amenities',
       'featured',
+      'order',
     ];
     const dataToCreate = {};
     for (const k of allowedFields) {
@@ -472,6 +467,10 @@ export const updateProperty = async (req, res) => {
         propertyData.featured !== undefined
           ? propertyData.featured
           : existingProperty.featured,
+      order:
+        propertyData.order !== undefined
+          ? propertyData.order
+          : existingProperty.order,
       user: {
         connect: { id: userId },
       },
@@ -571,6 +570,40 @@ export const deleteProperty = async (req, res) => {
       success: false,
       message: 'Failed to delete property',
       error: error.message,
+    });
+  }
+};
+
+export const reorderProperties = async (req, res) => {
+  try {
+    const { propertyIds } = req.body;
+
+    if (!Array.isArray(propertyIds)) {
+      return res.status(400).json({
+        success: false,
+        message: 'propertyIds must be an array',
+      });
+    }
+
+    // Update order for each property
+    const updatePromises = propertyIds.map((id, index) =>
+      prisma.property.update({
+        where: { id },
+        data: { order: index },
+      })
+    );
+
+    await Promise.all(updatePromises);
+
+    res.status(200).json({
+      success: true,
+      message: 'Properties reordered successfully',
+    });
+  } catch (error) {
+    console.error('Error in reorderProperties:', error?.stack || error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to reorder properties',
     });
   }
 };
