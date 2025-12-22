@@ -54,6 +54,13 @@ export const propertiesAPI = {
     return data;
   },
 
+  reorder: async (propertyIds) => {
+    const { data } = await apiClient.post('/properties/reorder', {
+      propertyIds,
+    });
+    return data;
+  },
+
   delete: async (id) => {
     const { data } = await apiClient.delete(`/properties/${id}`);
     return data;

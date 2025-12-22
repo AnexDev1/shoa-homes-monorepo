@@ -37,7 +37,7 @@ const LandingPage = () => {
     queryKey: ['properties', 'latest'],
     queryFn: async () => {
       const res = await propertiesAPI.getAll({
-        sort: 'newest',
+        sort: 'order',
         limit: 6,
         _t: Date.now(),
       });

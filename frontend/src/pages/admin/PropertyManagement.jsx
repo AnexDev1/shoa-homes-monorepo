@@ -1,8 +1,9 @@
 import { useState, useRef, useMemo, useEffect } from 'react';
-const DEFAULT_SMALL_PLACEHOLDER = `data:image/svg+xml;utf8,${encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'><rect width='50' height='50' fill='%23E5E7EB'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23737475' font-family='Arial' font-size='8'>No Image</text></svg>")}`;
+const DEFAULT_SMALL_PLACEHOLDER = `data:image/svg+xml;utf8,${encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'><rect width='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23737475' font-family='Arial' font-size='8'>No Image</text></svg>")}`;
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import PlaceSearch from '../../components/PlaceSearch';
+import SortablePropertiesList from '../../components/SortablePropertiesList';
 import { propertiesAPI } from '../../services/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import toast, { Toaster } from 'react-hot-toast';
@@ -15,7 +16,7 @@ const PropertyManagement = () => {
     title: '',
     description: '',
     type: 'apartment',
-    status: 'for-sale',
+    status: 'For Sale',
     location: '',
     bedrooms: '',
     bathrooms: '',
@@ -27,11 +28,12 @@ const PropertyManagement = () => {
   const [images, setImages] = useState([]);
   const [removedImageIds, setRemovedImageIds] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [viewMode, setViewMode] = useState('sortable'); // 'sortable' or 'table'
   const fileInputRef = useRef(null);
 
   const { data: properties, isLoading } = useQuery({
     queryKey: ['admin-properties'],
-    queryFn: () => propertiesAPI.getAll({ limit: 100 }),
+    queryFn: () => propertiesAPI.getAll({ limit: 100, sort: 'order' }),
   });
 
   const createMutation = useMutation({
@@ -434,9 +436,74 @@ const PropertyManagement = () => {
       </div>
 
       <div className="bg-white rounded-xl shadow-md overflow-hidden">
+        {/* View Toggle */}
+        <div className="px-6 py-4 border-b border-gray-200">
+          <div className="flex items-center gap-4">
+            <span className="text-sm font-medium text-gray-700">View:</span>
+            <div className="flex rounded-lg border border-gray-300">
+              <button
+                onClick={() => setViewMode('sortable')}
+                className={`px-4 py-2 text-sm font-medium rounded-l-lg ${
+                  viewMode === 'sortable'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                📋 Sortable List
+              </button>
+              <button
+                onClick={() => setViewMode('table')}
+                className={`px-4 py-2 text-sm font-medium rounded-r-lg ${
+                  viewMode === 'table'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                📊 Table View
+              </button>
+            </div>
+          </div>
+        </div>
+
         {isLoading ? (
           <div className="py-12">
             <LoadingSpinner size="lg" />
+          </div>
+        ) : viewMode === 'sortable' ? (
+          <div className="p-6">
+            <SortablePropertiesList
+              properties={properties?.data || []}
+              onEdit={(property) => {
+                setEditingProperty(property);
+                setFormData({
+                  title: property.title,
+                  description: property.description,
+                  type: property.type,
+                  status: property.status,
+                  location: property.location,
+                  bedrooms: property.bedrooms,
+                  bathrooms: property.bathrooms,
+                  area: property.area,
+                  amenities: amenityString || '',
+                  latitude: property.latitude || null,
+                  longitude: property.longitude || null,
+                  order: property.order || 0,
+                });
+                setImages(
+                  property.images?.map((img) => ({
+                    id: img.id,
+                    url: img.url,
+                    publicId: img.publicId,
+                  })) || []
+                );
+                setIsModalOpen(true);
+              }}
+              onDelete={(id) => {
+                if (window.confirm('Are you sure you want to delete this property?')) {
+                  deleteMutation.mutate(id);
+                }
+              }}
+            />
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -718,6 +785,9 @@ const PropertyManagement = () => {
                         >
                           <img
                             src={(() => {
+                              // Use preview for newly uploaded images
+                              if (img.preview) return img.preview;
+                              // For existing images from server
                               if (img.url) {
                                 if (
                                   img.url.startsWith('http') ||
@@ -726,6 +796,7 @@ const PropertyManagement = () => {
                                   return img.url;
                                 return 'https://api.shoahomes.com' + img.url;
                               }
+                              // Fallback for file objects
                               if (img.file)
                                 return URL.createObjectURL(img.file);
                               return DEFAULT_SMALL_PLACEHOLDER;

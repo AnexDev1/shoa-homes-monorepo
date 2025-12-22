@@ -171,8 +171,8 @@ const PropertyListingPage = () => {
                     className="input-field"
                   >
                     <option value="">All</option>
-                    <option value="for-sale">For Sale</option>
-                    <option value="for-rent">Sold</option>
+                    <option value="For Sale">For Sale</option>
+                    <option value="Sold">Sold</option>
                   </select>
                 </div>
 
@@ -233,6 +233,7 @@ const PropertyListingPage = () => {
                   >
                     <option value="newest">Newest First</option>
                     <option value="area">Area: Largest First</option>
+                    <option value="order">Custom Order</option>
                   </select>
                 </div>
               </div>
