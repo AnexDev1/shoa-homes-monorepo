@@ -60,8 +60,10 @@ app.use(
     // Use OS temporary directory which works cross-platform
     tempFileDir: os.tmpdir(),
     preserveExtension: true,
-    // Optional limits (tune as needed)
-    limits: { fileSize: 20 * 1024 * 1024 }, // 20 MB
+    // Increased limits for larger images
+    limits: { fileSize: 50 * 1024 * 1024 }, // 50 MB
+    // Increase timeout for large file processing
+    uploadTimeout: 60000, // 60 seconds
   })
 );
 

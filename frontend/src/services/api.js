@@ -83,6 +83,8 @@ export const propertiesAPI = {
       method: 'POST',
       headers,
       body: formData,
+      // Add timeout for large file uploads (5 minutes)
+      signal: AbortSignal.timeout(300000), // 5 minutes
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data?.message || 'Failed to upload images');
