@@ -28,6 +28,7 @@ const PropertyManagement = () => {
   const [images, setImages] = useState([]);
   const [removedImageIds, setRemovedImageIds] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [viewMode, setViewMode] = useState('sortable'); // 'sortable' or 'table'
   const fileInputRef = useRef(null);
 
@@ -173,9 +174,11 @@ const PropertyManagement = () => {
         const uploadFormData = new FormData();
         newImages.forEach((img) => uploadFormData.append('images[]', img.file));
         try {
+          setUploadProgress(0);
           const result = await propertiesAPI.uploadImages(
             propertyId,
-            uploadFormData
+            uploadFormData,
+            (p) => setUploadProgress(p)
           );
           if (result?.errors?.length) {
             // eslint-disable-next-line no-console
@@ -203,11 +206,14 @@ const PropertyManagement = () => {
           });
           await queryClient.invalidateQueries(['property', propertyId]);
           uploadSuccessful = true;
+          setUploadProgress(0);
         } catch (uploadError) {
           // eslint-disable-next-line no-console
           console.error('Image upload failed: ', uploadError);
+          // Prefer server-provided message when available
+          const serverMsg = uploadError?.response?.data;
           const message =
-            uploadError.response?.data?.message ||
+            (serverMsg && (serverMsg.message || JSON.stringify(serverMsg))) ||
             uploadError.message ||
             'Failed to upload images';
           toast.error(message);
@@ -261,6 +267,7 @@ const PropertyManagement = () => {
       );
     } finally {
       setIsUploading(false);
+      setUploadProgress(0);
     }
   };
 
@@ -294,19 +301,40 @@ const PropertyManagement = () => {
   };
 
   const removeImage = (index) => {
+    const removedImage = images[index];
+    // Optimistically remove from UI
     setImages((prev) => {
       const newImages = [...prev];
       const removed = newImages.splice(index, 1)[0];
-      // If the removed image exists in the DB, track it for deletion
-      if (removed && !removed.isNew && removed.id) {
-        setRemovedImageIds((ids) => [...ids, removed.id]);
-      }
-      // Revoke the object URL to prevent memory leaks
-      if (removed?.preview) {
-        URL.revokeObjectURL(removed.preview);
-      }
+      if (removed?.preview) URL.revokeObjectURL(removed.preview);
       return newImages;
     });
+
+    // If editing an existing property and the image exists in DB, delete immediately
+    if (editingProperty && removedImage && !removedImage.isNew && removedImage.id) {
+      propertiesAPI
+        .deleteImage(editingProperty.id, removedImage.id)
+        .then(() => {
+          // invalidate queries so other UI updates reflect deletion
+          queryClient.invalidateQueries(['property', editingProperty.id]);
+          queryClient.invalidateQueries({ queryKey: ['properties'], exact: false });
+          toast.success('Image deleted');
+        })
+        .catch((err) => {
+          // Revert removal on error
+          setImages((prev) => {
+            const copy = [...prev];
+            copy.splice(index, 0, removedImage);
+            return copy;
+          });
+          toast.error(
+            err.response?.data?.message || err.message || 'Failed to delete image'
+          );
+        });
+    } else if (removedImage && !removedImage.isNew && removedImage.id) {
+      // If not editing (shouldn't normally happen), mark for deletion on submit
+      setRemovedImageIds((ids) => [...ids, removedImage.id]);
+    }
   };
 
   const handleEdit = (property) => {
@@ -784,9 +812,16 @@ const PropertyManagement = () => {
            file:rounded file:border-0 file:text-sm file:font-semibold
            file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                   />
-                  {isUploading && (
-                    <p className="text-gray-500 text-sm mt-1">Uploading...</p>
-                  )}
+                  {isUploading && uploadProgress > 0 ? (
+                    <div className="w-full bg-gray-200 rounded h-2 mt-2">
+                      <div
+                        className="bg-blue-600 h-2 rounded"
+                        style={{ width: `${uploadProgress}%` }}
+                      />
+                    </div>
+                  ) : isUploading ? (
+                    <p className="text-gray-500 text-sm mt-1">Preparing...</p>
+                  ) : null}
                   {images.length > 0 && (
                     <div className="flex flex-wrap mt-2 gap-2">
                       {images.map((img, index) => (
