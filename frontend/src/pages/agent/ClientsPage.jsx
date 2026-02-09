@@ -7,6 +7,14 @@ import LoadingSpinner from '../../components/LoadingSpinner';
 import { toast } from 'react-hot-toast';
 import { Toaster } from 'react-hot-toast';
 
+const NOTE_OPTIONS = [
+  'First Meeting',
+  'Property Search and Showings',
+  'Negotiation and Offer Presentation',
+  'Sign Agreement',
+  'Property Transfer',
+];
+
 const ClientsPage = () => {
   const [isAddClientOpen, setIsAddClientOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -17,7 +25,7 @@ const ClientsPage = () => {
     name: '',
     email: '',
     phone: '',
-    notes: '',
+    notes: '', // Default to empty string for dropdown
   });
 
   const {
@@ -35,7 +43,7 @@ const ClientsPage = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(['agent-clients']);
       setIsAddClientOpen(false);
-      setFormData({ name: '', email: '', phone: '', notes: '' });
+      setFormData({ name: '', email: '', phone: '', notes: '' }); // Reset notes to empty string for dropdown
       toast.success('Client added successfully');
     },
     onError: (err) =>
@@ -273,14 +281,19 @@ const ClientsPage = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Notes
                   </label>
-                  <textarea
+                  <select
                     name="notes"
-                    rows="3"
                     value={formData.notes}
                     onChange={handleInputChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Any additional information about the client..."
-                  />
+                  >
+                    <option value="">Select a note type...</option>
+                    {NOTE_OPTIONS.map((option, index) => (
+                      <option key={index} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div className="mt-6 flex justify-end space-x-3">

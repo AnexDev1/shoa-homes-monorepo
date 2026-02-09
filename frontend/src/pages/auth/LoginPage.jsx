@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { authAPI } from '../../services/api';
 import { useAuthStore } from '../../store/authStore';
-import { Mail, Lock, Home, AlertCircle } from 'lucide-react';
+import { Mail, Lock, Home, AlertCircle, Eye, EyeOff } from 'lucide-react';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -13,6 +13,7 @@ const LoginPage = () => {
     password: '',
   });
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const mutation = useMutation({
     mutationFn: authAPI.login,
@@ -82,20 +83,27 @@ const LoginPage = () => {
               />
             </div>
 
-            <div>
+            <div className="relative">
               <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
                 <Lock className="w-4 h-4" />
                 Password
               </label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="input-field"
+                className="input-field pr-10"
                 placeholder="••••••••"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/5 text-gray-500 hover:text-gray-700"
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
             </div>
 
             <div className="flex items-center justify-between">
@@ -106,9 +114,6 @@ const LoginPage = () => {
                 />
                 <span className="ml-2 text-sm text-gray-600">Remember me</span>
               </label>
-              <a href="#" className="text-sm text-primary-600 hover:underline">
-                Forgot password?
-              </a>
             </div>
 
             <button

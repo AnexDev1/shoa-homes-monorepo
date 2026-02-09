@@ -52,6 +52,9 @@ const Navbar = () => {
             <Link to="/" className={linkClasses('/')}>
               Home
             </Link>
+            <Link to="/news" className={linkClasses('/news')}>
+              News/Events
+            </Link>
             <Link to="/properties" className={linkClasses('/properties')}>
               Properties
             </Link>
@@ -139,6 +142,13 @@ const Navbar = () => {
               onClick={handleLinkClick}
             >
               Home
+            </Link>
+            <Link
+              to="/news"
+              className={mobileLinkClasses('/news')}
+              onClick={handleLinkClick}
+            >
+              News/Events
             </Link>
             <Link
               to="/properties"

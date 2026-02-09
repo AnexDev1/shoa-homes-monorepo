@@ -542,10 +542,10 @@ export const mockDashboardStats = {
 
 // Company Stats
 export const companyStats = [
-  { label: 'Years of Legacy', value: '60+' },
+  { label: 'Years of Legacy', value: '68+' },
   { label: 'Projects Delivered', value: '10+' },
   { label: 'Sq.M Developed', value: '44,000+' },
-  { label: 'Happy Families', value: '3,200+' },
+  { label: 'Happy Families', value: '200+' },
 ];
 
 // Why Choose Us Data

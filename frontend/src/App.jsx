@@ -19,6 +19,7 @@ import PropertyDetailPage from './pages/client/PropertyDetailPage';
 import AboutPage from './pages/client/AboutPage';
 import ContactPage from './pages/client/ContactPage';
 import LoginPage from './pages/auth/LoginPage';
+import NewsEventsPage from './pages/client/NewsEventsPage';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -54,6 +55,7 @@ function AppContent() {
         <Route path="properties/:id" element={<PropertyDetailPage />} />
         <Route path="about" element={<AboutPage />} />
         <Route path="contact" element={<ContactPage />} />
+        <Route path="news" element={<NewsEventsPage />} />
         <Route path="login" element={<LoginPage />} />
         {/* Registration removed — admins are pre-created */}
       </Route>

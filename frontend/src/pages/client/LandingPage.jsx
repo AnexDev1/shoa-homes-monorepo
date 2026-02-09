@@ -204,7 +204,7 @@ const LandingPage = () => {
               NEWLY ADDED
             </span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4 text-navy-900">
-              Latest Properties
+              Latest Properties for Sale
             </h2>
             <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
               Check out the newest properties added to our collection in Addis
@@ -282,7 +282,7 @@ const LandingPage = () => {
           <div className="bg-white rounded-2xl shadow-premium overflow-hidden hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-1 flex flex-col">
             <div className="h-48 relative">
               <img
-                src="https://images.unsplash.com/photo-1574362848149-11496d93a7c7?w=800&q=80"
+                src="/images/flagship.png"
                 alt="Flagship Project"
                 className="w-full h-full object-cover"
               />
@@ -325,7 +325,7 @@ const LandingPage = () => {
           <div className="bg-white rounded-2xl shadow-premium overflow-hidden hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-1 flex flex-col">
             <div className="h-48 relative">
               <img
-                src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80"
+                src="/images/jacros.jpg"
                 alt="Jackros Site"
                 className="w-full h-full object-cover"
               />
@@ -365,7 +365,7 @@ const LandingPage = () => {
           <div className="bg-white rounded-2xl shadow-premium overflow-hidden hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-1 flex flex-col">
             <div className="h-48 relative">
               <img
-                src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80"
+                src="/images/wello.png"
                 alt="Wello Sefer Site"
                 className="w-full h-full object-cover"
               />
@@ -404,7 +404,7 @@ const LandingPage = () => {
           <div className="bg-white rounded-2xl shadow-premium overflow-hidden hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-1 flex flex-col">
             <div className="h-48 relative">
               <img
-                src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80"
+                src="/images/bisrate_gebriel.png"
                 alt="Bisrate Gabriel Site"
                 className="w-full h-full object-cover"
               />
@@ -443,7 +443,7 @@ const LandingPage = () => {
           <div className="bg-white rounded-2xl shadow-premium overflow-hidden hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-1 flex flex-col">
             <div className="h-48 relative">
               <img
-                src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&q=80"
+                src="/images/bole.jpg"
                 alt="Bole Matemiya Site"
                 className="w-full h-full object-cover"
               />
@@ -482,7 +482,7 @@ const LandingPage = () => {
           <div className="bg-white rounded-2xl shadow-premium overflow-hidden hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-1 flex flex-col">
             <div className="h-48 relative">
               <img
-                src="https://images.unsplash.com/photo-1515263487990-61b07816b324?w=800&q=80"
+                src="/images/bulbula.jpg"
                 alt="Bulbula Site"
                 className="w-full h-full object-cover"
               />
