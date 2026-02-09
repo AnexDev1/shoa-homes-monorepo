@@ -1,4 +1,5 @@
 import apiClient from '../lib/api';
+import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
 
 // Auth API
@@ -66,29 +67,59 @@ export const propertiesAPI = {
     return data;
   },
 
-  uploadImages: async (propertyId, files) => {
+  uploadImages: async (propertyId, files, onProgress) => {
     // files may be either an array of File or a FormData (in case caller pre-made it)
     let formData = files instanceof FormData ? files : new FormData();
     if (!(files instanceof FormData)) {
-      (files || []).forEach((file) => formData.append('images[]', file));
+      // Validate file sizes client-side to avoid large uploads being rejected
+      const MAX_BYTES = 50 * 1024 * 1024; // 50 MB
+      for (const file of (files || [])) {
+        if (file.size > MAX_BYTES) {
+          throw new Error(`File too large: ${file.name} (${Math.round(file.size / (1024 * 1024))}MB). Max is 50MB.`);
+        }
+      }
+      // Use 'images' (no [] suffix) so express-fileupload maps to req.files.images
+      (files || []).forEach((file) => formData.append('images', file));
     }
-    // Do NOT set Content-Type header manually — axios/browser will set boundary for multipart/form-data
-    // Also ensure we don't send the `Content-Type` header without boundary as a misconfigured header can cause parsing failures
-    // Use fetch for file uploads to avoid axios headers overriding/boundary issues
+
+    // Use axios to support upload progress reporting in browser
     const token = localStorage.getItem('token');
-    const baseUrl = apiClient.defaults.baseURL || '';
-    const url = baseUrl.replace(/\/$/, '') + `/properties/${propertyId}/images`;
     const headers = token ? { Authorization: `Bearer ${token}` } : {};
-    const res = await fetch(url, {
-      method: 'POST',
-      headers,
-      body: formData,
-      // Add timeout for large file uploads (5 minutes)
-      signal: AbortSignal.timeout(300000), // 5 minutes
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data?.message || 'Failed to upload images');
-    return data;
+
+    const url = `/properties/${propertyId}/images`;
+    const config = {
+      headers: {
+        ...headers,
+      },
+      timeout: 300000, // 5 minutes
+      onUploadProgress: (progressEvent) => {
+        if (onProgress && progressEvent.total) {
+          const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          try {
+            onProgress(percent);
+          } catch (e) {
+            // swallow progress handler errors
+          }
+        }
+      },
+    };
+
+    // Ensure we do NOT send any JSON Content-Type header from axios defaults
+    // so the browser can set the correct multipart boundary for FormData.
+    // Setting it to undefined here overrides the axios default and allows
+    // the browser to set the correct 'multipart/form-data; boundary=...' header.
+    if (config.headers) {
+      config.headers['Content-Type'] = undefined;
+    }
+
+    // Use axios directly for FormData upload so default JSON Content-Type on apiClient
+    // does not pollute this request. Include Authorization manually.
+    if (token) config.headers = { ...config.headers, Authorization: `Bearer ${token}` };
+    const target = apiClient.defaults?.baseURL
+      ? `${apiClient.defaults.baseURL.replace(/\/$/, '')}${url}`
+      : url;
+    const response = await axios.post(target, formData, config);
+    return response.data;
   },
 
   deleteImage: async (propertyId, imageId) => {

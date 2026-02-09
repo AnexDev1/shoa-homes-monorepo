@@ -96,6 +96,26 @@ app.get('/api/health', (req, res) => {
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
+
+  // Ensure CORS header is present on error responses so browser can read them
+  try {
+    const origin = req.headers.origin;
+    if (origin && allowedOrigins.has(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+    }
+  } catch (e) {
+    // ignore header set errors
+  }
+
+  // Special handling for payload too large
+  if (err?.status === 413 || err?.code === 'LIMIT_FILE_SIZE') {
+    return res.status(413).json({
+      success: false,
+      message: 'Uploaded file is too large. Maximum allowed size is 50MB.',
+    });
+  }
+
   res.status(err.status || 500).json({
     success: false,
     message: err.message || 'Internal Server Error',
