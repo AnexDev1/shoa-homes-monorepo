@@ -22,6 +22,7 @@ model User {
 
   properties Property[]
   clients   Client[]  // Added clients relationship
+  newsEvents NewsEvent[] // Add news events relationship
   // inquiries removed: user inquiries are no longer supported (contact via phone/email)
 
   @@map("users")
@@ -84,3 +85,27 @@ model Client {
   @@unique([email, agentId])
   @@map("clients")
 }
+
+model NewsEvent {
+  id          String   @id @default(uuid())
+  title       String
+  excerpt     String
+  content     String
+  type        String   // "news" or "event"
+  category    String
+  date        DateTime // The display / event date
+  time        String?  // e.g. "10:00 AM - 2:00 PM" (events only)
+  location    String?  // (events only)
+  image       String?  // Image URL
+  imagePublicId String? // Cloudinary public ID for deletion
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  createdById String
+  createdBy   User     @relation(fields: [createdById], references: [id])
+
+  @@map("news_events")
+}
+
+

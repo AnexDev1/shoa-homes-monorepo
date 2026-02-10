@@ -15,6 +15,7 @@ import dashboardRoutes from './routes/dashboard.routes.js';
 import userRoutes from './routes/user.routes.js';
 import agentRoutes from './routes/agent.routes.js';
 import contactRoutes from './routes/contact.routes.js';
+import newsEventRoutes from './routes/newsEvent.routes.js';
 
 // Load environment variables
 dotenv.config();
@@ -27,6 +28,7 @@ const allowedOrigins = (() => {
   const origins = [
     'http://localhost:3000', // Local development (legacy)
     'http://localhost:5173', // Vite dev server
+    'http://localhost:5174', // Vite dev server (alternative port)
     'https://shoa-0vtw.onrender.com', // legacy frontend domain
     'https://shoahomes.com', // Production domain
     'https://www.shoahomes.com', // Production domain with www
@@ -87,6 +89,7 @@ app.use('/api/properties', propertyRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/agent', agentRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/news-events', newsEventRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
