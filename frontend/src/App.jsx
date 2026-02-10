@@ -20,12 +20,14 @@ import AboutPage from './pages/client/AboutPage';
 import ContactPage from './pages/client/ContactPage';
 import LoginPage from './pages/auth/LoginPage';
 import NewsEventsPage from './pages/client/NewsEventsPage';
+import NewsEventDetailPage from './pages/client/NewsEventDetailPage';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
 import PropertyManagement from './pages/admin/PropertyManagement';
 import CreateUser from './pages/admin/CreateUser';
 import SettingsPage from './pages/admin/SettingsPage';
+import NewsEventsManagement from './pages/admin/NewsEventsManagement';
 
 import AgentDashboard from './pages/agent/AgentDashboard';
 import ClientsPage from './pages/agent/ClientsPage';
@@ -56,6 +58,7 @@ function AppContent() {
         <Route path="about" element={<AboutPage />} />
         <Route path="contact" element={<ContactPage />} />
         <Route path="news" element={<NewsEventsPage />} />
+        <Route path="news/:id" element={<NewsEventDetailPage />} />
         <Route path="login" element={<LoginPage />} />
         {/* Registration removed — admins are pre-created */}
       </Route>
@@ -71,6 +74,7 @@ function AppContent() {
       >
         <Route index element={<AdminDashboard />} />
         <Route path="properties" element={<PropertyManagement />} />
+        <Route path="news-events" element={<NewsEventsManagement />} />
         <Route path="create_user" element={<CreateUser />} />
         <Route path="settings" element={<SettingsPage />} />
       </Route>

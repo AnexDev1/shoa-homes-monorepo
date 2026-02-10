@@ -73,9 +73,11 @@ export const propertiesAPI = {
     if (!(files instanceof FormData)) {
       // Validate file sizes client-side to avoid large uploads being rejected
       const MAX_BYTES = 50 * 1024 * 1024; // 50 MB
-      for (const file of (files || [])) {
+      for (const file of files || []) {
         if (file.size > MAX_BYTES) {
-          throw new Error(`File too large: ${file.name} (${Math.round(file.size / (1024 * 1024))}MB). Max is 50MB.`);
+          throw new Error(
+            `File too large: ${file.name} (${Math.round(file.size / (1024 * 1024))}MB). Max is 50MB.`
+          );
         }
       }
       // Use 'images' (no [] suffix) so express-fileupload maps to req.files.images
@@ -94,7 +96,9 @@ export const propertiesAPI = {
       timeout: 300000, // 5 minutes
       onUploadProgress: (progressEvent) => {
         if (onProgress && progressEvent.total) {
-          const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          const percent = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
           try {
             onProgress(percent);
           } catch (e) {
@@ -114,7 +118,8 @@ export const propertiesAPI = {
 
     // Use axios directly for FormData upload so default JSON Content-Type on apiClient
     // does not pollute this request. Include Authorization manually.
-    if (token) config.headers = { ...config.headers, Authorization: `Bearer ${token}` };
+    if (token)
+      config.headers = { ...config.headers, Authorization: `Bearer ${token}` };
     const target = apiClient.defaults?.baseURL
       ? `${apiClient.defaults.baseURL.replace(/\/$/, '')}${url}`
       : url;
@@ -220,5 +225,44 @@ export const userAPI = {
   getById: async (userId) => {
     const { data } = await apiClient.get(`/users/${userId}`);
     return data.data;
+  },
+};
+
+// News & Events API
+export const newsEventsAPI = {
+  // Admin methods
+  adminGetAll: async (params) => {
+    const { data } = await apiClient.get('/news-events/admin', { params });
+    return data;
+  },
+
+  create: async (formData) => {
+    const { data } = await apiClient.post('/news-events', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return data;
+  },
+
+  update: async (id, formData) => {
+    const { data } = await apiClient.put(`/news-events/${id}`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return data;
+  },
+
+  delete: async (id) => {
+    const { data } = await apiClient.delete(`/news-events/${id}`);
+    return data;
+  },
+
+  // Public methods
+  getAll: async (params) => {
+    const { data } = await apiClient.get('/news-events', { params });
+    return data;
+  },
+
+  getById: async (id) => {
+    const { data } = await apiClient.get(`/news-events/${id}`);
+    return data;
   },
 };

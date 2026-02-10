@@ -12,6 +12,7 @@ const AdminLayout = () => {
     { name: 'Dashboard', path: '/admin', icon: '📊' },
     { name: 'Create User', path: '/admin/create_user', icon: '👤' },
     { name: 'Properties', path: '/admin/properties', icon: '🏠' },
+    { name: 'News & Events', path: '/admin/news-events', icon: '📰' },
     { name: 'Settings', path: '/admin/settings', icon: '⚙️' },
   ];
 
