@@ -20,8 +20,15 @@ const saveLocally = async (file, filename) => {
   await fs.copyFile(file.tempFilePath, filePath);
   // Clean up the temp file
   await fs.unlink(file.tempFilePath);
+
+  // Build a public URL for the file. If BACKEND_BASE_URL is set, use absolute URL; otherwise return a root-relative path.
+  const base = process.env.BACKEND_BASE_URL
+    ? process.env.BACKEND_BASE_URL.replace(/\/$/, '')
+    : '';
+  const url = base + `/uploads/shoa-homes/news-events/${filename}`;
+
   return {
-    url: `/uploads/shoa-homes/news-events/${filename}`,
+    url,
     publicId: null,
   };
 };
@@ -188,8 +195,8 @@ const update = async (req, res) => {
         date: new Date(date),
         time: time !== undefined ? time || null : existing.time,
         location: location !== undefined ? location || null : existing.location,
-        image: imageData.image,
-        imagePublicId: imageData.imagePublicId,
+        image: imageData.url,
+        imagePublicId: imageData.publicId,
         published: published === 'true',
       },
       include: { createdBy: { select: { name: true } } },
