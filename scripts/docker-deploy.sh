@@ -4,6 +4,7 @@ set -euo pipefail
 REPO_DIR=${REPO_DIR:-/var/www/shoa-homes-monorepo}
 COMPOSE_FILE=${COMPOSE_FILE:-docker-compose.prod.yml}
 BRANCH=${BRANCH:-main}
+BACKUP_DIR=${BACKUP_DIR:-$REPO_DIR/.db-backups}
 
 cd "$REPO_DIR"
 
@@ -12,10 +13,10 @@ git fetch --all --prune
 git reset --hard "origin/$BRANCH"
 
 echo "[2/7] Creating data backup for SQLite..."
-mkdir -p /var/backups/shoa
+mkdir -p "$BACKUP_DIR"
 if [ -f backend/prisma/dev.db ]; then
-  cp backend/prisma/dev.db "/var/backups/shoa/dev.db.$(date +%F-%H%M%S).bak"
-  echo "Backup created under /var/backups/shoa"
+  cp backend/prisma/dev.db "$BACKUP_DIR/dev.db.$(date +%F-%H%M%S).bak"
+  echo "Backup created under $BACKUP_DIR"
 else
   echo "No backend/prisma/dev.db found; skipping SQLite backup"
 fi
