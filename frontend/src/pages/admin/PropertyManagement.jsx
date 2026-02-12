@@ -16,7 +16,7 @@ const PropertyManagement = () => {
     title: '',
     description: '',
     type: 'apartment',
-    status: 'For Sale',
+    status: 'For Sale', // Default to For Sale
     location: '',
     bedrooms: '',
     bathrooms: '',
@@ -311,13 +311,21 @@ const PropertyManagement = () => {
     });
 
     // If editing an existing property and the image exists in DB, delete immediately
-    if (editingProperty && removedImage && !removedImage.isNew && removedImage.id) {
+    if (
+      editingProperty &&
+      removedImage &&
+      !removedImage.isNew &&
+      removedImage.id
+    ) {
       propertiesAPI
         .deleteImage(editingProperty.id, removedImage.id)
         .then(() => {
           // invalidate queries so other UI updates reflect deletion
           queryClient.invalidateQueries(['property', editingProperty.id]);
-          queryClient.invalidateQueries({ queryKey: ['properties'], exact: false });
+          queryClient.invalidateQueries({
+            queryKey: ['properties'],
+            exact: false,
+          });
           toast.success('Image deleted');
         })
         .catch((err) => {
@@ -328,7 +336,9 @@ const PropertyManagement = () => {
             return copy;
           });
           toast.error(
-            err.response?.data?.message || err.message || 'Failed to delete image'
+            err.response?.data?.message ||
+              err.message ||
+              'Failed to delete image'
           );
         });
     } else if (removedImage && !removedImage.isNew && removedImage.id) {
@@ -719,7 +729,8 @@ const PropertyManagement = () => {
                     className="input-field"
                   >
                     <option value="For Sale">For Sale</option>
-                    <option value="Sold">Sold</option>
+                    <option value="For Rent">For Rent</option>
+                    <option value="Sold Out">Sold Out</option>
                   </select>
                 </div>
 

@@ -117,3 +117,59 @@ If you'd like, I can:
 - create a `systemd` unit for PM2 instead of `pm2 startup` (if you prefer),
 - convert the DB to Postgres and update Prisma (create `DATABASE_URL`), or
 - create a one-off script to seed / reset admin credentials automatically.
+
+## Dockerized production deployment (data-safe)
+
+Use this only on the VPS where your current data already lives.
+
+### Added production files
+
+- `docker-compose.prod.yml`
+- `backend/Dockerfile.prod`
+- `scripts/docker-deploy.sh`
+
+### Scope
+
+- Docker deployment is backend-only.
+- Frontend stays deployed on cPanel.
+
+### Important data safety notes
+
+- The backend still uses SQLite and reads `DATABASE_URL` from env.
+- In production, keep `DATABASE_URL=file:./dev.db` in `backend/.env`.
+- The compose file mounts `./backend/prisma` into the backend container so `backend/prisma/dev.db` is reused (existing data preserved).
+- The deploy script creates a timestamped DB backup at `/var/backups/shoa/` before migration/deploy.
+- No reset command is used.
+
+### First-time setup on VPS
+
+```bash
+cd /var/www/shoa-homes-monorepo
+chmod +x scripts/docker-deploy.sh
+
+# ensure docker and compose plugin are available
+docker --version
+docker compose version
+```
+
+### Deploy / update
+
+```bash
+cd /var/www/shoa-homes-monorepo
+./scripts/docker-deploy.sh
+```
+
+### Verify
+
+```bash
+docker compose -f docker-compose.prod.yml ps
+curl -fsS http://127.0.0.1:5000/api/health
+```
+
+### Rollback data file (if required)
+
+```bash
+ls -lah /var/backups/shoa/
+cp /var/backups/shoa/dev.db.<timestamp>.bak /var/www/shoa-homes-monorepo/backend/prisma/dev.db
+docker compose -f /var/www/shoa-homes-monorepo/docker-compose.prod.yml restart backend
+```

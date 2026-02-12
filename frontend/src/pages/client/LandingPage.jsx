@@ -49,6 +49,20 @@ const LandingPage = () => {
     refetchOnReconnect: true,
   });
 
+  // Fetch sold out properties for portfolio
+  const { data: portfolioProperties = [] } = useQuery({
+    queryKey: ['properties', 'portfolio'],
+    queryFn: async () => {
+      const res = await propertiesAPI.getAll({
+        status: 'Sold Out',
+        limit: 10,
+        sort: 'newest',
+      });
+      return res?.data ?? [];
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+
   const handleSearchFilterChange = (field, value) => {
     setSearchFilters((prev) => ({
       ...prev,
@@ -75,36 +89,46 @@ const LandingPage = () => {
   return (
     <div className="overflow-hidden">
       {/* Hero Section with Background */}
-      <section className="relative h-[90vh] min-h-[600px] flex items-center">
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0 z-0">
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: 'url("/images/hero.webp")',
+      <section className="relative h-[90vh] min-h-[600px] flex items-center overflow-hidden">
+        {/* Background Video with Overlay */}
+        <div className="absolute inset-0 w-full h-full z-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            onEnded={(event) => {
+              event.currentTarget.currentTime = 0;
+              event.currentTarget.play();
             }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-navy-900/70 via-navy-800/60 to-navy-900/70" />
-          <div className="absolute inset-0 bg-gradient-to-t from-navy-900/50 via-transparent to-transparent" />
+            className="absolute inset-0 w-full h-full object-cover"
+          >
+            <source src="/video/hero_video.mp4" type="video/mp4" />
+          </video>
+          {/* Smart Overlay for text readability */}
+          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute inset-0 bg-navy-900/40 mix-blend-multiply" />
+          <div className="absolute inset-0 bg-gradient-to-t from-navy-900 via-transparent to-transparent opacity-90" />
         </div>
 
         {/* Hero Content */}
         <div className="container-custom relative z-10 py-10 sm:py-14 md:py-16">
-          <div className="max-w-4xl mx-auto text-center text-white">
+          <div className="max-w-4xl mx-auto text-center text-white drop-shadow-md">
             <div className="animate-slide-down">
-              <span className="inline-block px-3 sm:px-4 py-1.5 mb-5 text-[10px] sm:text-xs font-semibold tracking-wider text-gold-400 bg-gold-400/10 border border-gold-400/30 rounded-full backdrop-blur-sm">
+              <span className="inline-block px-3 sm:px-4 py-1.5 mb-5 text-[10px] sm:text-xs font-semibold tracking-wider text-gold-300 bg-navy-900/30 border border-gold-400/30 rounded-full backdrop-blur-md shadow-sm">
                 ✨ PREMIUM REAL ESTATE IN ETHIOPIA
               </span>
             </div>
 
-            <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-display font-bold mb-4 leading-snug animate-slide-up">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-display font-bold mb-4 leading-snug animate-slide-up drop-shadow-lg">
               Building for the future{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-300 to-gold-500">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-300 to-gold-500 drop-shadow-none filter brightness-110">
                 Generation
               </span>
             </h1>
 
-            <p className="text-base md:text-lg lg:text-xl mb-8 text-gray-200 max-w-3xl mx-auto animate-fade-in">
+            <p className="text-base md:text-lg lg:text-xl mb-8 text-gray-100 max-w-3xl mx-auto animate-fade-in font-medium drop-shadow-md">
               Discover luxury properties, modern apartments, and premium
               commercial spaces with Ethiopia&apos;s most trusted real estate
               partner
@@ -113,14 +137,14 @@ const LandingPage = () => {
             <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-4 animate-fade-in">
               <Link
                 to="/properties"
-                className="px-6 sm:px-8 py-3 sm:py-4 text-white font-bold rounded-lg border-2 border-gold-500 hover:border-gold-400 hover:text-gold-300 transform hover:scale-105 transition-all duration-300 text-center"
+                className="px-6 sm:px-8 py-3 sm:py-4 bg-gold-500 text-navy-900 font-bold rounded-lg hover:bg-gold-400 transform hover:scale-105 transition-all duration-300 text-center shadow-lg hover:shadow-gold-500/20"
               >
                 Browse Properties
               </Link>
 
               <a
                 href="#featured"
-                className="px-6 sm:px-8 py-3 sm:py-4 text-white font-bold rounded-lg border-2 border-white/40 hover:border-white/60 transform hover:scale-105 transition-all duration-300 text-center"
+                className="px-6 sm:px-8 py-3 sm:py-4 text-white font-bold rounded-lg border-2 border-white/60 bg-white/10 backdrop-blur-sm hover:bg-white/20 hover:border-white transform hover:scale-105 transition-all duration-300 text-center shadow-lg"
               >
                 View Featured
               </a>
@@ -278,6 +302,11 @@ const LandingPage = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Dynamic Portfolio Items (Sold Out Properties) */}
+          {portfolioProperties.map((property) => (
+            <PropertyCard key={property.id} property={property} />
+          ))}
+
           {/* Flagship Project */}
           <div className="bg-white rounded-2xl shadow-premium overflow-hidden hover:shadow-premium-lg transition-all duration-300 transform hover:-translate-y-1 flex flex-col">
             <div className="h-48 relative">
