@@ -1,0 +1,2 @@
+-- NO-OP migration: testimonial feature removed before applying to production.
+-- This migration has been intentionally neutralized to prevent creating the testimonials table.
