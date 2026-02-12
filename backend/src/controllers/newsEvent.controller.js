@@ -16,7 +16,7 @@ const saveLocally = async (file, filename) => {
   );
   await fs.mkdir(uploadDir, { recursive: true });
   const filePath = path.join(uploadDir, filename);
-  await fs.rename(file.path, filePath);
+  await fs.rename(file.tempFilePath, filePath);
   return {
     url: `/uploads/shoa-homes/news-events/${filename}`,
     publicId: null,
