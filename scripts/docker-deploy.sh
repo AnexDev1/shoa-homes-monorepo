@@ -25,17 +25,17 @@ echo "[3/7] Preparing runtime directories..."
 mkdir -p backend/uploads
 
 echo "[4/7] Building Docker images..."
-docker compose -f "$COMPOSE_FILE" build --pull backend
+docker-compose -f "$COMPOSE_FILE" build --pull backend
 
 echo "[5/7] Applying non-destructive Prisma migrations..."
-docker compose -f "$COMPOSE_FILE" run --rm backend npm run migrate:deploy || true
+docker-compose -f "$COMPOSE_FILE" run --rm backend npm run migrate:deploy || true
 
 echo "[6/7] Stopping any running containers (clean restart)..."
 # ensure a clean stop before starting to avoid port conflicts or stale state
-docker compose -f "$COMPOSE_FILE" down --remove-orphans || true
+docker-compose -f "$COMPOSE_FILE" down --remove-orphans || true
 
 echo "[7/7] Starting containers..."
-docker compose -f "$COMPOSE_FILE" up -d --remove-orphans backend
+docker-compose -f "$COMPOSE_FILE" up -d --remove-orphans backend
 
 echo "[7/7] Health checks..."
 sleep 5
