@@ -16,7 +16,10 @@ const saveLocally = async (file, filename) => {
   );
   await fs.mkdir(uploadDir, { recursive: true });
   const filePath = path.join(uploadDir, filename);
-  await fs.rename(file.tempFilePath, filePath);
+  // Use copyFile instead of rename to handle cross-device links
+  await fs.copyFile(file.tempFilePath, filePath);
+  // Clean up the temp file
+  await fs.unlink(file.tempFilePath);
   return {
     url: `/uploads/shoa-homes/news-events/${filename}`,
     publicId: null,
