@@ -4,6 +4,13 @@ async function checkDatabase() {
   const prisma = new PrismaClient();
 
   try {
+    // Log sanitized connection string
+    const url = process.env.DATABASE_URL || '';
+    const sanitizedUrl = url.replace(/:([^:@]+)@/, ':****@');
+    console.log(`Attempting to connect to: ${sanitizedUrl}`);
+
+    await prisma.$connect();
+    console.log('Successfully connected to the database.');
     const properties = await prisma.property.findMany();
     console.log('Properties found:', properties.length);
     properties.forEach((p) => console.log(`- ${p.title}`));
