@@ -266,3 +266,5 @@ export const newsEventsAPI = {
     return data;
   },
 };
+
+
