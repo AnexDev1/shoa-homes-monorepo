@@ -7,8 +7,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Load environment variables from .env file in the backend directory
-const envPath = path.resolve(__dirname, '../../../.env');
+const envPath = path.resolve(__dirname, '../../.env');
 dotenv.config({ path: envPath });
+
+const storageProvider = (process.env.STORAGE_PROVIDER || 'local')
+  .toLowerCase()
+  .trim();
 
 // Verify Cloudinary configuration — we only check presence of all required env vars.
 const isConfigured = Boolean(
@@ -16,15 +20,17 @@ const isConfigured = Boolean(
     process.env.CLOUDINARY_API_KEY &&
     process.env.CLOUDINARY_API_SECRET
 );
-if (!isConfigured) {
+if (storageProvider === 'cloudinary' && !isConfigured) {
   console.warn(
-    'Cloudinary is not configured: missing one or more CLOUDINARY_* env vars. Development fallback will be used.'
+    'STORAGE_PROVIDER=cloudinary but Cloudinary is not configured. Falling back to local storage.'
   );
 }
 
-// Cloudinary configuration is valid, proceed with initialization
+const useCloudinary = storageProvider === 'cloudinary' && isConfigured;
 
-if (isConfigured) {
+// Cloudinary configuration is valid and explicitly enabled, proceed with initialization
+
+if (useCloudinary) {
   cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
@@ -36,20 +42,20 @@ if (isConfigured) {
   );
 } else {
   console.info(
-    'Cloudinary not configured — using data-uri placeholder fallback for uploads.'
+    `Using local storage for uploads (STORAGE_PROVIDER=${storageProvider || 'local'}).`
   );
 }
 
 import fs from 'fs';
-import os from 'os';
+import crypto from 'crypto';
 
 export const uploadToCloudinary = async (file, folder = 'shoa-homes') => {
   try {
-    // Allow forcing local storage via STORAGE_PROVIDER=local or use local if Cloudinary isn't configured
-    const useLocal = process.env.STORAGE_PROVIDER === 'local' || !isConfigured;
+    const useLocal = !useCloudinary;
 
     // Compute uploads base dir (backend/uploads by default)
-    const uploadsBase = process.env.UPLOADS_DIR || path.resolve(__dirname, '../../uploads');
+    const uploadsBase =
+      process.env.UPLOADS_DIR || path.resolve(__dirname, '../../uploads');
     const targetFolder = path.join(uploadsBase, folder);
 
     // Ensure upload directory exists
@@ -59,13 +65,29 @@ export const uploadToCloudinary = async (file, folder = 'shoa-homes') => {
     if (useLocal) {
       try {
         // Source temp path provided by express-fileupload
-        const srcPath = (file.tempFilePath || file.path || '').replace(/\\/g, '/');
+        const srcPath = (file.tempFilePath || file.path || '').replace(
+          /\\/g,
+          '/'
+        );
+        if (!srcPath) {
+          throw new Error('Missing temporary upload path');
+        }
         const originalName = file.name || path.basename(srcPath);
-        const safeName = `${Date.now()}-${originalName.replace(/[^a-zA-Z0-9.\-_]/g, '_')}`;
+        const randomSuffix = crypto.randomBytes(6).toString('hex');
+        const safeName = `${Date.now()}-${randomSuffix}-${originalName.replace(/[^a-zA-Z0-9.\-_]/g, '_')}`;
         const destPath = path.join(targetFolder, safeName);
 
-        // Move temp file to destination
-        fs.renameSync(srcPath, destPath);
+        // Move temp file to destination (fallback to copy/unlink for cross-device moves)
+        try {
+          fs.renameSync(srcPath, destPath);
+        } catch (moveError) {
+          if (moveError?.code === 'EXDEV') {
+            fs.copyFileSync(srcPath, destPath);
+            fs.unlinkSync(srcPath);
+          } else {
+            throw moveError;
+          }
+        }
 
         // Build a public URL for the file. If BACKEND_BASE_URL is set, use absolute URL; otherwise return a root-relative path.
         const base = process.env.BACKEND_BASE_URL
@@ -105,10 +127,11 @@ export const uploadToCloudinary = async (file, folder = 'shoa-homes') => {
 
 export const deleteFromCloudinary = async (publicId) => {
   try {
-    const useLocal = process.env.STORAGE_PROVIDER === 'local' || !isConfigured;
+    const useLocal = !useCloudinary;
     if (useLocal) {
       // publicId for local files is stored as folder/filename
-      const uploadsBase = process.env.UPLOADS_DIR || path.resolve(__dirname, '../../uploads');
+      const uploadsBase =
+        process.env.UPLOADS_DIR || path.resolve(__dirname, '../../uploads');
       const filePath = path.join(uploadsBase, publicId);
       try {
         if (fs.existsSync(filePath)) fs.unlinkSync(filePath);

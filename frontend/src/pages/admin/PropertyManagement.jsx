@@ -205,7 +205,14 @@ const PropertyManagement = () => {
             exact: false,
           });
           await queryClient.invalidateQueries(['property', propertyId]);
-          uploadSuccessful = true;
+          const successCount = Array.isArray(result?.data)
+            ? result.data.length
+            : 0;
+          uploadSuccessful = successCount > 0;
+          if (!uploadSuccessful) {
+            const firstError = result?.errors?.[0]?.error;
+            toast.error(firstError || 'Image upload failed');
+          }
           setUploadProgress(0);
         } catch (uploadError) {
           // eslint-disable-next-line no-console
