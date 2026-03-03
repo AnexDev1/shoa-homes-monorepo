@@ -736,8 +736,7 @@ const PropertyManagement = () => {
                     className="input-field"
                   >
                     <option value="For Sale">For Sale</option>
-                    <option value="For Rent">For Rent</option>
-                    <option value="Sold Out">Sold Out</option>
+                    <option value="Sold">Sold</option>
                   </select>
                 </div>
 

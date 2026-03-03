@@ -49,12 +49,12 @@ const LandingPage = () => {
     refetchOnReconnect: true,
   });
 
-  // Fetch sold out properties for portfolio
+  // Fetch sold properties for portfolio
   const { data: portfolioProperties = [] } = useQuery({
     queryKey: ['properties', 'portfolio'],
     queryFn: async () => {
       const res = await propertiesAPI.getAll({
-        status: 'Sold Out',
+        status: 'Sold',
         limit: 10,
         sort: 'newest',
       });
@@ -302,7 +302,7 @@ const LandingPage = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* Dynamic Portfolio Items (Sold Out Properties) */}
+          {/* Dynamic Portfolio Items (Sold Properties) */}
           {portfolioProperties.map((property) => (
             <PropertyCard key={property.id} property={property} />
           ))}
